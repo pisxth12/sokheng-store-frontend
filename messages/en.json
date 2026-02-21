@@ -1,0 +1,12 @@
+{
+  "HomePage": {
+    "title": "Baby Shop",
+    "welcome": "Welcome to our store",
+    "description": "Find the best products for your baby"
+  },
+  "Theme": {
+    "light": "Light Mode",
+    "dark": "Dark Mode",
+    "toggle": "Toggle theme"
+  }
+}

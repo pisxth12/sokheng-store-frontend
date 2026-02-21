@@ -1,0 +1,34 @@
+/* src/app/globals.css */
+@import "tailwindcss";
+
+/* Enable dark mode with class strategy */
+@variant dark (&:where(.dark, .dark *));
+
+@theme{
+  --color-darkbg: #333333;
+
+  /* sidebar */
+  --color-sidebar: rgb(24, 67, 99);
+  --color-sidebar-hover: #1B4A70;
+  --color-sidebar-active: #1E537D;
+  
+}
+
+/* Your custom theme classes */
+:root {
+  --background: #f2f3f5;
+  --foreground: #333333;
+}
+
+.dark {
+  --background: #333333;
+  --foreground: #f2f3f5;
+}
+
+
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', sans-serif !important;
+}
