@@ -24,6 +24,8 @@ export const useAnalytics = () =>{
         }
     }
 
+    
+
     useEffect(() => {
         fetchAnalytics()
     }, [])

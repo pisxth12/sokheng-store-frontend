@@ -19,6 +19,7 @@ interface Props {
 }
 
 const CustomTooltip = ({ active, payload, label }: any) => {
+  
   if (active && payload && payload.length) {
     return (
       <div className="bg-white px-4 py-3 rounded-lg shadow-lg border border-gray-200">
@@ -34,6 +35,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export default function RevenueChart({ data }: Props) {
   const total = data.reduce((sum, item) => sum + item.value, 0);
   const avg = data.length ? total / data.length : 0;
+
 
   return (
     <div className="bg-white p-5 rounded-xl border border-gray-200">

@@ -6,6 +6,7 @@ import { Menu, Search, Bell, Mail, ChevronDown, X } from "lucide-react";
 import { useSearch } from "@/hooks/admin/useSearch";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/admin/useAuth";
+import NotificationBell from "../notifications/notificationBell";
 
 interface NavbarProps {
   toggleSidebar: () => void;
@@ -75,15 +76,12 @@ export default function Navbar({ toggleSidebar }: NavbarProps) {
 
           {/* Notification buttons */}
           <div className="flex items-center gap-1 ">
-            <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white"></span>
-            </button>
+            <div className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">
+              <NotificationBell/>
+              
+            </div>
 
-            <button className="relative p-2 text-gray-600 cursor-pointer hover:bg-gray-100 rounded-lg transition-colors hidden sm:block">
-              <Mail className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-blue-500 rounded-full ring-2 ring-white"></span>
-            </button>
+           
           </div>
 
           <div className="relative">

@@ -1,7 +1,7 @@
 import { adminProductApi } from "@/lib/api/admin/product";
 import { Product } from "@/types/product.type";
 import { useCallback, useEffect, useState } from "react";
-import { adminProductImage } from "./productImage";
+import { adminProductImage } from "./useProductImage";
 
 export const useProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);

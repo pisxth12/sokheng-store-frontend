@@ -22,7 +22,6 @@ export default function SocialLinksPage() {
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     facebook: "",
-
     telegram: "",
     tiktok: "",
     googleMap: "",
