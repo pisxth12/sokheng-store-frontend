@@ -1,0 +1,236 @@
+{
+  "DesktopNav": {
+    "products": "商品",
+    "sale": "特卖",
+    "about": "关于"
+  },
+  "Account": {
+    "page": {
+      "title": "我的账户",
+      "subtitle": "管理您的个人资料和偏好"
+    },
+    "profile": {
+      "orders": "订单",
+      "wishlist": "收藏夹",
+      "quickActions": "快捷操作"
+    },
+     "quickActions": {
+      "myOrders": "我的订单",
+      "wishlist": "收藏夹",
+      "addresses": "地址管理",
+      "paymentMethods": "支付方式"
+    },
+    "settings": {
+      "title": "设置",
+      "darkMode": "深色模式",
+      "emailNotifications": "邮件通知",
+      "language": "语言",
+      "logout": "退出登录"
+    },
+    "help": {
+      "title": "需要帮助？",
+      "description": "24/7 联系我们的支持团队",
+      "button": "联系支持"
+    }
+  },
+  "Cart": {
+    "title": "您的购物车",
+    "cartWithCount": "购物车",
+    "nothingHere": "这里什么都没有",
+    "addItemsToStart": "添加商品开始购物",
+    "browseProducts": "浏览商品",
+    "subtotal": "小计",
+    "checkout": "结算",
+    "taxShipping": "税费和运费在结算时计算",
+    "removeItem": "移除商品",
+    "emptyCart": "您的购物车是空的"
+  }, 
+  "EditProfile": {
+    "title": "编辑个人资料",
+    "fields": {
+      "fullName": "全名",
+      "fullNamePlaceholder": "输入您的全名",
+      "phoneNumber": "电话号码",
+      "phonePlaceholder": "输入您的电话号码",
+      "address": "地址",
+      "addressPlaceholder": "输入您的地址"
+    },
+    "buttons": {
+      "cancel": "取消",
+      "save": "保存更改",
+      "saving": "保存中..."
+    }
+  },
+  "Search": {
+    "placeholder": "搜索商品...",
+    "recentSearches": "最近搜索",
+    "popularSearches": "热门搜索",
+    "clearAll": "清除全部",
+    "close": "关闭",
+    "clear": "清除"
+  },
+  "ProductDetail": {
+    "loading": "正在加载商品...",
+    "notFound": {
+      "title": "未找到商品",
+      "message": "您要找的商品不存在。",
+      "button": "浏览所有商品"
+    },
+    "breadcrumb": {
+      "home": "首页",
+      "products": "商品"
+    },
+    "labels": {
+      "inStock": "有货 ({count} 件可用)",
+      "outOfStock": "缺货",
+      "description": "商品描述",
+      "quantity": "数量",
+      "addToCart": "加入购物车",
+      "sku": "商品编号"
+    },
+    "discount": "-{percent}%"
+  },
+  "RelatedProduct": {
+    "title": "您可能还喜欢",
+    "loading": "加载中...",
+    "loadingMore": "正在加载更多商品...",
+    "of": "之",
+    "previous": "上一个",
+    "next": "下一个"
+  },
+  "FeaturedPage": {
+    "title": "精选商品",
+    "loading": "正在加载精选商品...",
+    "error": "加载精选商品失败"
+  },
+  "SearchPage": {
+    "searchPlaceholder": "搜索商品...",
+    "filters": "筛选",
+    "sortOptions": {
+      "recommend": "推荐",
+      "newest": "最新",
+      "oldest": "最旧",
+      "priceLowHigh": "价格：从低到高",
+      "priceHighLow": "价格：从高到低"
+    },
+    "noResults": {
+      "title": "未找到商品",
+      "message": "我们找不到与 \"{query}\" 匹配的商品",
+      "button": "浏览所有商品"
+    },
+    "noMoreProducts": "没有更多商品了",
+    "loading": "加载中...",
+    "searching": "正在搜索 \"{query}\"..."
+  },
+  "FilterModal": {
+    "title": "筛选",
+    "priceRange": {
+      "label": "价格范围",
+      "min": "最低",
+      "max": "最高"
+    },
+    "sortBy": {
+      "label": "排序方式",
+      "options": {
+        "recommend": "推荐",
+        "newest": "最新",
+        "oldest": "最旧",
+        "priceLowHigh": "价格：从低到高",
+        "priceHighLow": "价格：从高到低"
+      }
+    },
+    "buttons": {
+      "cancel": "取消",
+      "apply": "应用"
+    }
+  },"Auth": {
+  "login": {
+    "brand": "瓦内萨婴儿用品店",
+    "email": {
+      "label": "邮箱",
+      "placeholder": "输入邮箱"
+    },
+    "password": {
+      "label": "密码",
+      "placeholder": "输入密码",
+      "forgot": "忘记密码?"
+    },
+    "button": {
+      "signIn": "登录",
+      "signingIn": "登录中..."
+    },
+    "divider": "或",
+    "google": "使用 Google 登录",
+    "register": {
+      "text": "新用户？",
+      "link": "创建账户"
+    },
+    "demo": "演示: admin@example.com / admin123",
+    "errors": {
+      "invalid": "邮箱或密码无效",
+      "googleFailed": "Google 登录失败"
+    }
+  },
+  "forgotPassword": {
+    "title": "重置密码",
+    "subtitle": "输入您的邮箱",
+    "email": {
+      "label": "邮箱地址",
+      "placeholder": "your@email.com"
+    },
+    "button": "发送重置码",
+    "sending": "发送中...",
+    "back": "返回",
+    "rememberPassword": "记得密码？",
+    "login": "登录"
+  },
+  "checkEmail": {
+    "title": "查看您的邮箱",
+    "message": "我们已向以下邮箱发送6位验证码：",
+    "expires": "验证码15分钟内有效",
+    "button": "输入验证码"
+  },
+  "verifyCode": {
+    "title": "验证码",
+    "subtitle": "输入6位验证码",
+    "description": "我们已将验证码发送至：",
+    "label": "验证码",
+    "button": "验证",
+    "verifying": "验证中...",
+    "resend": "重新发送",
+    "sending": "发送中...",
+    "resendIn": "{countdown}秒后重新发送",
+    "back": "返回"
+  },
+  "newPassword": {
+    "title": "新密码",
+    "subtitle": "设置强密码",
+    "newPassword": {
+      "label": "新密码",
+      "placeholder": "至少6个字符"
+    },
+    "confirmPassword": {
+      "label": "确认密码",
+      "placeholder": "再次输入密码"
+    },
+    "button": "重置密码",
+    "resetting": "重置中...",
+    "validation": {
+      "minLength": "密码至少需要6个字符",
+      "match": "两次输入的密码不一致"
+    },
+    "back": "返回"
+  },
+  "errors": {
+    "sendFailed": "发送重置码失败",
+    "invalidCode": "验证码无效",
+    "codeRequired": "请输入所有6位验证码",
+    "sessionExpired": "会话已过期，请重新开始",
+    "resetFailed": "重置密码失败",
+    "resendFailed": "重新发送验证码失败"
+  }
+}
+  
+ 
+  }
+  

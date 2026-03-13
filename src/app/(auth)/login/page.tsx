@@ -1,13 +1,15 @@
 "use client";
-import { useAuth } from "@/hooks/admin/useAuth";
+import { useAuth } from "@/hooks/open/useAuth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { Mail, Lock, Eye, EyeOff, LogIn } from "lucide-react";
+import { useTranslations } from 'next-intl';
 
 export default function LoginPage() {
+  const t = useTranslations('Auth.login');
   const [email, setEmail] = useState("admin@example.com");
-  const [password, setPassword] = useState("admin123");
+  const [password, setPassword] = useState("Admin123");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,7 +23,7 @@ export default function LoginPage() {
     try {
       await login({ email, password });
     } catch (error: any) {
-      setError("Invalid email or password");
+      setError(t('errors.invalid'));
     } finally {
       setLoading(false);
     }
@@ -32,7 +34,7 @@ export default function LoginPage() {
       setLoading(true);
       await googleLogin(credentialResponse.credential);
     } catch (error: any) {
-      setError(error.message || "Google login failed");
+      setError(t('errors.googleFailed'));
     } finally {
       setLoading(false);
     }
@@ -45,7 +47,7 @@ export default function LoginPage() {
           {/* Brand */}
           <div className="text-center mb-4">
             <h1 className="text-base font-medium tracking-wider text-gray-900 dark:text-white">
-              VANESSA BABY SHOP
+              {t('brand')}
             </h1>
           </div>
 
@@ -63,13 +65,13 @@ export default function LoginPage() {
             {/* Email */}
             <div>
               <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
-                Email
+                {t('email.label')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
                 <input
                   type="email"
-                  placeholder="Enter email"
+                  placeholder={t('email.placeholder')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-7 pr-3 py-2 text-xs bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-gray-700 focus:border-gray-400 dark:focus:border-gray-500 outline-none text-gray-900 dark:text-white placeholder-gray-400"
@@ -81,13 +83,13 @@ export default function LoginPage() {
             {/* Password */}
             <div>
               <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
-                Password
+                {t('password.label')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter password"
+                  placeholder={t('password.placeholder')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-7 pr-8 py-2 text-xs bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-gray-700 focus:border-gray-400 dark:focus:border-gray-500 outline-none text-gray-900 dark:text-white placeholder-gray-400"
@@ -114,7 +116,7 @@ export default function LoginPage() {
                 onClick={() => router.push("/forgot-password")}
                 className="text-[9px] text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 uppercase tracking-wider"
               >
-                Forgot?
+                {t('password.forgot')}
               </button>
             </div>
 
@@ -127,12 +129,12 @@ export default function LoginPage() {
               {loading ? (
                 <>
                   <div className="w-3 h-3 border border-white dark:border-gray-900 border-t-transparent rounded-full animate-spin"></div>
-                  <span>SIGNING IN</span>
+                  <span>{t('button.signingIn')}</span>
                 </>
               ) : (
                 <>
                   <LogIn className="w-3.5 h-3.5" />
-                  <span>SIGN IN</span>
+                  <span>{t('button.signIn')}</span>
                 </>
               )}
             </button>
@@ -145,7 +147,7 @@ export default function LoginPage() {
             </div>
             <div className="relative flex justify-center">
               <span className="px-2 bg-white dark:bg-[#212121] text-[8px] text-gray-400 uppercase tracking-wider">
-                Or
+                {t('divider')}
               </span>
             </div>
           </div>
@@ -154,7 +156,7 @@ export default function LoginPage() {
           <div className="flex justify-center">
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
-              onError={() => setError("Google login failed")}
+              onError={() => setError(t('errors.googleFailed'))}
               theme="outline"
               size="large"
               text="continue_with"
@@ -165,19 +167,19 @@ export default function LoginPage() {
 
           {/* Register Link */}
           <p className="mt-4 text-center text-[9px] text-gray-500 dark:text-gray-400">
-            New here?{" "}
+            {t('register.text')}{" "}
             <button
               onClick={() => router.push("/register")}
               className="font-medium text-gray-900 dark:text-white hover:underline"
             >
-              Create account
+              {t('register.link')}
             </button>
           </p>
 
           {/* Demo */}
           <div className="mt-3 pt-2 border-t border-gray-100 dark:border-gray-800">
             <p className="text-[8px] text-gray-400 text-center">
-              demo: admin@example.com / admin123
+              {t('demo')}
             </p>
           </div>
         </div>

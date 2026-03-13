@@ -5,7 +5,7 @@ import { Menu, Search, Bell, Mail, ChevronDown, X } from "lucide-react";
 
 import { useSearch } from "@/hooks/admin/useSearch";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/admin/useAuth";
+import { useAuth } from "@/hooks/open/useAuth";
 import NotificationBell from "../notifications/notificationBell";
 
 interface NavbarProps {
@@ -77,11 +77,8 @@ export default function Navbar({ toggleSidebar }: NavbarProps) {
           {/* Notification buttons */}
           <div className="flex items-center gap-1 ">
             <div className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">
-              <NotificationBell/>
-              
+              <NotificationBell />
             </div>
-
-           
           </div>
 
           <div className="relative">
@@ -91,7 +88,7 @@ export default function Navbar({ toggleSidebar }: NavbarProps) {
               className="flex items-center cursor-pointer gap-2 pl-2 pr-1 py-1 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-medium text-sm shadow-sm">
-                JD
+                {user?.name?.charAt(0)?.toUpperCase() || "A"}
               </div>
               <ChevronDown className="w-4 h-4 text-gray-500 hidden sm:block" />
             </button>

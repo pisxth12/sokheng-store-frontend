@@ -5,7 +5,7 @@ import Sidebar from "../../components/admin/layouts/sidebar";
 import Navbar from "../../components/admin/layouts/navbar";
 import { AppProvider } from "@/providers/AppProvider";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/admin/useAuth";
+import { useAuth } from "@/hooks/open/useAuth";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 export default function AdminLayout({

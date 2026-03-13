@@ -1,56 +1,49 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { authApi } from "@/lib/api/open/auth";
 import { useSocialLinks } from "@/hooks/admin/useSocialLinks";
 import {
-  AlertCircle,
-  ArrowLeft,
-  CheckCircle,
-  Facebook,
-  Instagram,
   Loader2,
+  Globe,
+  Lock,
+  User,
+  Edit2,
+  Facebook,
+  Plane,
   Map,
   Phone,
-  Plane,
-  Save,
+  ChevronRight,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import SocialLinksModal from "@/components/admin/settings/SocialLinksModal";
+import ChangePasswordModal from "@/components/admin/settings/ChangePasswordModal";
 
-export default function SocialLinksPage() {
-  const { links, saving, error, success, updateLinks } = useSocialLinks();
+export default function SettingsPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({
-    facebook: "",
-    telegram: "",
-    tiktok: "",
-    googleMap: "",
-    phone: "",
-  });
+  const [user, setUser] = useState<any>(null);
+  
+  // Modal states
+  const [socialModalOpen, setSocialModalOpen] = useState(false);
+  const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+
+  // Social Links data
+  const { links } = useSocialLinks();
 
   useEffect(() => {
-    if (links) {
-      setFormData({
-        facebook: links.facebook || "",
-
-        telegram: links.telegram || "",
-        tiktok: links.tiktok || "",
-        googleMap: links.googleMap || "",
-        phone: links.phone || "",
-      });
-    }
-    setLoading(false);
-  }, [links]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await updateLinks(formData);
-  };
+    const loadUser = async () => {
+      try {
+        const userData = await authApi.getMe();
+        setUser(userData);
+      } catch {
+        router.push("/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadUser();
+  }, [router]);
 
   if (loading) {
     return (
@@ -61,154 +54,139 @@ export default function SocialLinksPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6">
-      {/* Simple Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <button
-          onClick={() => router.back()}
-          className="p-1.5 hover:bg-gray-200 rounded-md transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4 text-gray-600" />
-        </button>
-        <h1 className="text-xl font-medium text-gray-900">Social Links</h1>
-      </div>
+    <>
+      <div className="min-h-screen bg-gray-50 p-4 md:p-6">
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="mb-6">
+            <h1 className="text-2xl font-medium text-gray-900">Settings</h1>
+            <p className="text-sm text-gray-500 mt-1">
+              Manage your account settings
+            </p>
+          </div>
 
-      {/* Status Messages */}
-      {success && (
-        <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-md flex items-center gap-2">
-          <CheckCircle className="w-4 h-4 text-green-600" />
-          <p className="text-sm text-green-600">Saved successfully</p>
-        </div>
-      )}
-      {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 text-red-600" />
-          <p className="text-sm text-red-600">{error}</p>
-        </div>
-      )}
+          {/* Two Column Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            {/* Social Links Card */}
+            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+              <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Globe className="w-5 h-5 text-gray-700" />
+                  <h2 className="font-medium text-gray-900">Social Links</h2>
+                </div>
+                <button
+                  onClick={() => setSocialModalOpen(true)}
+                  className="p-1.5 hover:bg-gray-100 rounded-md transition-colors"
+                >
+                  <Edit2 className="w-4 h-4 text-gray-500" />
+                </button>
+              </div>
+              
+              <div className="p-4 space-y-3">
+                <div className="flex items-center gap-3 text-sm">
+                  <Facebook className="w-4 h-4 text-[#1877f2]" />
+                  <span className="text-gray-600 flex-1">Facebook</span>
+                  <span className="text-gray-900 truncate max-w-[150px]">
+                    {links?.facebook || "Not set"}
+                  </span>
+                </div>
+                
+                <div className="flex items-center gap-3 text-sm">
+                  <Plane className="w-4 h-4 text-[#0088cc]" />
+                  <span className="text-gray-600 flex-1">Telegram</span>
+                  <span className="text-gray-900 truncate max-w-[150px]">
+                    {links?.telegram || "Not set"}
+                  </span>
+                </div>
 
-      {/* Simple Two Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Edit Form */}
-        <div className="bg-white border border-gray-200 rounded-md p-5">
-          <h2 className="text-base font-medium text-gray-900 mb-4">Edit</h2>
+                <div className="flex items-center gap-3 text-sm">
+                  <span className="w-4 text-sm font-medium text-gray-900">TT</span>
+                  <span className="text-gray-600 flex-1">TikTok</span>
+                  <span className="text-gray-900 truncate max-w-[150px]">
+                    {links?.tiktok || "Not set"}
+                  </span>
+                </div>
 
-          <form onSubmit={handleSubmit} className="space-y-3">
-            {/* Facebook */}
-            <div className="flex items-center gap-3 border border-gray-100 rounded-md px-3 py-2">
-              <Facebook className="w-4 h-4 text-[#1877f2]" />
-              <input
-                type="text"
-                name="facebook"
-                value={formData.facebook}
-                onChange={handleChange}
-                placeholder="Facebook URL"
-                className="flex-1 text-sm bg-transparent border-0 focus:outline-none p-0"
-              />
+                <div className="flex items-center gap-3 text-sm">
+                  <Phone className="w-4 h-4 text-green-600" />
+                  <span className="text-gray-600 flex-1">Phone</span>
+                  <span className="text-gray-900 truncate max-w-[150px]">
+                    {links?.phone || "Not set"}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-3 text-sm">
+                  <Map className="w-4 h-4 text-gray-600" />
+                  <span className="text-gray-600 flex-1">Google Map</span>
+                  <span className="text-gray-900 truncate max-w-[150px]">
+                    {links?.googleMap || "Not set"}
+                  </span>
+                </div>
+              </div>
             </div>
 
-            {/* Telegram */}
-            <div className="flex items-center gap-3 border border-gray-100 rounded-md px-3 py-2">
-              <Plane className="w-4 h-4 text-[#0088cc]" />
-              <input
-                type="text"
-                name="telegram"
-                value={formData.telegram}
-                onChange={handleChange}
-                placeholder="Telegram URL"
-                className="flex-1 text-sm bg-transparent border-0 focus:outline-none p-0"
-              />
+            {/* Password Card */}
+            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+              <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Lock className="w-5 h-5 text-gray-700" />
+                  <h2 className="font-medium text-gray-900">Password</h2>
+                </div>
+                <button
+                  onClick={() => setPasswordModalOpen(true)}
+                  className="p-1.5 hover:bg-gray-100 rounded-md transition-colors"
+                >
+                  <Edit2 className="w-4 h-4 text-gray-500" />
+                </button>
+              </div>
+              
+              <div className="p-4">
+                <p className="text-sm text-gray-500 mb-2">Password last changed</p>
+                <p className="text-sm text-gray-900">••••••••</p>
+                <p className="text-xs text-gray-400 mt-2">Click edit to change your password</p>
+              </div>
             </div>
 
-            {/* TikTok */}
-            <div className="flex items-center gap-3 border border-gray-100 rounded-md px-3 py-2">
-              <span className="text-sm font-medium text-gray-900 w-4">TT</span>
-              <input
-                type="text"
-                name="tiktok"
-                value={formData.tiktok}
-                onChange={handleChange}
-                placeholder="TikTok URL"
-                className="flex-1 text-sm bg-transparent border-0 focus:outline-none p-0"
-              />
-            </div>
-
-            {/* Phone */}
-            <div className="flex items-center gap-3 border border-gray-100 rounded-md px-3 py-2">
-              <Phone className="w-4 h-4 text-green-600" />
-              <input
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="Phone Number"
-                className="flex-1 text-sm bg-transparent border-0 focus:outline-none p-0"
-              />
-            </div>
-
-            {/* Google Map */}
-            <div className="flex items-center gap-3 border border-gray-100 rounded-md px-3 py-2">
-              <Map className="w-4 h-4 text-gray-600" />
-              <input
-                type="text"
-                name="googleMap"
-                value={formData.googleMap}
-                onChange={handleChange}
-                placeholder="Google Map URL"
-                className="flex-1 text-sm bg-transparent border-0 focus:outline-none p-0"
-              />
-            </div>
-
-            {/* Save Button */}
-            <button
-              type="submit"
-              disabled={saving}
-              className="w-full mt-4 py-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-md disabled:opacity-50"
-            >
-              {saving ? "Saving..." : "Save Changes"}
-            </button>
-          </form>
-        </div>
-
-        {/* Current Values */}
-        <div className="bg-white border border-gray-200 rounded-md p-5">
-          <h2 className="text-base font-medium text-gray-900 mb-4">Current</h2>
-
-          <div className="space-y-2">
-            <div className="flex justify-between py-2 border-b border-gray-100">
-              <span className="text-sm text-gray-500">Facebook</span>
-              <span className="text-sm text-gray-900 truncate max-w-[200px]">
-                {links?.facebook || "—"}
-              </span>
-            </div>
-
-            <div className="flex justify-between py-2 border-b border-gray-100">
-              <span className="text-sm text-gray-500">Telegram</span>
-              <span className="text-sm text-gray-900 truncate max-w-[200px]">
-                {links?.telegram || "—"}
-              </span>
-            </div>
-            <div className="flex justify-between py-2 border-b border-gray-100">
-              <span className="text-sm text-gray-500">TikTok</span>
-              <span className="text-sm text-gray-900 truncate max-w-[200px]">
-                {links?.tiktok || "—"}
-              </span>
-            </div>
-            <div className="flex justify-between py-2 border-b border-gray-100">
-              <span className="text-sm text-gray-500">Phone</span>
-              <span className="text-sm text-gray-900 truncate max-w-[200px]">
-                {links?.phone || "—"}
-              </span>
-            </div>
-            <div className="flex justify-between py-2">
-              <span className="text-sm text-gray-500">Google Map</span>
-              <span className="text-sm text-gray-900 truncate max-w-[200px]">
-                {links?.googleMap || "—"}
-              </span>
-            </div>
+            {/* User Info Card - Full Width */}
+            {user && (
+              <div className="lg:col-span-2 bg-white border border-gray-200 rounded-lg p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 bg-blue-50 rounded-md">
+                    <User className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <h3 className="font-medium text-gray-900">Account Information</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <span className="text-gray-500 block">Name</span>
+                    <span className="text-gray-900 font-medium">{user.name}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 block">Email</span>
+                    <span className="text-gray-900 font-medium">{user.email}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 block">Role</span>
+                    <span className="text-gray-900 font-medium">{user.role || "User"}</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Modals */}
+      <SocialLinksModal 
+        isOpen={socialModalOpen} 
+        onClose={() => setSocialModalOpen(false)} 
+      />
+      
+      <ChangePasswordModal 
+        isOpen={passwordModalOpen} 
+        onClose={() => setPasswordModalOpen(false)} 
+      />
+    </>
   );
 }

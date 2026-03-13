@@ -1,0 +1,40 @@
+@keyframes fadeInUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(16px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+@keyframes pulseRing {
+    0% { 
+        box-shadow: 0 0 0 0 rgba(99,102,241,0.45); 
+    }
+    70% { 
+        box-shadow: 0 0 0 7px rgba(99,102,241,0); 
+    }
+    100% { 
+        box-shadow: 0 0 0 0 rgba(99,102,241,0); 
+    }
+}
+
+.fade-in-up { 
+    animation: fadeInUp 0.4s cubic-bezier(0.22,1,0.36,1) both; 
+}
+
+.dot-active { 
+    animation: pulseRing 0.55s ease-out; 
+}
+
+/* Hide scrollbar but keep scrollability */
+.no-scrollbar::-webkit-scrollbar { 
+    display: none; 
+}
+
+.no-scrollbar { 
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
+}

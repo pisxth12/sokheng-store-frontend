@@ -1,4 +1,4 @@
-import { SocialLinks, SocialLinksResponse } from "@/types/social.type";
+import { SocialLinks, SocialLinksResponse } from "@/types/admin/social.type";
 import apiClient from "../open/client";
 
 export const adminSocialLinks = {

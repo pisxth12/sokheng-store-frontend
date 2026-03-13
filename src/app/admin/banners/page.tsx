@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import BannerForm from "@/components/admin/banners/BannerForm";
 import { useBanners } from "@/hooks/admin/useBanners";
-import { Banner } from "@/types/banner.type";
+import { Banner } from "@/types/admin/banner.type";
 import BannerCard from "@/components/admin/banners/BannerCard";
 import { useSearch } from "@/hooks/admin/useSearch";
 import { Plus, Search, AlertCircle } from "lucide-react";
@@ -50,19 +50,17 @@ export default function BannersPage() {
       }
       handleClose();
     },
-    [editingBanner, updateBanner, createBanner, handleClose]
+    [editingBanner, updateBanner, createBanner, handleClose],
   );
 
   // Filter
   const filteredBanners = banners.filter((banner) =>
-    (banner.title || "").toLowerCase().includes(searchQuery.toLowerCase())
+    (banner.title || "").toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   // Loading state
   if (loading) {
-    return (
-    <AdminLoadingSpinner message="Loading banners..."/>
-    );
+    return <AdminLoadingSpinner message="Loading banners..." />;
   }
 
   return (
@@ -72,7 +70,7 @@ export default function BannersPage() {
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">Banners</h1>
         </div>
-        
+
         <div className="flex flex-col sm:flex-row gap-3">
           {/* Search Bar */}
           <div className="relative">
@@ -85,7 +83,7 @@ export default function BannersPage() {
               className="pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent w-full sm:w-64"
             />
           </div>
-          
+
           {/* Add Button */}
           <button
             onClick={handleAdd}
@@ -93,9 +91,10 @@ export default function BannersPage() {
             className={`
               inline-flex items-center justify-center gap-2 px-4 py-2 
               rounded-lg text-sm font-medium transition-all duration-200
-              ${bannerLimit 
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                : 'bg-gray-900 text-white hover:bg-gray-800 active:scale-95'
+              ${
+                bannerLimit
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-gray-900 text-white hover:bg-gray-800 active:scale-95"
               }
             `}
           >
@@ -110,9 +109,12 @@ export default function BannersPage() {
         <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-sm font-medium text-amber-800">Maximum limit reached</p>
+            <p className="text-sm font-medium text-amber-800">
+              Maximum limit reached
+            </p>
             <p className="text-sm text-amber-700 mt-0.5">
-              You've reached the maximum of 5 banners. Delete some banners to add new ones.
+              You've reached the maximum of 5 banners. Delete some banners to
+              add new ones.
             </p>
           </div>
         </div>
@@ -123,9 +125,11 @@ export default function BannersPage() {
         <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
           {searchQuery ? (
             <div>
-              <p className="text-gray-600">No banners found for "{searchQuery}"</p>
+              <p className="text-gray-600">
+                No banners found for "{searchQuery}"
+              </p>
               <button
-                onClick={() => setSearchQuery('')}
+                onClick={() => setSearchQuery("")}
                 className="mt-2 text-sm text-gray-900 underline hover:no-underline"
               >
                 Clear search

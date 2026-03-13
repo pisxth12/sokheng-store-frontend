@@ -1,5 +1,5 @@
 import { adminNotificationApi } from "@/lib/api/admin/notifications";
-import { NotificationResponse } from "@/types/notification.type";
+import { NotificationResponse } from "@/types/admin/notification.type";
 import { useCallback, useEffect, useState, useRef } from "react";
 
 export const useNotifications = () => {
@@ -28,7 +28,7 @@ export const useNotifications = () => {
     } finally {
       setLoading(false);
     }
-  }, []); 
+  }, []);
 
   const markAsRead = useCallback(
     async (id: number) => {
@@ -75,13 +75,12 @@ export const useNotifications = () => {
         console.error("Fetch error:", err);
       }
     },
-    [fetchNotifications], 
+    [fetchNotifications],
   );
-
 
   useEffect(() => {
     fetchNotifications();
-  }, [fetchNotifications]); 
+  }, [fetchNotifications]);
 
   return {
     notifications,

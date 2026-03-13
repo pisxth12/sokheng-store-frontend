@@ -1,24 +1,38 @@
-import { Order, OrderFilters, OrderListResponse, PageResponse } from "@/types/order.type";
+import {
+  Order,
+  OrderFilters,
+  OrderListResponse,
+  PageResponse,
+} from "@/types/admin/order.type";
 import apiClient from "../open/client";
 
 export const adminOrderApi = {
   // Get all orders with pagination
   getAllOrders: async (params?: OrderFilters) => {
-    const response = await apiClient.get<PageResponse<OrderListResponse>>('/admin/orders', { params });
+    const response = await apiClient.get<PageResponse<OrderListResponse>>(
+      "/admin/orders",
+      { params },
+    );
     return response.data;
   },
 
   // Get orders by status
   getOrdersByStatus: async (status: string, params?: OrderFilters) => {
-    const response = await apiClient.get<PageResponse<OrderListResponse>>(`/admin/orders/status/${status}`, { params });
+    const response = await apiClient.get<PageResponse<OrderListResponse>>(
+      `/admin/orders/status/${status}`,
+      { params },
+    );
     return response.data;
   },
 
   // Search orders
   searchOrders: async (query: string, params?: OrderFilters) => {
-    const response = await apiClient.get<PageResponse<OrderListResponse>>('/admin/orders/search', {
-      params: { q: query, ...params }
-    });
+    const response = await apiClient.get<PageResponse<OrderListResponse>>(
+      "/admin/orders/search",
+      {
+        params: { q: query, ...params },
+      },
+    );
     return response.data;
   },
 
@@ -30,15 +44,15 @@ export const adminOrderApi = {
 
   // Update order status
   updateOrderStatus: async (id: number, status: string) => {
-    const response = await apiClient.patch<Order>(`/admin/orders/${id}/status`, { status });
+    const response = await apiClient.patch<Order>(
+      `/admin/orders/${id}/status`,
+      { status },
+    );
     return response.data;
   },
 
   // Delete order
   deleteOrder: async (id: number) => {
     await apiClient.delete(`/admin/orders/${id}`);
-  }
-
-
-
-}
+  },
+};

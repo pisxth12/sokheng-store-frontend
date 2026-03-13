@@ -1,7 +1,7 @@
 import {
   NotificationResponse,
   UnreadNotificationCount,
-} from "@/types/notification.type";
+} from "@/types/admin/notification.type";
 import apiClient from "../open/client";
 
 export const adminNotificationApi = {
@@ -21,7 +21,7 @@ export const adminNotificationApi = {
     return res.data;
   },
 
- // Mark as read
+  // Mark as read
   markAsRead: async (id: number) => {
     await apiClient.patch(`/admin/notifications/${id}/read`);
   },

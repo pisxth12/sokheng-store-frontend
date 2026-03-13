@@ -118,10 +118,10 @@ export const StatsCards = ({ data }: Props) => {
   return (
     <>
       {/* Header with total summary */}
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <h2 className="text-lg font-semibold text-gray-900">Overview</h2>
         <p className="text-sm text-gray-500">Your store performance at a glance</p>
-      </div>
+      </div> */}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         {stats.map(({ key, label, icon: Icon, gradient, lightBg, textColor, format, change, trend }) => {
@@ -133,7 +133,7 @@ export const StatsCards = ({ data }: Props) => {
               className="group relative bg-white  shadow-lg rounded-2xl border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
             >
               {/* Gradient overlay on hover */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-300`} />
+              <div className={`absolute inset-0 bg-linear-to-br ${gradient} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-300`} />
               
               <div className="relative p-5">
                 {/* Header with icon and menu */}
@@ -162,7 +162,7 @@ export const StatsCards = ({ data }: Props) => {
                 {/* Progress bar (with null check) */}
                 <div className="mt-3 h-1 bg-gray-100 rounded-full overflow-hidden">
                   <div 
-                    className={`h-full bg-gradient-to-r ${gradient} rounded-full transition-all duration-500`}
+                    className={`h-full bg-linear-to-r ${gradient} rounded-full transition-all duration-500`}
                     style={{ 
                       width: `${Math.min(100, ((value ?? 0) / 1000) * 100)}%`,
                       opacity: 0.7
@@ -177,7 +177,7 @@ export const StatsCards = ({ data }: Props) => {
 
       {/* Quick insights footer (with null checks) */}
       <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-xl">
+        <div className="bg-linear-to-br from-blue-50 to-indigo-50 p-4 rounded-xl">
           <p className="text-sm text-blue-600 font-medium mb-1">Total Revenue</p>
           <p className="text-xl font-bold text-gray-900">
             ${(data.totalRevenue ?? 0).toLocaleString()}
@@ -188,7 +188,7 @@ export const StatsCards = ({ data }: Props) => {
           </div>
         </div>
         
-        <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-xl">
+        <div className="bg-linear-to-br from-purple-50 to-pink-50 p-4 rounded-xl">
           <p className="text-sm text-purple-600 font-medium mb-1">Average Order Value</p>
           <p className="text-xl font-bold text-gray-900">
             ${(((data.totalRevenue ?? 0) / (data.totalOrders ?? 1))).toFixed(2)}
@@ -199,7 +199,7 @@ export const StatsCards = ({ data }: Props) => {
           </div>
         </div>
         
-        <div className="bg-gradient-to-br from-orange-50 to-amber-50 p-4 rounded-xl">
+        <div className="bg-linear-to-br from-orange-50 to-amber-50 p-4 rounded-xl">
           <p className="text-sm text-orange-600 font-medium mb-1">Conversion Rate</p>
           <p className="text-xl font-bold text-gray-900">3.2%</p>
           <div className="flex items-center gap-2 mt-2">

@@ -1,5 +1,5 @@
 import { adminBannerApi } from "@/lib/api/admin/banners";
-import { Banner } from "@/types/banner.type";
+import { Banner } from "@/types/admin/banner.type";
 import { useEffect, useState } from "react";
 
 export const useBanners = () => {
@@ -33,13 +33,13 @@ export const useBanners = () => {
     setSuccess(false);
     try {
       await adminBannerApi.create(data);
-       await fetchBanners();
+      await fetchBanners();
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
       const errorMessage =
         err?.response?.data?.message ||
-         err.response?.data ||
+        err.response?.data ||
         "Failed to create banner";
       setError(errorMessage);
       console.error("Create error:", err);
@@ -58,7 +58,6 @@ export const useBanners = () => {
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
-    
       console.error("Update error:", err);
     } finally {
       setSaving(false);
@@ -71,7 +70,7 @@ export const useBanners = () => {
     setSuccess(false);
     try {
       await adminBannerApi.delete(id);
-       await fetchBanners();
+      await fetchBanners();
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {

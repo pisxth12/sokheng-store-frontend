@@ -1,5 +1,5 @@
 import { adminProductApi } from "@/lib/api/admin/product";
-import { Product } from "@/types/product.type";
+import { Product } from "@/types/admin/product.type";
 import { useCallback, useEffect, useState } from "react";
 import { adminProductImage } from "./useProductImage";
 
@@ -21,11 +21,12 @@ export const useProducts = () => {
   const [isSearching, setIsSearching] = useState(false);
 
   const fetchProducts = useCallback(
-    async (page = currentPage) => {
+    async (page: number) => {
       setLoading(true);
       setError(null);
       try {
         const response = await adminProductApi.getAll(page, pageSize);
+        console.log('API Response:', response);
         setProducts(response.content || []);
         setTotalPages(response.totalPages || 0);
         setTotalElements(response.totalElements || 0);
@@ -41,7 +42,7 @@ export const useProducts = () => {
         setLoading(false);
       }
     },
-    [currentPage, pageSize],
+    [ pageSize],
   );
 
   const searchProducts = useCallback(
@@ -144,30 +145,29 @@ export const useProducts = () => {
     [isSearching, searchQuery, currentPage, searchProducts, fetchProducts],
   );
 
-  const clearDicountPrice = useCallback( async(productId: number) => {
-      setError(null);
-      setLoading(true);
-      try{
-          await adminProductApi.clearDiscount(productId);
-          if (isSearching && searchQuery) {
-          await searchProducts(searchQuery, currentPage);
-        } else {
-          await fetchProducts(currentPage);
-        }
-      }catch(err: any){
-        setError(err?.response?.data?.message || "Failed to delete product");
-      }finally{
-        setLoading(false);
+  const clearDicountPrice = useCallback(async (productId: number) => {
+    setError(null);
+    setLoading(true);
+    try {
+      await adminProductApi.clearDiscount(productId);
+      if (isSearching && searchQuery) {
+        await searchProducts(searchQuery, currentPage);
+      } else {
+        await fetchProducts(currentPage);
       }
-
-  },[])
+    } catch (err: any) {
+      setError(err?.response?.data?.message || "Failed to delete product");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   const toggleStatus = useCallback(
     async (id: number) => {
       setSaving(true);
       setError(null);
       try {
-        await adminProductApi.toggleStatus(id); 
+        await adminProductApi.toggleStatus(id);
         if (isSearching && searchQuery) {
           await searchProducts(searchQuery, currentPage);
         } else {
@@ -277,7 +277,9 @@ export const useProducts = () => {
           await fetchProducts(currentPage); // ✅ Added await
         }
       } catch (err: any) {
-        setError(err?.response?.data?.message || "Failed to update image alt text");
+        setError(
+          err?.response?.data?.message || "Failed to update image alt text",
+        );
       } finally {
         setSaving(false);
       }
@@ -312,8 +314,14 @@ export const useProducts = () => {
     fetchProducts(0);
   }, [fetchProducts]);
 
-  const nextPage = useCallback(() => goToPage(currentPage + 1), [goToPage, currentPage]);
-  const prevPage = useCallback(() => goToPage(currentPage - 1), [goToPage, currentPage]);
+  const nextPage = useCallback(
+    () => goToPage(currentPage + 1),
+    [goToPage, currentPage],
+  );
+  const prevPage = useCallback(
+    () => goToPage(currentPage - 1),
+    [goToPage, currentPage],
+  );
 
   const refresh = useCallback(() => {
     if (isSearching && searchQuery) {

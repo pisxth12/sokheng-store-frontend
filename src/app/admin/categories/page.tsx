@@ -2,16 +2,16 @@
 
 import React, { useState, useCallback, useEffect } from "react";
 import { useCategory } from "@/hooks/admin/useCategory";
-import { Category } from "@/types/category.type";
+import { Category } from "@/types/admin/category.type";
 import CategoryForm from "@/components/admin/categories/CategoryForm";
 import CategoryCard from "@/components/admin/categories/CategoryCard";
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  Search, 
-  X, 
+import {
+  ChevronLeft,
+  ChevronRight,
+  Search,
+  X,
   Plus,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
 import AdminLoadingSpinner from "@/components/ui/AdminLoadingSpinner";
 
@@ -41,7 +41,9 @@ export default function CategoriesPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [searchInput, setSearchInput] = useState("");
-  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(
+    null,
+  );
 
   // Handlers
   const handleAdd = useCallback(() => {
@@ -68,12 +70,12 @@ export default function CategoriesPage() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchInput(value);
-    
+
     // Debounce search to avoid too many requests
     if (searchTimeout) {
       clearTimeout(searchTimeout);
     }
-    
+
     const timeout = setTimeout(() => {
       if (value.trim()) {
         searchCategories(value, 0);
@@ -81,7 +83,7 @@ export default function CategoriesPage() {
         resetSearch();
       }
     }, 500);
-    
+
     setSearchTimeout(timeout);
   };
 
@@ -129,9 +131,8 @@ export default function CategoriesPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">Categories</h1>
-         
         </div>
-        
+
         <button
           onClick={handleAdd}
           className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-all duration-200 active:scale-95"
@@ -143,7 +144,6 @@ export default function CategoriesPage() {
 
       {/* Search Bar */}
       <div className="mb-6">
-        
         <div className="relative max-w-md">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input
@@ -158,7 +158,7 @@ export default function CategoriesPage() {
               onClick={handleClearSearch}
               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
             >
-              <X className="w-4 h-4" /> 
+              <X className="w-4 h-4" />
             </button>
           )}
         </div>
@@ -166,8 +166,9 @@ export default function CategoriesPage() {
         {/* Search Results Info */}
         {searchInput && (
           <p className="text-sm text-gray-600 mt-2">
-            Found {categories.length} {categories.length === 1 ? 'category' : 'categories'} 
-            {isSearching && ' (searching...)'}
+            Found {categories.length}{" "}
+            {categories.length === 1 ? "category" : "categories"}
+            {isSearching && " (searching...)"}
           </p>
         )}
       </div>
@@ -175,7 +176,7 @@ export default function CategoriesPage() {
       {/* Error Alert */}
       {error && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
           <div className="flex-1">
             <p className="text-sm font-medium text-red-800">Error</p>
             <p className="text-sm text-red-700 mt-0.5">{error}</p>
@@ -194,7 +195,9 @@ export default function CategoriesPage() {
         <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
           {searchInput ? (
             <div>
-              <p className="text-gray-600">No categories found for "{searchInput}"</p>
+              <p className="text-gray-600">
+                No categories found for "{searchInput}"
+              </p>
               <button
                 onClick={handleClearSearch}
                 className="mt-2 text-sm text-gray-900 underline hover:no-underline"
@@ -238,7 +241,7 @@ export default function CategoriesPage() {
           <p className="text-sm text-gray-500 order-2 sm:order-1">
             Page {currentPage + 1} of {totalPages}
           </p>
-          
+
           <div className="flex items-center justify-center gap-2 order-1 sm:order-2">
             <button
               onClick={prevPage}
@@ -263,10 +266,11 @@ export default function CategoriesPage() {
                       key={i}
                       onClick={() => goToPage(i)}
                       className={`
-                        min-w-[36px] h-9 text-sm rounded-lg transition-all
-                        ${currentPage === i
-                          ? 'bg-gray-900 text-white font-medium'
-                          : 'border border-gray-200 hover:bg-gray-50 text-gray-700'
+                        min-w-9 h-9 text-sm rounded-lg transition-all
+                        ${
+                          currentPage === i
+                            ? "bg-gray-900 text-white font-medium"
+                            : "border border-gray-200 hover:bg-gray-50 text-gray-700"
                         }
                       `}
                     >
@@ -274,16 +278,19 @@ export default function CategoriesPage() {
                     </button>
                   );
                 }
-                
+
                 // Show ellipsis
                 if (i === currentPage - 2 || i === currentPage + 2) {
                   return (
-                    <span key={i} className="w-9 h-9 flex items-center justify-center text-gray-400">
+                    <span
+                      key={i}
+                      className="w-9 h-9 flex items-center justify-center text-gray-400"
+                    >
                       ...
                     </span>
                   );
                 }
-                
+
                 return null;
               })}
             </div>
@@ -301,7 +308,7 @@ export default function CategoriesPage() {
           {/* Page Size Selector */}
           <div className="flex items-center gap-2 order-3">
             <span className="text-sm text-gray-500">Show:</span>
-            <select 
+            <select
               className="text-sm border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-gray-900"
               value={pageSize}
               // onChange={(e) => handlePageSizeChange(Number(e.target.value))}

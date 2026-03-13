@@ -4,9 +4,11 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Key, Lock, Eye, EyeOff, ArrowLeft, Shield, Mail } from "lucide-react";
 import { authApi } from "@/lib/api/open/auth";
+import { useTranslations } from "next-intl";
 
 
 export default function VerifyResetCodePage() {
+    const t = useTranslations('Auth');
     const [code, setCode] = useState(["", "", "", "", "", ""]);
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -145,20 +147,20 @@ export default function VerifyResetCodePage() {
                         className="flex items-center gap-1 text-[9px] text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 uppercase tracking-wider mb-4"
                     >
                         <ArrowLeft className="w-3 h-3" />
-                        Back
+                        {t('verifyCode.back')}
                     </button>
 
                     <div className="text-center mb-4">
                         <h1 className="text-base font-medium tracking-wider text-gray-900 dark:text-white">
-                            VERIFY CODE
+                              {t('verifyCode.title')}
                         </h1>
                         <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">
-                            Enter the 6-digit code
+                             {t('verifyCode.subtitle')}
                         </p>
                     </div>
 
                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-4 text-center">
-                        We sent a code to:<br />
+                         {t('verifyCode.description')}<br />
                         <span className="font-medium text-gray-900 dark:text-white">{email}</span>
                     </p>
 
@@ -171,7 +173,7 @@ export default function VerifyResetCodePage() {
                     <form onSubmit={handleCodeSubmit} className="space-y-4">
                         <div>
                             <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
-                                Verification Code
+                                {t('verifyCode.label')}
                             </label>
                             <div className="flex gap-1 justify-between">
                                 {code.map((digit, index) => (
@@ -196,7 +198,7 @@ export default function VerifyResetCodePage() {
                             disabled={loading}
                             className="w-full py-2 px-3 bg-gray-900 hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 dark:text-gray-900 text-white text-xs font-medium disabled:opacity-50"
                         >
-                            {loading ? "VERIFYING..." : "VERIFY CODE"}
+                           {loading ? t('verifyCode.verifying') : t('verifyCode.button')}
                         </button>
                     </form>
 
@@ -206,8 +208,8 @@ export default function VerifyResetCodePage() {
                             disabled={resendLoading || countdown > 0}
                             className="text-[9px] text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 uppercase tracking-wider disabled:opacity-50"
                         >
-                            {resendLoading ? "SENDING..." : 
-                             countdown > 0 ? `RESEND IN ${countdown}S` : "RESEND CODE"}
+                             {resendLoading ? t('verifyCode.sending') : 
+                             countdown > 0 ? t('verifyCode.resendIn', { countdown }) : t('verifyCode.resend')}
                         </button>
                     </div>
                 </div>
@@ -219,15 +221,15 @@ export default function VerifyResetCodePage() {
                         className="flex items-center gap-1 text-[9px] text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 uppercase tracking-wider mb-4"
                     >
                         <ArrowLeft className="w-3 h-3" />
-                        Back
+                         {t('newPassword.back')}
                     </button>
 
                     <div className="text-center mb-4">
                         <h1 className="text-base font-medium tracking-wider text-gray-900 dark:text-white">
-                            NEW PASSWORD
+                            {t('newPassword.title')}
                         </h1>
                         <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1 uppercase tracking-wider">
-                            Choose a strong password
+                            {t('newPassword.subtitle')}
                         </p>
                     </div>
 
@@ -240,7 +242,7 @@ export default function VerifyResetCodePage() {
                     <form onSubmit={handlePasswordSubmit} className="space-y-3">
                         <div>
                             <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
-                                New Password
+                                {t('newPassword.newPassword.label')}
                             </label>
                             <div className="relative">
                                 <Lock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
@@ -249,7 +251,7 @@ export default function VerifyResetCodePage() {
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
                                     className="w-full pl-7 pr-8 py-2 text-xs bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-gray-700 focus:border-gray-400 dark:focus:border-gray-500 outline-none text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-                                    placeholder="Minimum 6 characters"
+                                   placeholder={t('newPassword.newPassword.placeholder')}
                                     required
                                     disabled={loading}
                                 />
@@ -269,7 +271,7 @@ export default function VerifyResetCodePage() {
 
                         <div>
                             <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
-                                Confirm Password
+                                  {t('newPassword.confirmPassword.label')}
                             </label>
                             <div className="relative">
                                 <Lock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
@@ -278,7 +280,7 @@ export default function VerifyResetCodePage() {
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     className="w-full pl-7 pr-8 py-2 text-xs bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-gray-700 focus:border-gray-400 dark:focus:border-gray-500 outline-none text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-                                    placeholder="Re-enter password"
+                                       placeholder={t('newPassword.confirmPassword.placeholder')}
                                     required
                                     disabled={loading}
                                 />
@@ -298,7 +300,7 @@ export default function VerifyResetCodePage() {
 
                         {newPassword && newPassword.length < 6 && (
                             <p className="text-[9px] text-red-500 dark:text-red-400">
-                                Password must be at least 6 characters
+                                 {t('newPassword.validation.minLength')}
                             </p>
                         )}
 
@@ -307,7 +309,7 @@ export default function VerifyResetCodePage() {
                             disabled={loading}
                             className="w-full py-2 px-3 bg-gray-900 hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 dark:text-gray-900 text-white text-xs font-medium disabled:opacity-50 mt-2"
                         >
-                            {loading ? "RESETTING..." : "RESET PASSWORD"}
+                              {loading ? t('newPassword.resetting') : t('newPassword.button')}
                         </button>
                     </form>
                 </div>

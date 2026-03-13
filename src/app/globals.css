@@ -1,19 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
+/* Set DM Sans as the default font for everything */
+* {
+  font-family: 'DM Sans', sans-serif !important;
+}
+
+/* Then use DM Mono for numbers/monospace text */
+.mono {
+  font-family: 'DM Mono', monospace !important;
+}
 /* src/app/globals.css */
 @import "tailwindcss";
 
 /* Enable dark mode with class strategy */
 @variant dark (&:where(.dark, .dark *));
 
-@theme{
-  --color-darkbg: #333333;
-
-  /* sidebar */
-  --color-sidebar: rgb(24, 67, 99);
-  --color-sidebar-hover: #1B4A70;
-  --color-sidebar-active: #1E537D;
-  
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  @apply antialiased;
 }
 
+@utility max-w-primary {
+  max-width: 1450px;
+  margin: 0 auto;
+}
+@utility p-primary {
+  padding: 100px;
+}
+
+@theme {
+  --color-darkbg: #333333;
+}
 /* Your custom theme classes */
 :root {
   --background: #f2f3f5;
@@ -21,14 +38,66 @@
 }
 
 .dark {
-  --background: #333333;
+  --background: #1a1a1a;
   --foreground: #f2f3f5;
 }
 
+/* Header Sidebar SearchDrop */
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
 
+@keyframes slideLeft {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
 
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: 'Inter', sans-serif !important;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.3s ease-out;
+}
+
+.animate-slideLeft {
+  animation: slideLeft 0.3s ease-out;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* ======== hide scroll bar ====== */
+html {
+  scroll-behavior: smooth;
+}
+/* globals.css */ 
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.snap-x {
+  scroll-snap-type: x mandatory;
+}
+.snap-start {
+  scroll-snap-align: start;
 }
