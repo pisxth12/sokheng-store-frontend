@@ -1,4 +1,4 @@
-import { PageResponse, Product } from "@/types/open/product.type";
+import { PageResponse, Product, ProductSuggestion } from "@/types/open/product.type";
 import apiClient from "./client";
 
 export const publicProductApi = {
@@ -13,15 +13,21 @@ export const publicProductApi = {
   },
 
   // Get by category
-  getProductsByCategory: async (categoryId: number, page: number, size: number) => {
-    const res = await apiClient.get<PageResponse<Product>>( `/categories/${categoryId}/products?page=${page}&size=${size}`);
+  getProductsByCategory: async (
+    categorySlug: string, 
+    page: number = 0, 
+    size: number = 32
+  )  => {
+    const res = await apiClient.get<PageResponse<Product>>( `/categories/${categorySlug}/products?page=${page}&size=${size}`);
     return res.data;
   },
 
   //Get featured
-   getFeatured: async () => {
-    const res = await apiClient.get<Product[]>("/products/featured");
-    return res.data; // Returns array, not PageResponse
+   getFeatured: async (options?: { signal?: AbortSignal }) => {
+    const res = await apiClient.get<Product[]>("/products/featured",{
+      signal: options?.signal
+    });
+    return res.data;
   },
 
 
@@ -56,7 +62,14 @@ export const publicProductApi = {
     return res.data;
   },
 
-
+   getSuggestions: async (query: string): Promise<ProductSuggestion[]> => {
+        if (!query || query.length < 2) return [];
+        
+        const res = await apiClient.get<ProductSuggestion[]>(
+            `/products/suggestions?q=${encodeURIComponent(query)}`
+        );
+        return res.data;
+    },
 
    // Single product - no pagination
   getProductBySlug: async (slug: string) => {

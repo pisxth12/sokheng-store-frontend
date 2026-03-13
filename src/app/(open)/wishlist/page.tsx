@@ -4,7 +4,7 @@ import EmptyWishlist from '@/components/open/wishlists/EmptyWishlist';
 import { useWishlist } from '@/hooks/open/useWishlist';
 import Error from '@/components/ui/Error';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
-import { ShoppingCart, Trash2, Heart } from 'lucide-react';
+import { ShoppingCart, Trash2, Heart, Minus } from 'lucide-react';
 import Link from 'next/link';
 import { useCart } from '@/hooks/open/useCart';
 import toast from 'react-hot-toast';
@@ -80,13 +80,13 @@ const WishlistPage = () => {
                                 {/* Discount Badge */}
                                 {item.isOnSale || item.discountPercent  && (
                                     <div className="absolute top-3 right-3 bg-red-500 text-white px-2 py-1  text-sm font-semibold">
-                                        -{item.discountPercent}% 
+                                      {item.discountPercent}% 
                                     </div>
                                 )}
                             </Link>
                             {item.isOnSale && item.salePrice && (
                                     <span className='absolute top-3 right-3 z-10 bg-red-500 px-3'>
-                                        {item.discountPercent}%
+                                     -{item.discountPercent}%
                                     </span>
                                 )}
 

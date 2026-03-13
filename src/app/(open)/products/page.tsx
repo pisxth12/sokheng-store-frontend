@@ -2,6 +2,7 @@
 "use client"
 import { ProductGrid } from "@/components/open/products/ProductGrid";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { ScrollToTop } from "@/components/ui/ScrollToTop";
 import { useProducts } from "@/hooks/open/useProducts";
 import { publicProductApi } from "@/lib/api/open/products";
 import { useCallback, useEffect, useRef } from "react";
@@ -115,6 +116,7 @@ export default function ProductsPage() {
           <p className="text-gray-500">No products found</p>
         </div>
       )}
+      <ScrollToTop />
     </div>
   );
 }

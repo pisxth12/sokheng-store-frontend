@@ -161,7 +161,6 @@ const isCompleted = order?.status === 'COMPLETED' || paymentCompleted;
 
     if (error || !order) return (
         <div className="min-h-screen bg-[#080808] text-white flex items-center justify-center">
-            <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap'); *{font-family:'DM Sans',sans-serif}`}</style>
             <div className="text-center space-y-4">
                 <p className="text-white/40 text-sm">Order not found</p>
                 <button onClick={() => router.push('/')} className="text-sm border border-white/10 px-5 py-2.5 rounded-xl hover:bg-white/5 transition-colors">
@@ -175,22 +174,14 @@ const isCompleted = order?.status === 'COMPLETED' || paymentCompleted;
 
     return (
         <div className="min-h-screen bg-[#080808] text-white">
-            <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
-                * { font-family: 'DM Sans', sans-serif; }
-                .mono { font-family: 'DM Mono', monospace; }
-                .item-row { transition: background 0.15s; }
-                .item-row:hover { background: rgba(255,255,255,0.02); }
-                .pay-btn { transition: all 0.2s; }
-                .pay-btn:hover { background: #fff; color: #000; }
-            `}</style>
+          
 
-           <QRModal
+         <QRModal
     isOpen={showQRModal}
-    onClose={() => setShowQRModal(false)}
+    onClose={handleCloseQRModal}
     qrString={qrData?.qrString || ''}
     amount={qrData?.amount || 0}
-    orderNumber={orderNumber} // ← this is what drives the polling
+    orderNumber={orderNumber} 
 />
 
             {/* Top bar */}

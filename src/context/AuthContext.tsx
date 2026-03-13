@@ -137,7 +137,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       toast.success('Profile updated successfully');
      
   }catch(error:any){
-     toast.error(error.response?.data?.message || "Update profile failed");
+    toast.error("Please input valid data");
     throw new Error(error.response?.data?.message || "Update profile failed");
   }finally{
     setLoading(false);

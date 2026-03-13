@@ -59,3 +59,11 @@ export interface PageResponse<T> {
   numberOfElements: number;
   empty: boolean;
 }
+
+export interface ProductSuggestion {
+  id: number;
+  name: string;
+  slug: string;
+  mainImage: string;
+}
+

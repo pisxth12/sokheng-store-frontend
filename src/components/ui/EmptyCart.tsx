@@ -26,11 +26,11 @@ const EmptyCart = () => {
             </div>
 
             {/* Message */}
-            <h2 className="text-3xl font-bold text-gray-800 mb-3">
+            <h2 className="text-3xl font-bold  mb-3">
                 Your Cart is Empty
             </h2>
             
-            <p className="text-gray-500 text-lg mb-8 text-center max-w-md">
+            <p className="text-lg mb-8 text-center max-w-md">
                 Looks like you haven't added anything yet. 
                 Let's find something special for you!
             </p>
@@ -38,31 +38,16 @@ const EmptyCart = () => {
             {/* Shop Now Button */}
             <button
                 onClick={ ()=> router.push('/products')}
-                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 
-                         text-white text-lg font-semibold rounded-xl
-                         hover:from-blue-700 hover:to-blue-800 
+                className="px-8 py-4 bg-linear-to-r  
+                         text-white text-lg font-semibold 
+                         border-2
                          transform transition-all duration-300 
                          hover:scale-105 hover:shadow-xl
                          focus:outline-none focus:ring-4 focus:ring-blue-300"
             >
-                🛍️ Shop Now
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://bakong-deeplink.nbc.gov.kh/bakong/wAyhkAL4TBCf0eT1F" alt="Bakong QR"></img>
+                 Shop Now
             </button>
-
-            {/* Quick Links */}
-            <div className="mt-8 flex gap-6 text-sm text-gray-400">
-                <a href="/products" className="hover:text-blue-600 transition-colors">
-                    Browse Products
-                </a>
-                <span>•</span>
-                <a href="/collections" className="hover:text-blue-600 transition-colors">
-                    Collections
-                </a>
-                <span>•</span>
-                <a href="/deals" className="hover:text-blue-600 transition-colors">
-                    Special Deals
-                </a>
-            </div>
+            
         </div>
     );
 };

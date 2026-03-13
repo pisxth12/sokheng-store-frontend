@@ -18,8 +18,18 @@ const QRModal = ({ isOpen, onClose, qrString, amount, orderNumber }: QRModalProp
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   
+  const stopPolling = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
   useEffect(() => {
-    if (!isOpen || !orderNumber) return;
+    if (!isOpen || !orderNumber) {
+      stopPolling();
+      return;
+    };
 
     setStatus('PENDING');
 
@@ -38,14 +48,14 @@ const QRModal = ({ isOpen, onClose, qrString, amount, orderNumber }: QRModalProp
         }
 
         if (res.status === 'EXPIRED' || res.status === 'FAILED') {
-          clearInterval(intervalRef.current!);
+          stopPolling();
         }
       } catch (err) {
         console.error('Polling error:', err);
       }
     }, 3000);
 
-    return () => clearInterval(intervalRef.current!);
+    return () => stopPolling();
   }, [isOpen, orderNumber]);
 
   if (!isOpen) return null;
@@ -74,7 +84,10 @@ const QRModal = ({ isOpen, onClose, qrString, amount, orderNumber }: QRModalProp
       <div
         className="qr-backdrop fixed inset-0 z-50 flex items-end sm:items-center justify-center"
         style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)' }}
-        onClick={onClose}
+        onClick={() => {
+          stopPolling();
+          onClose();
+        }}
       >
         <div
           className="qr-modal qr-sheet w-full sm:max-w-sm bg-[#0e0e0e] border border-white/8 rounded-t-3xl sm:rounded-2xl p-6 mx-0 sm:mx-4"
@@ -90,7 +103,10 @@ const QRModal = ({ isOpen, onClose, qrString, amount, orderNumber }: QRModalProp
               
             </div>
             <button
-              onClick={onClose}
+              onClick={() => {
+                stopPolling();
+                onClose();
+              }}
               className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-colors"
             >
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -125,7 +141,12 @@ const QRModal = ({ isOpen, onClose, qrString, amount, orderNumber }: QRModalProp
           </div>
 
           <button
-            onClick={onClose}
+            onClick={() => {
+    console.log('🔴 Cancel clicked - stopping polling');  // ← បន្ថែម log
+    stopPolling();
+    console.log('🟢 Polling stopped, calling onClose');
+    onClose();
+  }}
             disabled={status === 'PAID'}
             className="w-full py-3.5 rounded-xl border border-white/10 text-white/60 text-sm font-medium hover:bg-white/5 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >

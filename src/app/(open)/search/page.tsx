@@ -9,6 +9,7 @@ import Link from "next/link";
 import FilterModal from "../../../components/open/searchs/FilterModal";
 import ProductCardSkeletonGrid from "@/components/open/loadings/ProductCardSkeletonGrid";
 import { useTranslations } from "next-intl";
+import { ScrollToTop } from "@/components/ui/ScrollToTop";
 
 export default function SearchPage() {
   const t = useTranslations('SearchPage'); 
@@ -161,7 +162,7 @@ export default function SearchPage() {
       <div className="min-h-screen ">
         {/* Search Header */}
         <div
-          className={` max-w-primary sticky top-0 z-10  transition-transform duration-300 ${
+          className={` max-w-primary px-4 shadow-md sticky dark:bg-darkbg bg-white top-15 z-10   transition-transform duration-300 ${
             showHeader ? "translate-y-0" : "-translate-y-full"
           }`}
         >
@@ -263,6 +264,7 @@ export default function SearchPage() {
           }}
         />
       )}
+      <ScrollToTop/>
     </>
   );
 }

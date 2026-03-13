@@ -16,10 +16,11 @@ const EditProfileModal = ({ isOpen, onClose, onSave }: EditProfileModalProps) =>
   const t = useTranslations('EditProfile'); 
   const { user } = useAuth();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<UpdateProfileRequest>({
     name: user?.name || '',
     phone: user?.phone || '',
     address: user?.address || '',
+
   });
 
   const [loading, setLoading] = useState(false);

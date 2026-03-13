@@ -119,17 +119,16 @@ export const CartSideBar = ({ isOpen, onClose }: Props) => {
                     ) : !cart?.items?.length ? (
                         /* Empty state */
                         <div className="flex flex-col items-center justify-center h-full text-center gap-4 py-16">
-                            <div className="cart-empty-float p-5 rounded-2xl bg-gray-100 dark:bg-zinc-900">
+                            {/* <div className="cart-empty-float p-5 rounded-2xl bg-gray-100 dark:bg-zinc-900">
                                 <ShoppingBag className="w-10 h-10 text-gray-400 dark:text-zinc-600" />
-                            </div>
+                            </div> */}
                             <div>
                                 <p className="font-semibold text-gray-800 dark:text-gray-200 text-lg">{t('nothingHere')}</p>
-                                <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">{t('addItemsToStart')}</p>
                             </div>
                             <button
                                 onClick={handleMove}
                                 
-                                className="mt-2 flex items-center gap-2 px-5 py-2.5 rounded-full border border-gray-900 dark:border-gray-300 text-gray-900 dark:text-gray-100 text-sm font-medium hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-gray-900 transition-all duration-200 active:scale-95"
+                                className="mt-2 flex items-center gap-2 px-5 py-2.5  border border-gray-900 dark:border-gray-300 text-gray-900 dark:text-gray-100 text-sm font-medium hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-gray-900 transition-all duration-200 active:scale-95"
                             >
                                 {t('browseProducts')} <ArrowRight className="w-3.5 h-3.5" />
                             </button>

@@ -2,21 +2,33 @@
 import { useAuth } from "@/hooks/open/useAuth";
 import { useCart } from "@/hooks/open/useCart";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { PaymentMethod } from "@/types/open/cart.type";
 import EmptyCart from "@/components/ui/EmptyCart";
 import Link from "next/link";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import EditProfileModal from "@/components/open/accounts/EditProfile";
+import { UpdateProfileRequest } from "@/types/open/auth.type";
+import { Edit } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function CheckoutPage() {
-    const { user, isAuthenticated } = useAuth();
+    const { user, isAuthenticated , updateProfile} = useAuth();
     const { cart, loading, checkout } = useCart();
     const router = useRouter();
     const [isProcessing, setIsProcessing] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  
+
+    const checkAuth = useCallback(() => {
+    if (!isAuthenticated) router.push('/checkout/guest');
+    }, [isAuthenticated, router]);
+    
 
     useEffect(() => {
-        if (!isAuthenticated) router.push('/checkout/guest');
-    }, [isAuthenticated, router]);
+        checkAuth();
+    }, [checkAuth]);
+
 
     const handlePlaceOrder = async () => {
         setIsProcessing(true);
@@ -38,6 +50,15 @@ export default function CheckoutPage() {
         }
     };
 
+    const handleSaveProfile = useCallback(async (data: UpdateProfileRequest) => {
+    try {
+        await updateProfile(data);
+        setIsEditModalOpen(false);
+    } catch (error) {
+        console.error(error);
+    }
+}, [updateProfile]);
+
   
 
     if (cart?.items.length === 0) return <EmptyCart />;
@@ -46,7 +67,8 @@ export default function CheckoutPage() {
     const subtotal = cart?.items?.reduce((sum, i) => sum + i.totalPrice, 0) || 0;
 
     return (
-        <div className="min-h-screen bg-[#080808] text-white">
+        <>
+            <div className="min-h-screen bg-[#080808] text-white">
            
 
             {/* Top bar */}
@@ -68,12 +90,15 @@ export default function CheckoutPage() {
 
                 {/* Delivery to */}
                 <div className="rounded-2xl border bg-white/2 p-5">
-                    <p className="text-[11px] mono  uppercase tracking-widest mb-3">Deliver to</p>
+                    <div className="flex justify-between">
+                        <p className="text-[11px] mono  uppercase tracking-widest mb-3">Deliver to</p>
+                        <Edit onClick={() => setIsEditModalOpen(true)} className="w-4 h-4 cursor-pointer hover:text-slate-400"/>
+                    </div>
                     <div className="flex items-start justify-between">
                         <div>
                             <p className="font-medium text-white">{user?.name || 'Customer'}</p>
-                            <p className="text-sm  mt-0.5">{user?.address || 'No address on file'}</p>
-                            <p className="text-sm ">{user?.phone || 'No phone'}</p>
+                            <p className={`text-sm  mt-0.5 ${!user?.address ? 'text-red-500 animate-pulse': ''}`}>{user?.address || 'No address on file'}</p>
+                            <p className={`text-sm ${!user?.phone ? 'text-red-500 animate-pulse': ''} `}>{user?.phone || 'No phone'}</p>
                         </div>
                         <span className="text-[11px] mono  border  rounded-full px-2.5 py-0.5">
                             {user?.email}
@@ -81,6 +106,7 @@ export default function CheckoutPage() {
                     </div>
                 </div>
 
+               
                 {/* Order items */}
                 <div className="rounded-2xl border bg-white/2 overflow-hidden">
                     <div className="px-5 pt-5 pb-3">
@@ -148,5 +174,11 @@ export default function CheckoutPage() {
 
             </div>
         </div>
+        <EditProfileModal
+            isOpen={isEditModalOpen}
+            onClose={() => setIsEditModalOpen(false)}
+            onSave={handleSaveProfile}
+        />
+        </>
     );
 }

@@ -39,7 +39,7 @@ export default function AccountPage() {
           setIsEditModalOpen(false);
         } catch (error) {
           toast.error('Failed to update profile');
-        console.error('Update failed:', error);
+          console.error('Update failed:', error);
         }
     }
 
