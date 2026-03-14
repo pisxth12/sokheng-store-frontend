@@ -7,6 +7,7 @@ import { X, Upload, Trash2, Star, Loader2 } from "lucide-react";
 import { useProducts } from "@/hooks/admin/useProduct";
 import { useCategory } from "@/hooks/admin/useCategory";
 import ProductImageGallery from "./ProductImageGallery";
+import { useBrand } from "@/hooks/admin/useBrand";
 
 interface ProductFormProps {
   product?: Product | null;
@@ -30,6 +31,7 @@ export default function ProductForm({
   } = useProducts();
 
   const { categories } = useCategory();
+  const { brands } = useBrand(); 
 
   // Form state
   const [name, setName] = useState(product?.name || "");
@@ -45,6 +47,8 @@ export default function ProductForm({
   const [slug, setSlug] = useState(product?.slug || "");
   const [isFeatured, setIsFeatured] = useState(product?.isFeatured || false);
   const [categoryId, setCategoryId] = useState(product?.categoryId || 0);
+  const [brandId, setBrandId] = useState(product?.brandId || 0);
+
 
   // Image state
   const [imageFiles, setImageFiles] = useState<File[]>([]);
@@ -76,6 +80,8 @@ export default function ProductForm({
       setSlug(product.slug || "");
       setIsFeatured(product.isFeatured || false);
       setCategoryId(product.categoryId || 0);
+      setBrandId(product.brandId || 0);
+
     } else {
       // Reset form for new product
       setName("");
@@ -87,6 +93,7 @@ export default function ProductForm({
       setSlug("");
       setIsFeatured(false);
       setCategoryId(0);
+      setBrandId(0);
       setImageFiles([]);
       setImagePreviews([]);
       setAltTexts([]);
@@ -173,6 +180,10 @@ export default function ProductForm({
       if (slug) formData.append("slug", slug);
       formData.append("isFeatured", isFeatured.toString());
       formData.append("categoryId", categoryId.toString());
+
+      if(brandId && brandId !== null){
+        formData.append("brandId", brandId.toString());
+      }
 
       if (product) {
         imageFiles.forEach((file) => formData.append("newImages", file));
@@ -334,6 +345,26 @@ export default function ProductForm({
                 ))}
               </select>
             </div>
+
+                
+             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Brand (Optional)
+              </label>
+              <select
+                value={brandId}
+                onChange={(e) => setBrandId(parseInt(e.target.value))}
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="0">No brand</option>
+                {brands.map((brand) => (
+                  <option key={brand.id} value={brand.id}>
+                    {brand.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
           </div>
 
           {/* Featured Checkbox */}

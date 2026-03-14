@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useState, useCallback, useEffect } from "react";
-import { useCategory } from "@/hooks/admin/useCategory";
-import { Category } from "@/types/admin/category.type";
-import CategoryForm from "@/components/admin/categories/CategoryForm";
-import CategoryCard from "@/components/admin/categories/CategoryCard";
+import { useBrand } from "@/hooks/admin/useBrand";
+import { Brand } from "@/types/admin/brand.type";
 import {
   ChevronLeft,
   ChevronRight,
@@ -14,77 +12,78 @@ import {
   AlertCircle,
 } from "lucide-react";
 import AdminLoadingSpinner from "@/components/ui/AdminLoadingSpinner";
+import BrandCard from "@/components/admin/brands/BrandCard";
+import BrandForm from "@/components/admin/brands/BrandForm";
+import { NoBrand } from "@/components/admin/brands/NoBrand";
 
-export default function CategoriesPage() {
+export default function BrandsPage() {
+  // ============= HOOKS =============
   const {
-    categories,
-    saving,
-    deleteCategory,
+    // Data
+    brands,
     loading,
+    saving,
     error,
-    toggleStatus,
-    createCategory,
-    updateCategory,
     clearError,
-    nextPage,
-    prevPage,
-    goToPage,
+    success,
+
+    // Pagination
     currentPage,
     totalPages,
+    totalElements,
+    goToPage,
+    nextPage,
+    prevPage,
+
+    // Search
+    searchBrands,
     resetSearch,
     isSearching,
-    searchCategories,
-  } = useCategory();
 
+    // Actions
+    createBrand,
+    updateBrand,
+    deleteBrand,
+    toggleStatus,
+    addCategories,
+    removeCategories,
+  } = useBrand();
+
+  // ============= LOCAL STATE =============
   const [showForm, setShowForm] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [editingBrand, setEditingBrand] = useState<Brand | null>(null);
   const [searchInput, setSearchInput] = useState("");
-  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(
-    null,
-  );
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
 
-  // Handlers
-  const handleAdd = useCallback(() => {
-    setEditingCategory(null);
-    setShowForm(true);
-    clearError();
-  }, [clearError]);
-
-  const handleEdit = useCallback(
-    (category: Category) => {
-      setEditingCategory(category);
-      setShowForm(true);
-      clearError();
-    },
-    [clearError],
-  );
-
-  const handleClose = useCallback(() => {
-    setShowForm(false);
-    setEditingCategory(null);
-    clearError();
-  }, [clearError]);
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // ============= SEARCH HANDLERS =============
+  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchInput(value);
 
-    // Debounce search to avoid too many requests
     if (searchTimeout) {
       clearTimeout(searchTimeout);
     }
 
     const timeout = setTimeout(() => {
       if (value.trim()) {
-        searchCategories(value, 0);
+        searchBrands(value, 0);
       } else {
         resetSearch();
       }
     }, 500);
 
     setSearchTimeout(timeout);
-  };
+  }, [searchBrands, resetSearch]);
 
+  const handleClearSearch = useCallback(() => {
+    setSearchInput("");
+    resetSearch();
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+  }, [resetSearch, searchTimeout]);
+
+  // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
       if (searchTimeout) {
@@ -93,42 +92,76 @@ export default function CategoriesPage() {
     };
   }, [searchTimeout]);
 
-  const handleClearSearch = useCallback(() => {
-    setSearchInput("");
-    resetSearch();
-  }, [resetSearch]);
+  // ============= FORM HANDLERS =============
+  const handleAdd = useCallback(() => {
+    setEditingBrand(null);
+    setShowForm(true);
+    clearError();
+  }, [clearError]);
 
-  const handleSubmit = useCallback(
-    async (formData: FormData) => {
-      try {
-        if (editingCategory) {
-          await updateCategory(editingCategory.id, formData);
-        } else {
-          await createCategory(formData);
-        }
-        handleClose();
-      } catch (err) {
-        console.log("Form submission failed, keeping form open");
+  const handleEdit = useCallback((brand: Brand) => {
+    setEditingBrand(brand);
+    setShowForm(true);
+    clearError();
+  }, [clearError]);
+
+  const handleClose = useCallback(() => {
+    setShowForm(false);
+    setEditingBrand(null);
+    clearError();
+  }, [clearError]);
+
+  const handleSubmit = useCallback(async (formData: FormData) => {
+    try {
+      if (editingBrand) {
+        await updateBrand(editingBrand.id, formData);
+      } else {
+        await createBrand(formData);
       }
-    },
-    [editingCategory, updateCategory, createCategory, handleClose],
-  );
+      handleClose();
+    } catch (err) {
+      console.log("Form submission failed, keeping form open");
+    }
+  }, [editingBrand, updateBrand, createBrand, handleClose]);
 
-  // Loading state
-  if (loading && categories.length === 0) {
+  // ============= CATEGORY HANDLERS =============
+  const handleAddCategories = useCallback(async (brandId: number, categoryIds: number[]) => {
+    try {
+      await addCategories(brandId, categoryIds);
+    } catch (err) {
+      console.error("Failed to add categories:", err);
+    }
+  }, [addCategories]);
+
+  const handleRemoveCategories = useCallback(async (brandId: number, categoryIds: number[]) => {
+    try {
+      await removeCategories(brandId, categoryIds);
+    } catch (err) {
+      console.error("Failed to remove categories:", err);
+    }
+  }, [removeCategories]);
+
+  // ============= LOADING STATE =============
+  if (loading && brands.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <AdminLoadingSpinner message="Loading categories..." />
+        <AdminLoadingSpinner message="Loading brands..." />
       </div>
     );
   }
 
+  // ============= RENDER =============
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Categories</h1>
+          <h1 className="text-2xl font-semibold text-gray-900">Brands</h1>
+          {totalElements > 0 && (
+            <p className="text-sm text-gray-500 mt-1">
+              Total {totalElements} {totalElements === 1 ? 'brand' : 'brands'}
+            </p>
+          )}
         </div>
 
         <button
@@ -136,7 +169,7 @@ export default function CategoriesPage() {
           className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-all duration-200 active:scale-95"
         >
           <Plus className="w-4 h-4" />
-          Add Category
+          Add Brand
         </button>
       </div>
 
@@ -149,7 +182,7 @@ export default function CategoriesPage() {
             value={searchInput}
             type="search"
             className="w-full pl-9 pr-10 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-            placeholder="Search categories by name..."
+            placeholder="Search brands by name..."
           />
           {searchInput && (
             <button
@@ -164,8 +197,7 @@ export default function CategoriesPage() {
         {/* Search Results Info */}
         {searchInput && (
           <p className="text-sm text-gray-600 mt-2">
-            Found {categories.length}{" "}
-            {categories.length === 1 ? "category" : "categories"}
+            Found {brands.length} {brands.length === 1 ? "brand" : "brands"}
             {isSearching && " (searching...)"}
           </p>
         )}
@@ -188,46 +220,36 @@ export default function CategoriesPage() {
         </div>
       )}
 
-      {/* Empty State */}
-      {categories.length === 0 && !loading && (
-        <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
-          {searchInput ? (
-            <div>
-              <p className="text-gray-600">
-                No categories found for "{searchInput}"
-              </p>
-              <button
-                onClick={handleClearSearch}
-                className="mt-2 text-sm text-gray-900 underline hover:no-underline"
-              >
-                Clear search
-              </button>
-            </div>
-          ) : (
-            <div>
-              <p className="text-gray-600">No categories yet</p>
-              <button
-                onClick={handleAdd}
-                className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm rounded-lg hover:bg-gray-800 transition-colors"
-              >
-                <Plus className="w-4 h-4" />
-                Create your first category
-              </button>
-            </div>
-          )}
+      {/* Success Alert */}
+      {success && (
+        <div className="mb-6 px-4 py-2 bg-green-50 border border-green-200 rounded-lg">
+          <p className="text-sm text-green-800">
+            Brand {editingBrand ? "updated" : "created"} successfully!
+          </p>
         </div>
       )}
 
-      {/* Categories Grid */}
-      {categories.length > 0 && (
+      {/* Empty State */}
+      {brands.length === 0 && !loading && (
+         <NoBrand
+                searchInput={searchInput}
+                handleClearSearch={handleClearSearch}
+                handleAdd={handleAdd}
+            />
+      )}
+
+      {/* Brands Grid */}
+      {brands.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {categories.map((category) => (
-            <CategoryCard
-              key={category.id}
-              category={category}
+          {brands.map((brand) => (
+            <BrandCard
+              key={brand.id}
+              brand={brand}
               onEdit={handleEdit}
-              onDelete={deleteCategory}
+              onDelete={deleteBrand}
               onToggle={toggleStatus}
+              onAddCategories={handleAddCategories} 
+              onRemoveCategories={handleRemoveCategories}  
             />
           ))}
         </div>
@@ -237,7 +259,7 @@ export default function CategoriesPage() {
       {totalPages > 1 && (
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-8 pt-6 border-t border-gray-200">
           <p className="text-sm text-gray-500 order-2 sm:order-1">
-            Page {currentPage + 1} of {totalPages}
+            Page {currentPage + 1} of {totalPages} • {totalElements} total
           </p>
 
           <div className="flex items-center justify-center gap-2 order-1 sm:order-2">
@@ -253,7 +275,6 @@ export default function CategoriesPage() {
             {/* Page Numbers */}
             <div className="flex gap-1">
               {[...Array(totalPages)].map((_, i) => {
-                // Show current page, first, last, and adjacent pages
                 if (
                   i === 0 ||
                   i === totalPages - 1 ||
@@ -277,7 +298,6 @@ export default function CategoriesPage() {
                   );
                 }
 
-                // Show ellipsis
                 if (i === currentPage - 2 || i === currentPage + 2) {
                   return (
                     <span
@@ -302,15 +322,13 @@ export default function CategoriesPage() {
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
-
-        
         </div>
       )}
 
       {/* Form Modal */}
       {showForm && (
-        <CategoryForm
-          category={editingCategory ?? undefined}
+        <BrandForm
+          brand={editingBrand ?? undefined}
           onClose={handleClose}
           onSubmit={handleSubmit}
           saving={saving}

@@ -18,7 +18,6 @@ export default function ProductsPage() {
   const {
     products,
     loading,
-    saving,
     error,
     success,
     currentPage,

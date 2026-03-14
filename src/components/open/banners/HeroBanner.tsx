@@ -172,7 +172,7 @@ export default function HeroBanner() {
                                 {banner.link && (
                                     <Link
                                         href={banner.link}
-                                        className="inline-block px-5 py-2 sm:px-7 sm:py-2.5 border-2 border-white text-white hover:text-black font-semibold roundedtext-black font-semibold rounded bg-transparent text-sm sm:text-base hover:bg-gray-100 active:scale-95 transition-all duration-150 shadow-lg"
+                                        className="inline-block px-5 py-2 sm:px-7 sm:py-2.5 border-2 border-white text-white  font-semibold roundedtext-black font-semibold rounded bg-transparent text-sm sm:text-base hover:-translate-y-1 active:scale-95 transition-all duration-150 shadow-lg"
                                         onClick={e => isDragging && e.preventDefault()}
                                     >
                                         Shop Now

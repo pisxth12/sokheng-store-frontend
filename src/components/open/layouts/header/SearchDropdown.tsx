@@ -2,7 +2,7 @@
 import useRecentSearch from "@/hooks/open/useRecentSearch";
 import { useSearchProducts } from "@/hooks/open/useSearchProducts";
 import { useSearchSuggestions } from "@/hooks/open/useSearchSuggestions";
-import { Search, X } from "lucide-react";
+import { History, Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -118,22 +118,23 @@ export default function SearchDropdown({ isOpen, onClose }: Props) {
                 </p>
                 <div className="space-y-2">
                   {recentSearches.map((term) => (
-                    <div key={term} className="flex justify-between items-center">
-                      <button
-                        onClick={() => handleSuggestionClick(term)}
-                        className="block dark:text-white w-full text-left px-3 py-2 text-gray-600 hover:bg-gray-100 dark:hover:bg-black/20 rounded-lg transition"
-                      >
-                        {term}
-                      </button>
-                      <button
-                        onClick={() => removeRecent(term)}
-                        aria-label={t('clear')} 
-                        className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 px-2"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))}
+                        <div key={term} className="flex items-center justify-between group hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors">
+                          <button
+                            onClick={() => handleSuggestionClick(term)}
+                            className="flex-1 flex items-center gap-3 px-3 py-2 text-left"
+                          >
+                            <History className="w-4 h-4 text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-300" />
+                            <span className="text-gray-700 dark:text-gray-300">{term}</span>
+                          </button>
+                          
+                          <button
+                            onClick={() => removeRecent(term)}
+                            className="opacity-0 group-hover:opacity-100 p-2 mr-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-all"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
                   <button
                     onClick={clearRecent}
                     className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 mt-2 hover:underline"

@@ -16,7 +16,6 @@ import {
   X,
 } from "lucide-react";
 import { useAuth } from "@/hooks/open/useAuth";
-import { useOrders } from "@/hooks/admin/useOrders";
 
 interface NavItem {
   name: string;
@@ -52,6 +51,11 @@ const navItems: NavItem[] = [
     href: "/admin/orders",
     icon: <ShoppingBag className="w-4 h-4" />,
     badge: "9+",
+  },
+  {
+    name: "Brands",
+    href: "/admin/brands",
+    icon: <Image className="w-4 h-4" />,
   },
   {
     name: "Categories",
@@ -103,7 +107,7 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
         }`}
       >
         <span
-          className={`flex items-center justify-center w-5 h-5 flex-shrink-0 ${active ? "text-white" : "text-gray-400"}`}
+          className={`flex items-center justify-center w-5 h-5 shrink-0 ${active ? "text-white" : "text-gray-400"}`}
         >
           {item.icon}
         </span>
@@ -118,7 +122,7 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
           </span>
         )}
         {active && (
-          <span className="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />
+          <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
         )}
       </Link>
     );
@@ -136,15 +140,15 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
 
       {/* Sidebar — UNCHANGED logic */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-screen bg-white flex flex-col border-r border-black/[0.07] shadow-[4px_0_32px_rgba(0,0,0,0.06)] transition-transform duration-300 ease-[cubic-bezier(.4,0,.2,1)] lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-screen bg-white flex flex-col border-r border-black/[0.07] shadow-[4px_0_32px_rgba(0,0,0,0.06)] transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         style={{ width: "260px" }}
       >
         {/* Logo */}
-        <div className="flex items-center justify-between px-4 py-5 border-b border-black/[0.06] flex-shrink-0">
+        <div className="flex items-center justify-between px-4 py-5 border-b border-black/6 shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-[9px] bg-gray-900 flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 rounded-[9px] bg-gray-900 flex items-center justify-center shrink-0">
               <ShoppingBag size={15} color="#fff" />
             </div>
             <span className="text-sm font-extrabold text-gray-900 tracking-tight">
@@ -174,28 +178,28 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
             <NavLink key={item.name} item={item} />
           ))}
 
-          <div className="h-px bg-black/[0.06] my-3 mx-1" />
+          <div className="h-px bg-black/6 my-3 mx-1" />
 
           <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-black/25 px-2.5 pt-2 pb-1.5">
             Catalog
           </p>
-          {navItems.slice(3, 7).map((item) => (
+          {navItems.slice(3, 8).map((item) => (
             <NavLink key={item.name} item={item} />
           ))}
 
-          <div className="h-px bg-black/[0.06] my-3 mx-1" />
+          <div className="h-px bg-black/6 my-3 mx-1" />
 
           <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-black/25 px-2.5 pt-2 pb-1.5">
             Account
           </p>
-          {navItems.slice(7).map((item) => (
+          {navItems.slice(8).map((item) => (
             <NavLink key={item.name} item={item} />
           ))}
         </nav>
 
         {/* User profile — UNCHANGED logic */}
-        <div className="flex-shrink-0 border-t border-black/[0.06] px-4 py-3.5 flex items-center gap-2.5 bg-white">
-          <div className="w-8 h-8 rounded-[9px] bg-gray-900 flex items-center justify-center text-white text-[13px] font-extrabold tracking-tight flex-shrink-0">
+        <div className="shrink-0 border-t border-black/6 px-4 py-3.5 flex items-center gap-2.5 bg-white">
+          <div className="w-8 h-8 rounded-[9px] bg-gray-900 flex items-center justify-center text-white text-[13px] font-extrabold tracking-tight shrink-0">
             {user?.name?.charAt(0)?.toUpperCase() || "A"}
           </div>
           <div className="flex-1 min-w-0">
@@ -203,7 +207,7 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
               {user?.name || "Admin User"}
             </p>
             <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0" />
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" />
               <span className="text-[10px] text-gray-400 font-medium">
                 Online
               </span>

@@ -45,6 +45,7 @@ export default function ProductCard({
     stock,
     isActive,
     isFeatured,
+    brandName,
     images,
     mainImage,
   } = product;
@@ -173,6 +174,8 @@ export default function ProductCard({
               </div>
             )}
 
+         
+
             {/* Image Count */}
             {images && images.length > 0 && (
               <div className="absolute bottom-2 right-2 px-2 py-1 bg-black/50 backdrop-blur-sm text-white text-xs rounded-lg">
@@ -189,16 +192,19 @@ export default function ProductCard({
             <h3 className="font-medium text-gray-900 text-sm line-clamp-2 flex-1">
               {name}
             </h3>
-            <div
-              className={`
-                            w-2 h-2 rounded-full flex-shrink-0 mt-1
-                            ${isActive ? "bg-green-500" : "bg-gray-400"}
-                        `}
-            />
+          
+         {
+          brandName && (
+            <span className="px-2 py-0.5 font-bold bg-gray-100 text-gray-600  text-xs rounded-full">
+              {brandName.length > 10 ? brandName.slice(0, 10) + "..." : brandName}
+            </span>
+          )
+         }
+          
           </div>
 
           {/* Price Section */}
-          <div className="mb-3">
+          <div className="mb-3 flex items-center justify-between">
             {originalPrice ? (
               <div className="flex items-baseline gap-2">
                 <span className="text-lg font-bold text-gray-900">
@@ -214,6 +220,12 @@ export default function ProductCard({
                 ${price.toFixed(2)}
               </span>
             )}
+            <div
+              className={`
+                            w-2 h-2 rounded-full flex-shrink-0 mt-1
+                            ${isActive ? "bg-green-500" : "bg-gray-400"}
+                        `}
+            />
           </div>
 
           {/* Stock Status */}

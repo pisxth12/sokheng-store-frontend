@@ -7,12 +7,14 @@ import { useSearch } from "@/hooks/admin/useSearch";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/open/useAuth";
 import NotificationBell from "../notifications/notificationBell";
+import PageSearch from "./searchPage";
 
 interface NavbarProps {
   toggleSidebar: () => void;
 }
 
 export default function Navbar({ toggleSidebar }: NavbarProps) {
+  
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [opeProfileDetail, setOpenProfileDetail] = useState(false);
   const { searchQuery, setSearchQuery } = useSearch();
@@ -29,7 +31,7 @@ export default function Navbar({ toggleSidebar }: NavbarProps) {
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (searchQuery.trim() !== "") {
-      router.push(`/admin/search?q=${searchQuery}`);
+      router.push(`/admin/${searchQuery}`);
     }
   };
 
@@ -50,14 +52,10 @@ export default function Navbar({ toggleSidebar }: NavbarProps) {
             {/* Desktop Search - visible on md and up */}
             <div className="hidden md:block flex-1 sm:w-[400px] max-w-md mx-auto">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-black w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Search products, categories, orders..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2  outline-0 dark:text-black  text-sm  transition-all"
-                />
+                <PageSearch 
+                      searchQuery={searchQuery}
+                      setSearchQuery={setSearchQuery}
+                    />
               </div>
             </div>
           </div>
@@ -87,7 +85,7 @@ export default function Navbar({ toggleSidebar }: NavbarProps) {
               onClick={() => setOpenProfileDetail(!opeProfileDetail)}
               className="flex items-center cursor-pointer gap-2 pl-2 pr-1 py-1 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-medium text-sm shadow-sm">
+              <div className="w-8 h-8 bg-linear-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-medium text-sm shadow-sm">
                 {user?.name?.charAt(0)?.toUpperCase() || "A"}
               </div>
               <ChevronDown className="w-4 h-4 text-gray-500 hidden sm:block" />
@@ -144,30 +142,16 @@ export default function Navbar({ toggleSidebar }: NavbarProps) {
 
           {/* Optional: Quick search suggestions */}
           <div className="mt-2 text-xs text-gray-400 flex gap-2">
-            <span>Recent:</span>
-            <button className="hover:text-gray-600">Products</button>
-            <button className="hover:text-gray-600">Users</button>
-            <button className="hover:text-gray-600">Orders</button>
+            <span>Quick:</span>
+            <button onClick={()=> router.push("/admin")} className="hover:text-gray-600">Dashboard</button>
+            <button onClick={()=> router.push("/admin/products")} className="hover:text-gray-600">Products</button>
+            <button onClick={()=> router.push("/admin/users")} className="hover:text-gray-600">Users</button>
+            <button onClick={()=> router.push("/admin/orders")} className="hover:text-gray-600">Orders</button>
           </div>
         </div>
       )}
 
-      {/* Add animation styles */}
-      <style jsx>{`
-        @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-slideDown {
-          animation: slideDown 0.2s ease-out;
-        }
-      `}</style>
+      
     </nav>
   );
 }

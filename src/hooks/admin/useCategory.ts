@@ -13,7 +13,7 @@ export const useCategory = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize] = useState(12);
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");

@@ -23,8 +23,13 @@ export interface Product{
     slug?: string;
     isActive: boolean;
     isFeatured: boolean;
+
     categoryId: number;
     categoryName?: string;
+
+    brandId?: number;  
+    brandName?: string;   
+
     images: ProductImage[];
     mainImage?: string;
     createdAt?: string;
@@ -32,7 +37,7 @@ export interface Product{
 }
 
 export interface ProdductCreateRequest {
-     name: string;
+    name: string;
     description?: string;
     price: number;
     salePrice?: number;
@@ -41,6 +46,7 @@ export interface ProdductCreateRequest {
     slug?: string;
     isFeatured: boolean;
     categoryId: number;
+    brandId?: number;
     images?: File[];
     altTexts?: string[];
 }
@@ -56,6 +62,7 @@ export interface ProductUpdateRequest {
     isFeatured?: boolean;
     isActive?: boolean;
     categoryId?: number;
+    brandId?: number;
     newImages?: File[];
     newAltTexts?: string[];
     deleteImageIds?: number[];

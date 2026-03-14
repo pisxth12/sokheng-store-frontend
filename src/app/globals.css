@@ -1,42 +1,10 @@
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
-                * { font-family: 'DM Sans', sans-serif; }
-                .mono { font-family: 'DM Mono', monospace; }
-                .item-row { transition: background 0.15s; }
-                .item-row:hover { background: rgba(255,255,255,0.02); }
-                .pay-btn { transition: all 0.2s; }
-                .pay-btn:hover { background: #fff; color: #000; }
-* {
-  font-family: 'DM Sans', sans-serif !important;
-}
-
-/* Then use DM Mono for numbers/monospace text */
-.mono {
-  font-family: 'DM Mono', monospace !important;
-}
 /* src/app/globals.css */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
-/* Enable dark mode with class strategy */
-@variant dark (&:where(.dark, .dark *));
-
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  @apply antialiased;
-}
-
-@utility max-w-primary {
-  max-width: 1450px;
-  margin: 0 auto;
-}
-@utility p-primary {
-  padding: 100px;
-}
-
-@theme {
-  --color-darkbg: #333333;
-}
-/* Your custom theme classes */
+/* ======================================
+   1. THEME & VARIABLES
+   ====================================== */
 :root {
   --background: #f2f3f5;
   --foreground: #333333;
@@ -47,8 +15,64 @@ body {
   --foreground: #f2f3f5;
 }
 
-/* Header Sidebar SearchDrop */
+@theme {
+  --color-darkbg: #333333;
+}
+
+/* Dark mode strategy */
+@variant dark (&:where(.dark, .dark *));
+
+/* ======================================
+   2. BASE STYLES
+   ====================================== */
+* {
+  font-family: 'DM Sans', sans-serif !important;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  @apply antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ======================================
+   3. TYPOGRAPHY UTILITIES
+   ====================================== */
+.mono {
+  font-family: 'DM Mono', monospace !important;
+}
+
+/* ======================================
+   4. CUSTOM UTILITIES
+   ====================================== */
+@utility max-w-primary {
+  max-width: 1450px;
+  margin: 0 auto;
+}
+
+@utility p-primary {
+  padding: 100px;
+}
+
+/* ======================================
+   5. ANIMATIONS
+   ====================================== */
 @keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDownFull {
   from {
     transform: translateY(-100%);
   }
@@ -66,6 +90,15 @@ body {
   }
 }
 
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -75,34 +108,63 @@ body {
   }
 }
 
+/* Animation Classes */
 .animate-slideDown {
-  animation: slideDown 0.3s ease-out;
+  animation: slideDown 0.2s ease-out;
+}
+
+.animate-slideDownFull {
+  animation: slideDownFull 0.3s ease-out;
 }
 
 .animate-slideLeft {
   animation: slideLeft 0.3s ease-out;
 }
 
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out;
+}
+
 .animate-fadeIn {
   animation: fadeIn 0.2s ease-out;
 }
 
-/* ======== hide scroll bar ====== */
-html {
-  scroll-behavior: smooth;
-}
-/* globals.css */ 
+/* ======================================
+   6. SCROLL UTILITIES
+   ====================================== */
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-.scrollbar-hide::-webkit-scrollbar {
+
+.scrollbar-hide::-webkit-webkitscrollbar {
   display: none;
 }
 
 .snap-x {
   scroll-snap-type: x mandatory;
 }
+
 .snap-start {
   scroll-snap-align: start;
+}
+
+/* ======================================
+   7. COMPONENT STYLES (Legacy - Consider moving to components)
+   ====================================== */
+.item-row {
+  transition: background 0.15s;
+}
+
+.item-row:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.pay-btn {
+  transition: all 0.2s;
+}
+
+.pay-btn:hover {
+  background: #fff;
+  color: #000;
 }
