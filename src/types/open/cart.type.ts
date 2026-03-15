@@ -1,7 +1,5 @@
 
 
-
-
 export interface CartItemResponse {
     id: number;
     productId: number;
@@ -25,6 +23,11 @@ export interface CartResponse {
     updatedAt: string;
 }
 
+export interface CartCountResponse {
+    totalItems: number;      
+    totalPrice?: number;      
+}
+
 export interface AddToCartRequest {
     productId: number;
     quantity: number;
@@ -34,14 +37,6 @@ export interface UpdateCartItemRequest{
     quantity:  number;
 }
 
-export enum PaymentMethod {
-    CASH = 'CASH',
-    ABA = 'ABA',
-    WING = 'WING',
-    ACLIDA = 'ACLIDA',
-    KHQR = 'KHQR',
-    CREDIT_CARD = 'CREDIT_CARD',
-}
 
 export interface CheckoutRequest{
     customerName: string;

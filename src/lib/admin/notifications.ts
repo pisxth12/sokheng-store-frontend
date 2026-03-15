@@ -2,7 +2,7 @@ import {
   NotificationResponse,
   UnreadNotificationCount,
 } from "@/types/admin/notification.type";
-import apiClient from "../open/client";
+import apiClient from "../api/client";
 
 export const adminNotificationApi = {
   //Get all notifications

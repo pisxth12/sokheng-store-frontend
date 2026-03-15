@@ -5,31 +5,45 @@ export interface Product{
     price: number;
     discountPercent: number;
     salePrice?: number;
-    saleEndDate?: string;
-    currentPrice: number;
     isOnSale: boolean;
     stock: number;
     soldCount: number;
-    sku: string;
     slug: string;
-    isActive: boolean;
-    isFeatured: boolean;
-    categoryId: number;
+    brandName: string;
     categoryName: string;
-    categorySlug: string;
     mainImage: string;
     images: ProductImage[];
-    createdAt: string;
-    updatedAt: string;
-
 }
+
+export interface ProductDetail extends Product {
+   description: string;          
+    categoryId: number;           
+    categorySlug: string;         
+    brandId?: number;             
+    brandSlug?: string;           
+    isFeatured: boolean;          
+    createdAt: string;            
+    images: ProductDetailImage[];
+}
+
 export interface ProductImage {
   id: number;
   imageUrl: string;
-  altText: string;
-  sortOrder: number;
   isMain: boolean;
 }
+
+export interface ProductDetailImage extends ProductImage{
+   altText?: string;
+}
+
+export interface ProductSuggestion {
+  id: number;
+  name: string;
+  slug: string;
+  price: number;
+  mainImage: string;
+}
+
 
 export interface PageResponse<T> {
   content: T[];
@@ -60,10 +74,4 @@ export interface PageResponse<T> {
   empty: boolean;
 }
 
-export interface ProductSuggestion {
-  id: number;
-  name: string;
-  slug: string;
-  mainImage: string;
-}
 

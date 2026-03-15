@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { authApi } from "@/lib/api/open/auth";
+import { authApi } from "@/lib/open/auth";
 import { AlertCircle, CheckCircle, Lock, X } from "lucide-react";
 
 interface ChangePasswordModalProps {
@@ -9,7 +9,10 @@ interface ChangePasswordModalProps {
   onClose: () => void;
 }
 
-export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProps) {
+export default function ChangePasswordModal({
+  isOpen,
+  onClose,
+}: ChangePasswordModalProps) {
   const [formData, setFormData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -27,7 +30,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (formData.newPassword !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;
@@ -35,7 +38,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
 
     setLoading(true);
     setError("");
-    
+
     try {
       await authApi.changePassword({
         currentPassword: formData.currentPassword,
@@ -46,7 +49,11 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
       setTimeout(() => {
         onClose();
         setSuccess(false);
-        setFormData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+        setFormData({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
       }, 1500);
     } catch (err) {
       setError("Failed to change password");
@@ -59,15 +66,16 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div 
+      <div
         className="fixed inset-0 bg-black/50 transition-opacity"
         onClick={onClose}
       />
       <div className="flex min-h-full items-center justify-center p-4">
         <div className="relative bg-white rounded-lg w-full max-w-md shadow-xl">
-          
           <div className="flex items-center justify-between p-5 border-b">
-            <h2 className="text-lg font-medium text-gray-900">Change Password</h2>
+            <h2 className="text-lg font-medium text-gray-900">
+              Change Password
+            </h2>
             <button
               onClick={onClose}
               className="p-1 hover:bg-gray-100 rounded-md transition-colors"
@@ -79,7 +87,9 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
           {success && (
             <div className="mx-5 mt-4 p-3 bg-green-50 border border-green-200 rounded-md flex items-center gap-2">
               <CheckCircle className="w-4 h-4 text-green-600" />
-              <p className="text-sm text-green-600">Password changed successfully</p>
+              <p className="text-sm text-green-600">
+                Password changed successfully
+              </p>
             </div>
           )}
 

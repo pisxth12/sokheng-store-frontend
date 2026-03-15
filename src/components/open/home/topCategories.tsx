@@ -2,12 +2,19 @@
 
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { useTopCategories } from '@/hooks/open/useTopCategories';
+import { TopCategory } from '@/types/open/category.type';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { memo, useMemo, useState } from 'react';
 
-export const TopCategories = memo(function TopCategories() {
-    const { categories, loading, error } = useTopCategories(8);
+
+
+interface TopCategoriesProps {
+  categories: TopCategory[]; // get from Server
+}
+
+
+export const TopCategories = memo(function TopCategories({ categories }: TopCategoriesProps) {
     const t = useTranslations('FeaturedPage');
 
   
@@ -15,24 +22,7 @@ export const TopCategories = memo(function TopCategories() {
         "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4", 
     []);
 
-    if (loading) {
-        return <LoadingSpinner message={t('loading')} />;
-    }
-    
 
-    if (error) {
-        return (
-            <div className="text-center py-10">
-                <p className="text-red-500 mb-4">{t('error')}</p>
-                <button 
-                    onClick={() => window.location.reload()}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                >
-                    Try Again
-                </button>
-            </div>
-        );
-    }
 
     // Empty state
     if (!categories.length) {

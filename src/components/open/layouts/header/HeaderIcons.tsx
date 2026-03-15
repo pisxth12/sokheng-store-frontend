@@ -8,15 +8,19 @@ import Link from "next/link";
 interface Props {
   onSearchClick: () => void;
   onCartClick: () => void;
+  initialCount: number;
 }
 
 export default function HeaderIcons({
   onSearchClick,
   onCartClick,
+  initialCount,
 }: Props) {
   const { itemCount } = useCart();
   const { isAuthenticated } = useAuth();
   const { count: itemCountInWishlist } = useWishlist();
+
+   const displayCount = itemCount || initialCount;
 
 
   return (
@@ -53,9 +57,9 @@ export default function HeaderIcons({
         aria-label="Cart"
       >
         <ShoppingCart className="w-5 h-5" />
-        {itemCount > 0 && (
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center ">
-            {itemCount > 99 ? "99+" : itemCount}
+         {displayCount > 0 && (
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+            {displayCount > 99 ? '99+' : displayCount}
           </span>
         )}
       </button>

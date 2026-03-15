@@ -4,7 +4,7 @@ import {
   OrderListResponse,
   PageResponse,
 } from "@/types/admin/order.type";
-import apiClient from "../open/client";
+import apiClient from "../api/client";
 
 export const adminOrderApi = {
   // Get all orders with pagination

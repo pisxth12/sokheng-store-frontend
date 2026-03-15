@@ -1,5 +1,5 @@
 import { create } from "domain";
-import apiClient from "../open/client";
+import apiClient from "../api/client";
 import { PageResponse, Product } from "@/types/admin/product.type";
 
 export const adminProductApi = {

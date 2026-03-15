@@ -1,4 +1,4 @@
-import apiClient from "@/lib/api/open/client";
+import apiClient from "@/lib/api/client";
 import { ProductImage } from "@/types/admin/product.type";
 
 export const adminProductImage = {

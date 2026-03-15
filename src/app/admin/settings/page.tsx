@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { authApi } from "@/lib/api/open/auth";
+import { authApi } from "@/lib/open/auth";
 import { useSocialLinks } from "@/hooks/admin/useSocialLinks";
 import {
   Loader2,
@@ -23,7 +23,7 @@ export default function SettingsPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
-  
+
   // Modal states
   const [socialModalOpen, setSocialModalOpen] = useState(false);
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
@@ -67,7 +67,6 @@ export default function SettingsPage() {
 
           {/* Two Column Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            
             {/* Social Links Card */}
             <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
               <div className="p-4 border-b border-gray-100 flex items-center justify-between">
@@ -82,7 +81,7 @@ export default function SettingsPage() {
                   <Edit2 className="w-4 h-4 text-gray-500" />
                 </button>
               </div>
-              
+
               <div className="p-4 space-y-3">
                 <div className="flex items-center gap-3 text-sm">
                   <Facebook className="w-4 h-4 text-[#1877f2]" />
@@ -91,7 +90,7 @@ export default function SettingsPage() {
                     {links?.facebook || "Not set"}
                   </span>
                 </div>
-                
+
                 <div className="flex items-center gap-3 text-sm">
                   <Plane className="w-4 h-4 text-[#0088cc]" />
                   <span className="text-gray-600 flex-1">Telegram</span>
@@ -101,7 +100,9 @@ export default function SettingsPage() {
                 </div>
 
                 <div className="flex items-center gap-3 text-sm">
-                  <span className="w-4 text-sm font-medium text-gray-900">TT</span>
+                  <span className="w-4 text-sm font-medium text-gray-900">
+                    TT
+                  </span>
                   <span className="text-gray-600 flex-1">TikTok</span>
                   <span className="text-gray-900 truncate max-w-[150px]">
                     {links?.tiktok || "Not set"}
@@ -140,11 +141,15 @@ export default function SettingsPage() {
                   <Edit2 className="w-4 h-4 text-gray-500" />
                 </button>
               </div>
-              
+
               <div className="p-4">
-                <p className="text-sm text-gray-500 mb-2">Password last changed</p>
+                <p className="text-sm text-gray-500 mb-2">
+                  Password last changed
+                </p>
                 <p className="text-sm text-gray-900">••••••••</p>
-                <p className="text-xs text-gray-400 mt-2">Click edit to change your password</p>
+                <p className="text-xs text-gray-400 mt-2">
+                  Click edit to change your password
+                </p>
               </div>
             </div>
 
@@ -155,20 +160,28 @@ export default function SettingsPage() {
                   <div className="p-2 bg-blue-50 rounded-md">
                     <User className="w-4 h-4 text-blue-600" />
                   </div>
-                  <h3 className="font-medium text-gray-900">Account Information</h3>
+                  <h3 className="font-medium text-gray-900">
+                    Account Information
+                  </h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                   <div>
                     <span className="text-gray-500 block">Name</span>
-                    <span className="text-gray-900 font-medium">{user.name}</span>
+                    <span className="text-gray-900 font-medium">
+                      {user.name}
+                    </span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">Email</span>
-                    <span className="text-gray-900 font-medium">{user.email}</span>
+                    <span className="text-gray-900 font-medium">
+                      {user.email}
+                    </span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">Role</span>
-                    <span className="text-gray-900 font-medium">{user.role || "User"}</span>
+                    <span className="text-gray-900 font-medium">
+                      {user.role || "User"}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -178,14 +191,14 @@ export default function SettingsPage() {
       </div>
 
       {/* Modals */}
-      <SocialLinksModal 
-        isOpen={socialModalOpen} 
-        onClose={() => setSocialModalOpen(false)} 
+      <SocialLinksModal
+        isOpen={socialModalOpen}
+        onClose={() => setSocialModalOpen(false)}
       />
-      
-      <ChangePasswordModal 
-        isOpen={passwordModalOpen} 
-        onClose={() => setPasswordModalOpen(false)} 
+
+      <ChangePasswordModal
+        isOpen={passwordModalOpen}
+        onClose={() => setPasswordModalOpen(false)}
       />
     </>
   );

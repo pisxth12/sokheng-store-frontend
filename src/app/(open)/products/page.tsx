@@ -1,53 +1,42 @@
-
-"use client"
+"use client";
 import { ProductGrid } from "@/components/open/products/ProductGrid";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { ScrollToTop } from "@/components/ui/ScrollToTop";
 import { useProducts } from "@/hooks/open/useProducts";
-import { publicProductApi } from "@/lib/api/open/products";
+import { publicProductApi } from "@/lib/open/products";
 import { useCallback, useEffect, useRef } from "react";
 
-
-
 export default function ProductsPage() {
-  const {  products,
-    loading,
-    hasMore,
-    total,
-    error,
-    loadMore,
-    reset } = useProducts(
-    publicProductApi.getAllProducts
-  );
+  const { products, loading, hasMore, total, error, loadMore, reset } =
+    useProducts(publicProductApi.getAllProducts);
 
   const observerTarget = useRef<HTMLDivElement>(null);
-  const handleObserver = useCallback((entries:  IntersectionObserverEntry[])=> {
-    const [entry] = entries;
-    if(entry.isIntersecting && hasMore && !loading){
-      loadMore();
-    }
-  },[loadMore, loading, hasMore]);
-
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const [entry] = entries;
+      if (entry.isIntersecting && hasMore && !loading) {
+        loadMore();
+      }
+    },
+    [loadMore, loading, hasMore],
+  );
 
   useEffect(() => {
     const element = observerTarget.current;
-    if(!element) return;
+    if (!element) return;
     const observer = new IntersectionObserver(handleObserver, {
       threshold: 0.1,
-      rootMargin: '100px'
+      rootMargin: "100px",
     });
     observer.observe(element);
-    
+
     return () => {
       observer.unobserve(element);
       observer.disconnect();
-    }
-  },[handleObserver]);
+    };
+  }, [handleObserver]);
 
- 
-
-
-    if (error) {
+  if (error) {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
         <h2 className="text-2xl font-semibold text-gray-900 mb-4">
@@ -72,19 +61,15 @@ export default function ProductsPage() {
     );
   }
 
-
- 
-
   if (loading && products.length === 0) return <LoadingSpinner />;
 
-
-   return (
+  return (
     <div className=" mx-auto max-w-primary py-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <h1 className="text-3xl font-bold ">All Products</h1>
         <p className="text-sm text-gray-600 bg-gray-100 px-4 py-2 rounded-full">
-          Showing <span className="font-semibold">{products.length}</span> of{' '}
+          Showing <span className="font-semibold">{products.length}</span> of{" "}
           <span className="font-semibold">{total}</span> products
         </p>
       </div>
@@ -93,7 +78,7 @@ export default function ProductsPage() {
       {products.length > 0 ? (
         <>
           <ProductGrid products={products} />
-          
+
           {/* Observer Target */}
           <div ref={observerTarget} className="h-4 w-full" />
 

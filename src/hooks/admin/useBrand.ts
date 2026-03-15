@@ -1,4 +1,4 @@
-import { adminBrandApi } from "@/lib/api/admin/brand";
+import { adminBrandApi } from "@/lib/admin/brand";
 import { Brand } from "@/types/admin/brand.type";
 import { useCallback, useEffect, useState } from "react";
 
@@ -44,7 +44,6 @@ interface BrandState {
   refresh: () => void;
 }
 
-
 export const useBrand = (): BrandState => {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(false);
@@ -66,68 +65,77 @@ export const useBrand = (): BrandState => {
   const [sortBy, setSortBy] = useState("name");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
-  const fetchBrands = useCallback(async (page = currentPage) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await adminBrandApi.getAll(
-        page, 
-        pageSize, 
-        sortBy, 
-        sortDirection
-      );
-      setBrands(response.content || []);
-      setTotalPages(response.totalPages || 0);
-      setTotalElements(response.totalElements || 0);
-      setCurrentPage(page);
-    } catch (err: any) {
-      const errorMessage =
-        err?.response?.data?.message ||
-        err?.message ||
-        "Failed to fetch brands";
-      setError(errorMessage);
-      console.error("Fetch error:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [pageSize, sortBy, sortDirection]);
-
-  const searchBrands = useCallback(async (query: string, page = 0) => {
-    if (!query.trim()) {
-      setSearchQuery("");
-      fetchBrands(page);
-      return;
-    }
-    setIsSearching(true);
-    setError(null);
-    try {
-      const response = await adminBrandApi.search(query, page, pageSize);
-      setBrands(response.content || []);
-      setTotalPages(response.totalPages || 0);
-      setTotalElements(response.totalElements || 0);
-      setCurrentPage(response.number || 0);
-    } catch (err: any) {
-      const errorMessage =
-        err?.response?.data?.message ||
-        err?.message ||
-        "Failed to search brands";
-      setError(errorMessage);
-    } finally {
-      setIsSearching(false);
-    }
-  }, [pageSize, fetchBrands]);
-
-    const goToPage = useCallback((page: number) => {
-    if (page >= 0 && page < totalPages) {
-      if (isSearching && searchQuery) {
-        searchBrands(searchQuery, page);
-      } else {
-        fetchBrands(page);
+  const fetchBrands = useCallback(
+    async (page = currentPage) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await adminBrandApi.getAll(
+          page,
+          pageSize,
+          sortBy,
+          sortDirection,
+        );
+        setBrands(response.content || []);
+        setTotalPages(response.totalPages || 0);
+        setTotalElements(response.totalElements || 0);
+        setCurrentPage(page);
+      } catch (err: any) {
+        const errorMessage =
+          err?.response?.data?.message ||
+          err?.message ||
+          "Failed to fetch brands";
+        setError(errorMessage);
+        console.error("Fetch error:", err);
+      } finally {
+        setLoading(false);
       }
-    }
-  }, [totalPages, isSearching, searchQuery, searchBrands, fetchBrands]);
+    },
+    [pageSize, sortBy, sortDirection],
+  );
 
-   const nextPage = useCallback(() => {
+  const searchBrands = useCallback(
+    async (query: string, page = 0) => {
+      if (!query.trim()) {
+        setSearchQuery("");
+        fetchBrands(page);
+        return;
+      }
+      setIsSearching(true);
+      setError(null);
+      try {
+        const response = await adminBrandApi.search(query, page, pageSize);
+        setBrands(response.content || []);
+        setTotalPages(response.totalPages || 0);
+        setTotalElements(response.totalElements || 0);
+        setCurrentPage(response.number || 0);
+      } catch (err: any) {
+        const errorMessage =
+          err?.response?.data?.message ||
+          err?.message ||
+          "Failed to search brands";
+        setError(errorMessage);
+      } finally {
+        setIsSearching(false);
+      }
+    },
+    [pageSize, fetchBrands],
+  );
+
+  const goToPage = useCallback(
+    (page: number) => {
+      if (page >= 0 && page < totalPages) {
+        if (isSearching && searchQuery) {
+          searchBrands(searchQuery, page);
+        } else {
+          fetchBrands(page);
+        }
+      }
+    },
+    [totalPages, isSearching, searchQuery, searchBrands, fetchBrands],
+  );
+
+  const nextPage = useCallback(() => {
     if (currentPage < totalPages - 1) {
       goToPage(currentPage + 1);
     }
@@ -146,9 +154,9 @@ export const useBrand = (): BrandState => {
   }, [fetchBrands]);
 
   const handleSort = useCallback((field: string) => {
-    setSortBy(prev => {
+    setSortBy((prev) => {
       if (prev === field) {
-        setSortDirection(dir => dir === "asc" ? "desc" : "asc");
+        setSortDirection((dir) => (dir === "asc" ? "desc" : "asc"));
         return prev;
       } else {
         setSortDirection("asc");
@@ -167,139 +175,155 @@ export const useBrand = (): BrandState => {
     }
   }, [isSearching, searchQuery, currentPage, searchBrands, fetchBrands]);
 
+  // ============= CRUD ACTIONS =============
+  const createBrand = useCallback(
+    async (data: FormData) => {
+      setError(null);
+      setSaving(true);
+      setSuccess(false);
+      try {
+        await adminBrandApi.create(data);
+        await fetchBrands(0);
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 3000);
+      } catch (err: any) {
+        const errorMessage =
+          err?.response?.data?.message ||
+          err?.response?.data ||
+          err?.message ||
+          "Failed to create brand";
+        setError(errorMessage);
+        throw err;
+      } finally {
+        setSaving(false);
+      }
+    },
+    [fetchBrands],
+  );
 
-    // ============= CRUD ACTIONS =============
-    const createBrand = useCallback(async (data: FormData) => {
-    setError(null);
-    setSaving(true);
-    setSuccess(false);
-    try {
-      await adminBrandApi.create(data);
-      await fetchBrands(0);
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
-    } catch (err: any) {
-      const errorMessage =
-        err?.response?.data?.message ||
-        err?.response?.data ||
-        err?.message ||
-        "Failed to create brand";
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setSaving(false);
-    }
-  }, [fetchBrands]);
+  const updateBrand = useCallback(
+    async (id: number, data: FormData) => {
+      setError(null);
+      setSaving(true);
+      setSuccess(false);
+      try {
+        await adminBrandApi.update(id, data);
+        await fetchBrands(currentPage);
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 3000);
+      } catch (err: any) {
+        const errorMessage =
+          err?.response?.data?.message ||
+          err?.response?.data ||
+          err?.message ||
+          "Failed to update brand";
+        setError(errorMessage);
+        throw err;
+      } finally {
+        setSaving(false);
+      }
+    },
+    [fetchBrands, currentPage],
+  );
 
-  const updateBrand = useCallback(async (id: number, data: FormData) => {
-    setError(null);
-    setSaving(true);
-    setSuccess(false);
-    try {
-      await adminBrandApi.update(id, data);
-      await fetchBrands(currentPage);
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
-    } catch (err: any) {
-      const errorMessage =
-        err?.response?.data?.message ||
-        err?.response?.data ||
-        err?.message ||
-        "Failed to update brand";
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setSaving(false);
-    }
-  }, [fetchBrands, currentPage]);
+  const deleteBrand = useCallback(
+    async (id: number) => {
+      setError(null);
+      setSaving(true);
+      setSuccess(false);
+      try {
+        await adminBrandApi.delete(id);
+        await fetchBrands(currentPage);
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 3000);
+      } catch (err: any) {
+        const errorMessage =
+          err?.response?.data?.message ||
+          err?.response?.data ||
+          err?.message ||
+          "Failed to delete brand";
+        setError(errorMessage);
+        throw err;
+      } finally {
+        setSaving(false);
+      }
+    },
+    [fetchBrands, currentPage],
+  );
 
-  const deleteBrand = useCallback(async (id: number) => {
-    setError(null);
-    setSaving(true);
-    setSuccess(false);
-    try {
-      await adminBrandApi.delete(id);
-      await fetchBrands(currentPage);
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
-    } catch (err: any) {
-      const errorMessage =
-        err?.response?.data?.message ||
-        err?.response?.data ||
-        err?.message ||
-        "Failed to delete brand";
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setSaving(false);
-    }
-  }, [fetchBrands, currentPage]);
+  const toggleStatus = useCallback(
+    async (id: number) => {
+      setError(null);
+      setSaving(true);
+      setSuccess(false);
+      try {
+        await adminBrandApi.toggleStatus(id);
+        await fetchBrands(currentPage);
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 3000);
+      } catch (err: any) {
+        const errorMessage =
+          err?.response?.data?.message ||
+          err?.response?.data ||
+          err?.message ||
+          "Failed to toggle status";
+        setError(errorMessage);
+        throw err;
+      } finally {
+        setSaving(false);
+      }
+    },
+    [fetchBrands, currentPage],
+  );
 
-  const toggleStatus = useCallback(async (id: number) => {
-    setError(null);
-    setSaving(true);
-    setSuccess(false);
-    try {
-      await adminBrandApi.toggleStatus(id);
-      await fetchBrands(currentPage);
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
-    } catch (err: any) {
-      const errorMessage =
-        err?.response?.data?.message ||
-        err?.response?.data ||
-        err?.message ||
-        "Failed to toggle status";
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setSaving(false);
-    }
-  }, [fetchBrands, currentPage]);
+  const addCategories = useCallback(
+    async (brandId: number, categoryIds: number[]) => {
+      setError(null);
+      setSaving(true);
+      try {
+        await adminBrandApi.addCategories(brandId, categoryIds);
+        await fetchBrands(currentPage);
+      } catch (err: any) {
+        const errorMessage =
+          err?.response?.data?.message ||
+          err?.message ||
+          "Failed to add categories";
+        setError(errorMessage);
+        throw err;
+      } finally {
+        setSaving(false);
+      }
+    },
+    [fetchBrands, currentPage],
+  );
 
-  const addCategories = useCallback(async (brandId: number, categoryIds: number[]) => {
-    setError(null);
-    setSaving(true);
-    try {
-      await adminBrandApi.addCategories(brandId, categoryIds);
-      await fetchBrands(currentPage);
-    } catch (err: any) {
-      const errorMessage =
-        err?.response?.data?.message ||
-        err?.message ||
-        "Failed to add categories";
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setSaving(false);
-    }
-  }, [fetchBrands, currentPage]);
-
-  const removeCategories = useCallback(async (brandId: number, categoryIds: number[]) => {
-    setError(null);
-    setSaving(true);
-    try {
-      await adminBrandApi.removeCategories(brandId, categoryIds);
-      await fetchBrands(currentPage);
-    } catch (err: any) {
-      const errorMessage =
-        err?.response?.data?.message ||
-        err?.message ||
-        "Failed to remove categories";
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setSaving(false);
-    }
-  }, [fetchBrands, currentPage]);
-
+  const removeCategories = useCallback(
+    async (brandId: number, categoryIds: number[]) => {
+      setError(null);
+      setSaving(true);
+      try {
+        await adminBrandApi.removeCategories(brandId, categoryIds);
+        await fetchBrands(currentPage);
+      } catch (err: any) {
+        const errorMessage =
+          err?.response?.data?.message ||
+          err?.message ||
+          "Failed to remove categories";
+        setError(errorMessage);
+        throw err;
+      } finally {
+        setSaving(false);
+      }
+    },
+    [fetchBrands, currentPage],
+  );
 
   // ============= EFFECTS =============
   useEffect(() => {
     fetchBrands();
   }, [fetchBrands]);
 
-   return {
+  return {
     // Data
     brands,
     loading,
@@ -338,10 +362,7 @@ export const useBrand = (): BrandState => {
     toggleStatus,
     addCategories,
     removeCategories,
-    
+
     refresh,
   };
-
-
-
-}
+};

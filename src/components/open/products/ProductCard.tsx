@@ -1,5 +1,6 @@
 "use client"
-import { Product } from "@/types/admin/product.type";
+
+import { Product } from "@/types/open/product.type";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -86,10 +87,13 @@ export default function ProductCard({product}: Props){
                     <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                         {product.categoryName}
                     </p>
+
                     
                     <h3 className="font-medium text-gray-800 dark:text-gray-200 group-hover:text-gray-600 dark:group-hover:text-gray-400 transition line-clamp-2">
                         {product.name}
                     </h3>
+
+                    
                     
                     {/* Price Section */}
                     <div className="pt-1">

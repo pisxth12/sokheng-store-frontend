@@ -4,8 +4,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
 
-export default function HeroBanner() {
-    const { banners, loading } = useBanner();
+interface Banner{
+   id: number;
+    title: string;
+    imageUrl: string;
+    link?: string;
+}
+interface HeroBannerProps {
+    banners: Banner[];
+}
+
+export default function HeroBanner({ banners }: HeroBannerProps) {
+    
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState(0);
@@ -13,7 +23,9 @@ export default function HeroBanner() {
     const containerRef = useRef<HTMLDivElement>(null);
     const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
 
-    
+     if (!banners.length) return null;
+
+
     const cloned = banners.length > 0
         ? [banners[banners.length - 1], ...banners, banners[0]]
         : [];
@@ -116,11 +128,7 @@ export default function HeroBanner() {
     // Real current index for dots (clamped)
     const realIndex = ((currentIndex % banners.length) + banners.length) % banners.length;
 
-    if (loading) {
-        return (
-            <div className="w-full bg-gray-100 animate-pulse" style={{ height: "clamp(220px, 42vw, 580px)" }} />
-        );
-    }
+
 
     if (banners.length === 0) return null;
 

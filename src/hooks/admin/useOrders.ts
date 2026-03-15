@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { adminOrderApi } from "@/lib/api/admin/orders";
+import { adminOrderApi } from "@/lib/admin/orders";
 import { useRouter } from "next/navigation";
 import {
   OrderFilters,
@@ -113,7 +113,7 @@ export const useOrders = (initialFilters?: OrderFilters) => {
 
   // Update filters
   const updateFilters = useCallback((newFilters: Partial<OrderFilters>) => {
-    setFilters((prev) => ({ ...prev, ...newFilters, page: 0 })); 
+    setFilters((prev) => ({ ...prev, ...newFilters, page: 0 }));
   }, []);
 
   // Change page

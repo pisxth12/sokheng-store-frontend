@@ -1,4 +1,4 @@
-import { adminSocialLinks } from "@/lib/api/admin/contacts";
+import { adminSocialLinks } from "@/lib/admin/contacts";
 import { SocialLinks } from "@/types/admin/social.type";
 import { useEffect, useState } from "react";
 

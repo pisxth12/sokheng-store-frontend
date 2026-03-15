@@ -1,4 +1,4 @@
-import { publicSocialsContact } from "@/lib/api/open/useSocialContact";
+import { publicSocialsContact } from "@/lib/open/useSocialContact";
 import { ContactSocialResponse } from "@/types/open/socialsContact.type";
 import { useEffect, useState } from "react";
 
@@ -15,8 +15,8 @@ export const useContact = () => {
     setLoading(true);
     setError("");
     try {
-        const data = await publicSocialsContact.getAllContacts();
-        setContacts(data);
+      const data = await publicSocialsContact.getAllContacts();
+      setContacts(data);
     } catch (err: any) {
       setError("Failed to load contact");
     } finally {

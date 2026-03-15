@@ -1,4 +1,4 @@
-import { adminDashboardApi } from "@/lib/api/admin/dashboard";
+import { adminDashboardApi } from "@/lib/admin/dashboard";
 import { DashboardSummary } from "@/types/admin/dashboard.type";
 import { useEffect, useState } from "react";
 

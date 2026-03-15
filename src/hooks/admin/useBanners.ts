@@ -1,4 +1,4 @@
-import { adminBannerApi } from "@/lib/api/admin/banners";
+import { adminBannerApi } from "@/lib/admin/banners";
 import { Banner } from "@/types/admin/banner.type";
 import { useEffect, useState } from "react";
 

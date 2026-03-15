@@ -1,5 +1,5 @@
 import { SocialLinks, SocialLinksResponse } from "@/types/admin/social.type";
-import apiClient from "../open/client";
+import apiClient from "../api/client";
 
 export const adminSocialLinks = {
   getLinks: async () => {

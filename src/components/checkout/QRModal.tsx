@@ -1,23 +1,30 @@
-"use client"
+"use client";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { publicPaymentApi } from "@/lib/api/open/payment";
+import { publicPaymentApi } from "@/lib/open/payment";
 
 interface QRModalProps {
   isOpen: boolean;
   onClose: () => void;
   qrString: string;
   amount: number;
-  orderNumber: string; 
+  orderNumber: string;
 }
 
-const QRModal = ({ isOpen, onClose, qrString, amount, orderNumber }: QRModalProps) => {
+const QRModal = ({
+  isOpen,
+  onClose,
+  qrString,
+  amount,
+  orderNumber,
+}: QRModalProps) => {
   const router = useRouter();
   const [imageError, setImageError] = useState(false);
-  const [status, setStatus] = useState<'PENDING' | 'PAID' | 'EXPIRED' | 'FAILED'>('PENDING');
+  const [status, setStatus] = useState<
+    "PENDING" | "PAID" | "EXPIRED" | "FAILED"
+  >("PENDING");
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  
   const stopPolling = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -29,29 +36,29 @@ const QRModal = ({ isOpen, onClose, qrString, amount, orderNumber }: QRModalProp
     if (!isOpen || !orderNumber) {
       stopPolling();
       return;
-    };
+    }
 
-    setStatus('PENDING');
+    setStatus("PENDING");
 
     intervalRef.current = setInterval(async () => {
       try {
         const res = await publicPaymentApi.getPaymentStatus(orderNumber);
-        console.log('Poll result:', res);
+        console.log("Poll result:", res);
         setStatus(res.status);
 
-        if (res.status === 'PAID') {
+        if (res.status === "PAID") {
           clearInterval(intervalRef.current!);
           setTimeout(() => {
             onClose();
             router.push(`/orders/${orderNumber}`);
-          }, 1000); // brief delay so user sees the 
+          }, 1000); // brief delay so user sees the
         }
 
-        if (res.status === 'EXPIRED' || res.status === 'FAILED') {
+        if (res.status === "EXPIRED" || res.status === "FAILED") {
           stopPolling();
         }
       } catch (err) {
-        console.error('Polling error:', err);
+        console.error("Polling error:", err);
       }
     }, 3000);
 
@@ -63,10 +70,18 @@ const QRModal = ({ isOpen, onClose, qrString, amount, orderNumber }: QRModalProp
   const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrString)}`;
 
   const statusConfig = {
-    PENDING:  { text: 'Waiting for payment...', color: 'text-white/40',   spin: true  },
-    PAID:     { text: 'Payment confirmed! ✓',   color: 'text-emerald-400', spin: false },
-    EXPIRED:  { text: 'QR code expired',        color: 'text-red-400',     spin: false },
-    FAILED:   { text: 'Payment failed',         color: 'text-red-400',     spin: false },
+    PENDING: {
+      text: "Waiting for payment...",
+      color: "text-white/40",
+      spin: true,
+    },
+    PAID: {
+      text: "Payment confirmed! ✓",
+      color: "text-emerald-400",
+      spin: false,
+    },
+    EXPIRED: { text: "QR code expired", color: "text-red-400", spin: false },
+    FAILED: { text: "Payment failed", color: "text-red-400", spin: false },
   }[status];
 
   return (
@@ -83,7 +98,7 @@ const QRModal = ({ isOpen, onClose, qrString, amount, orderNumber }: QRModalProp
 
       <div
         className="qr-backdrop fixed inset-0 z-50 flex items-end sm:items-center justify-center"
-        style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)' }}
+        style={{ background: "rgba(0,0,0,0.7)", backdropFilter: "blur(6px)" }}
         onClick={() => {
           stopPolling();
           onClose();
@@ -91,16 +106,19 @@ const QRModal = ({ isOpen, onClose, qrString, amount, orderNumber }: QRModalProp
       >
         <div
           className="qr-modal qr-sheet w-full sm:max-w-sm bg-[#0e0e0e] border border-white/8 rounded-t-3xl sm:rounded-2xl p-6 mx-0 sm:mx-4"
-          onClick={e => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
         >
           <div className="w-8 h-1 bg-white/10 rounded-full mx-auto mb-6 sm:hidden" />
 
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <p className="text-[11px] qr-mono text-white/30 uppercase tracking-widest mb-0.5">Scan to Pay</p>
-              <p className="qr-mono text-xl font-medium text-white">${amount.toFixed(2)}</p>
-              
+              <p className="text-[11px] qr-mono text-white/30 uppercase tracking-widest mb-0.5">
+                Scan to Pay
+              </p>
+              <p className="qr-mono text-xl font-medium text-white">
+                ${amount.toFixed(2)}
+              </p>
             </div>
             <button
               onClick={() => {
@@ -110,25 +128,39 @@ const QRModal = ({ isOpen, onClose, qrString, amount, orderNumber }: QRModalProp
               className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-white/30 transition-colors"
             >
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                <path
+                  d="M1 1l10 10M11 1L1 11"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
               </svg>
             </button>
           </div>
 
           {/* QR */}
-          <div className={` py-10 rounded-2xl flex items-center justify-center mb-4 transition-all ${status === 'PAID' ? 'bg-emerald-50' : 'bg-white'}`}>
+          <div
+            className={` py-10 rounded-2xl flex items-center justify-center mb-4 transition-all ${status === "PAID" ? "bg-emerald-50" : "bg-white"}`}
+          >
             {!qrString ? (
               <div className="w-[220px] h-[220px] flex items-center justify-center">
                 <div className="w-6 h-6 border border-black/20 border-t-black rounded-full animate-spin" />
               </div>
-            ) : status === 'PAID' ? (
+            ) : status === "PAID" ? (
               <div className="w-[220px] h-[220px] flex items-center justify-center">
                 <div className="text-5xl">✓</div>
               </div>
             ) : !imageError ? (
-              <img src={qrImageUrl} alt="QR Code" className="w-[220px] h-[220px]" onError={() => setImageError(true)} />
+              <img
+                src={qrImageUrl}
+                alt="QR Code"
+                className="w-[220px] h-[220px]"
+                onError={() => setImageError(true)}
+              />
             ) : (
-              <div className="w-[220px] h-[220px] flex items-center justify-center text-sm text-red-400">Failed to load QR</div>
+              <div className="w-[220px] h-[220px] flex items-center justify-center text-sm text-red-400">
+                Failed to load QR
+              </div>
             )}
           </div>
 
@@ -137,17 +169,19 @@ const QRModal = ({ isOpen, onClose, qrString, amount, orderNumber }: QRModalProp
             {statusConfig.spin && (
               <div className="w-3 h-3 border border-white/20 border-t-white rounded-full animate-spin flex-shrink-0" />
             )}
-            <p className={`text-xs ${statusConfig.color}`}>{statusConfig.text}</p>
+            <p className={`text-xs ${statusConfig.color}`}>
+              {statusConfig.text}
+            </p>
           </div>
 
           <button
             onClick={() => {
-    console.log('🔴 Cancel clicked - stopping polling');  // ← បន្ថែម log
-    stopPolling();
-    console.log('🟢 Polling stopped, calling onClose');
-    onClose();
-  }}
-            disabled={status === 'PAID'}
+              console.log("🔴 Cancel clicked - stopping polling"); // ← បន្ថែម log
+              stopPolling();
+              console.log("🟢 Polling stopped, calling onClose");
+              onClose();
+            }}
+            disabled={status === "PAID"}
             className="w-full py-3.5 rounded-xl border border-white/10 text-white/60 text-sm font-medium hover:bg-white/5 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
             Cancel

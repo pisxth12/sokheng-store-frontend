@@ -245,9 +245,6 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            <p className="text-sm text-gray-400 dark:text-gray-500 pt-4">
-              {t('labels.sku')}: {product.sku} 
-            </p>
           </div>
         </div>
 

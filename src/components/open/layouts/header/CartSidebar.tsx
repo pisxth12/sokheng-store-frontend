@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const CartSideBar = ({ isOpen, onClose }: Props) => {
-    const { cart, loading, updateQuantity, removeItem, itemCount,  getItemQuantity } = useCart();
+    const { cart, loading, updateQuantity, removeItem, itemCount,  loadCart, isCartLoaded } = useCart();
     const { isAuthenticated } = useAuth();
     const router = useRouter();
     const [removingId, setRemovingId] = useState<number | null>(null);
@@ -23,6 +23,11 @@ export const CartSideBar = ({ isOpen, onClose }: Props) => {
 
     
 
+     useEffect(() => {
+        if (isOpen && !isCartLoaded) {
+            loadCart();
+        }
+    }, [isOpen, isCartLoaded, loadCart]);
 
     useEffect(() => {
         if (isOpen) {

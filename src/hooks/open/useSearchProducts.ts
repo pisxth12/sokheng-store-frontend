@@ -1,6 +1,6 @@
 import { PageResponse, Product } from "@/types/open/product.type";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { publicProductApi } from "@/lib/api/open/products";
+import { publicProductApi } from "@/lib/open/products";
 
 interface SearchFilters {
   sortBy?: string;
@@ -13,7 +13,6 @@ interface SearchFilters {
 interface UseSearchProductsReturn {
   //Data
   results: Product[];
-  
 
   //State
   loading: boolean;
@@ -43,7 +42,7 @@ interface UseSearchProductsReturn {
 export const useSearchProducts = (
   initialQuery: string = "",
   pageSize: number = 32,
-  initialFilters: SearchFilters = {}
+  initialFilters: SearchFilters = {},
 ): UseSearchProductsReturn => {
   const [results, setResults] = useState<Product[]>([]);
   const [query, setQuery] = useState(initialQuery);
@@ -62,29 +61,29 @@ export const useSearchProducts = (
       searchQuery: string,
       pageNum: number = 0,
       isNewSearch: boolean = false,
-      currentFilters: SearchFilters = filters
+      currentFilters: SearchFilters = filters,
     ) => {
       if (!searchQuery.trim()) {
         if (isNewSearch) setResults([]);
         return;
       }
-      
+
       setLoading(true);
       setError(null);
-      
+
       try {
         const response: PageResponse<Product> =
           await publicProductApi.searchProducts(
-            searchQuery, 
-            pageNum, 
+            searchQuery,
+            pageNum,
             pageSize,
             currentFilters.sortBy,
             currentFilters.sortOrder,
             currentFilters.minPrice,
             currentFilters.maxPrice,
-            currentFilters.categoryId
+            currentFilters.categoryId,
           );
-        
+
         setResults((prev) => {
           if (isNewSearch || pageNum === 0) {
             return response.content;
@@ -92,23 +91,23 @@ export const useSearchProducts = (
 
           const existingIds = new Set(prev.map((p) => p.id));
           const newProducts = response.content.filter(
-            (p) => !existingIds.has(p.id)
+            (p) => !existingIds.has(p.id),
           );
           return [...prev, ...newProducts];
         });
-        
+
         setHasMore(!response.last);
         setTotal(response.totalElements);
         setPage(pageNum + 1);
       } catch (err) {
         setError(
-          err instanceof Error ? err : new Error("Failed to load products")
+          err instanceof Error ? err : new Error("Failed to load products"),
         );
       } finally {
         setLoading(false);
       }
     },
-    [pageSize, filters]
+    [pageSize, filters],
   );
 
   // ============== APPLY FILTERS ==============
@@ -120,7 +119,7 @@ export const useSearchProducts = (
       setHasMore(true);
       await performSearch(query, 0, true, newFilters);
     },
-    [query, performSearch]
+    [query, performSearch],
   );
 
   // ============== ACTIONS ==============
@@ -134,7 +133,7 @@ export const useSearchProducts = (
       setError(null);
       await performSearch(searchQuery, 0, true, newFilters || filters);
     },
-    [performSearch, filters]
+    [performSearch, filters],
   );
 
   const loadMore = useCallback(async () => {
@@ -167,7 +166,6 @@ export const useSearchProducts = (
   return {
     // Data
     results,
-    
 
     // States
     loading,

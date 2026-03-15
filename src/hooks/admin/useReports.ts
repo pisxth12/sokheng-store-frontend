@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { reportService } from "@/lib/api/admin/report";
+import { reportService } from "@/lib/admin/report";
 import { ReportData, ReportOptions } from "@/types/admin/report.type";
 
 export const useReports = () => {

@@ -4,7 +4,7 @@ import {
   RegisterCredentials,
   UpdateProfileRequest,
 } from "@/types/open/auth.type";
-import apiClient from "./client";
+import apiClient from "../api/client";
 
 export const authApi = {
   login: async (data: LoginCredentials) => {
@@ -32,12 +32,10 @@ export const authApi = {
     return response.data;
   },
 
-  updateProfile: async (data: UpdateProfileRequest)=>{
+  updateProfile: async (data: UpdateProfileRequest) => {
     const response = await apiClient.put("/users/me", data);
     return response.data;
   },
-
-
 
   forgotPassword: async (email: string) => {
     const response = await apiClient.post("/auth/password/forgot", { email });
@@ -55,8 +53,12 @@ export const authApi = {
     });
     return response.data;
   },
-  changePassword: async (data: { currentPassword: string; newPassword: string; confirmPassword: string }) => {
-  const response = await apiClient.post("/auth/password/change", data);
-  return response.data;
-}
+  changePassword: async (data: {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }) => {
+    const response = await apiClient.post("/auth/password/change", data);
+    return response.data;
+  },
 };

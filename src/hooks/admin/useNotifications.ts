@@ -1,4 +1,4 @@
-import { adminNotificationApi } from "@/lib/api/admin/notifications";
+import { adminNotificationApi } from "@/lib/admin/notifications";
 import { NotificationResponse } from "@/types/admin/notification.type";
 import { useCallback, useEffect, useState, useRef } from "react";
 

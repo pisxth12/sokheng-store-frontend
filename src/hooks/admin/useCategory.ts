@@ -1,4 +1,4 @@
-import { adminCategoryApi } from "@/lib/api/admin/category";
+import { adminCategoryApi } from "@/lib/admin/category";
 import { Category } from "@/types/admin/category.type";
 import { useEffect, useState } from "react";
 

@@ -1,4 +1,4 @@
-import { publicProductApi } from "@/lib/api/open/products";
+import { publicProductApi } from "@/lib/open/products";
 import { ProductSuggestion } from "@/types/open/product.type";
 import { useEffect, useState } from "react";
 
@@ -15,21 +15,23 @@ export const useSearchSuggestions = () => {
       return;
     }
     const timer = setTimeout(async () => {
-        setLoading(true);
-        try{
-            const results = await publicProductApi.getSuggestions(query);
-            setSuggestions(results);
-            setError(null);
-        }catch(err){
-            setError(err instanceof Error ? err : new Error("Failed to load suggestions"));
-        }finally{
-            setLoading(false);
-        }
+      setLoading(true);
+      try {
+        const results = await publicProductApi.getSuggestions(query);
+        setSuggestions(results);
+        setError(null);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err : new Error("Failed to load suggestions"),
+        );
+      } finally {
+        setLoading(false);
+      }
     });
     return () => clearTimeout(timer);
   }, [query]);
 
-    return {
+  return {
     query,
     setQuery,
     suggestions,

@@ -1,5 +1,5 @@
 import { AnalyticsData } from "@/types/admin/analytics.type";
-import apiClient from "../open/client";
+import apiClient from "../api/client";
 
 export const adminAnalyticsApi = {
   // Get all analytics data for dashboard

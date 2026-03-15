@@ -1,4 +1,4 @@
-import { adminAnalyticsApi } from "@/lib/api/admin/analytics";
+import { adminAnalyticsApi } from "@/lib/admin/analytics";
 import { AnalyticsData } from "@/types/admin/analytics.type";
 import { useEffect, useState } from "react";
 

@@ -1,5 +1,5 @@
 import { DashboardSummary } from "@/types/admin/dashboard.type";
-import apiClient from "../open/client";
+import apiClient from "../api/client";
 
 export const adminDashboardApi = {
   getSummary: async () => {

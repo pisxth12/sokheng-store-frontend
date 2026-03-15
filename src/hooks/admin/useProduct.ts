@@ -1,4 +1,4 @@
-import { adminProductApi } from "@/lib/api/admin/product";
+import { adminProductApi } from "@/lib/admin/product";
 import { Product } from "@/types/admin/product.type";
 import { useCallback, useEffect, useState } from "react";
 import { adminProductImage } from "./useProductImage";
@@ -26,7 +26,7 @@ export const useProducts = () => {
       setError(null);
       try {
         const response = await adminProductApi.getAll(page, pageSize);
-        console.log('API Response:', response);
+        console.log("API Response:", response);
         setProducts(response.content || []);
         setTotalPages(response.totalPages || 0);
         setTotalElements(response.totalElements || 0);
@@ -42,7 +42,7 @@ export const useProducts = () => {
         setLoading(false);
       }
     },
-    [ pageSize],
+    [pageSize],
   );
 
   const searchProducts = useCallback(

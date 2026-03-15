@@ -1,4 +1,4 @@
-import { authApi } from "@/lib/api/open/auth";
+import { authApi } from "@/lib/open/auth";
 import {
   AuthResponse,
   LoginCredentials,
@@ -35,7 +35,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     checkAuth();
   }, []);
   const checkAuth = async () => {
- 
     try {
       const user = await authApi.getMe();
       setUser(user);
@@ -123,27 +122,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(true);
     try {
       const res: AuthResponse = await authApi.updateProfile(data);
-    
-    setUser(prev => {
-      if (!prev) return null;
-      return {
-       ...prev,
-        name: res.name,
-        phone: res.phone || prev.phone,
-        address: res.address || prev.address,
-        updatedAt: new Date().toISOString()
-      };
-    });
-      toast.success('Profile updated successfully');
-     
-  }catch(error:any){
-    toast.error("Please input valid data");
-    throw new Error(error.response?.data?.message || "Update profile failed");
-  }finally{
-    setLoading(false);
-  }
-}
-  
+
+      setUser((prev) => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          name: res.name,
+          phone: res.phone || prev.phone,
+          address: res.address || prev.address,
+          updatedAt: new Date().toISOString(),
+        };
+      });
+      toast.success("Profile updated successfully");
+    } catch (error: any) {
+      toast.error("Please input valid data");
+      throw new Error(error.response?.data?.message || "Update profile failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const logout = async () => {
     try {

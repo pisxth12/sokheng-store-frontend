@@ -28,6 +28,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }),
   );
 
+ 
   return (
     <SearchProvider>
       <ThemeProvider>
@@ -35,18 +36,23 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           <WishlistProvider>
             {googleClientId ? (
               <GoogleOAuthProvider clientId={googleClientId}>
-                <AuthProvider>
-                  <CartProvider>{children}</CartProvider>
-                  <Toaster position="top-right" />
+                <AuthProvider>             
+                  <CartProvider>            
+                    {children}
+                    <Toaster position="top-right" />
+                  </CartProvider>
                 </AuthProvider>
               </GoogleOAuthProvider>
             ) : (
-              <AuthProvider>
-                {children}
-                <Toaster position="top-right" />
+              <AuthProvider>                
+                <CartProvider>               
+                  {children}
+                  <Toaster position="top-right" />
+                </CartProvider>
               </AuthProvider>
             )}
           </WishlistProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </ThemeProvider>
     </SearchProvider>

@@ -1,12 +1,10 @@
+import { API } from "@/lib/config/constants";
 import axios, { AxiosError, AxiosInstance } from "axios";
-
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
 
 // Create axios instance
 const apiClient: AxiosInstance = axios.create({
-  baseURL: API_URL,
-  withCredentials: true,  //  Sends cookies automatically
+  baseURL: API.FULL_URL,
+  withCredentials: true,  
   headers: {
     "Content-Type": "application/json",
   },

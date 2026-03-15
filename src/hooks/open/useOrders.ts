@@ -1,4 +1,4 @@
-import { publicOrderApi } from "@/lib/api/open/order";
+import { publicOrderApi } from "@/lib/open/order";
 import { Order } from "@/types/open/order.type";
 import { use, useCallback, useEffect, useState } from "react";
 
