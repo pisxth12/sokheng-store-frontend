@@ -249,7 +249,7 @@ export default function ProductDetailPage() {
         </div>
 
         {product && (
-          <RelatedProduct productId={product.id} initialSize={4} loadMoreSize={2} />
+          <RelatedProduct productId={product.id} initialSize={4}  />
         )}
       </div>
     </div>

@@ -64,7 +64,7 @@ export const CartProvider = ({
   }, [isCartLoaded]);
 
   const refreshCart = useCallback(async () => {
-    if (!isCartLoaded) return; // Don't refresh if not loaded
+    if (!isCartLoaded) return; 
     setLoading(true);
     try {
       const data = await publicCartApi.getCart();
@@ -77,10 +77,7 @@ export const CartProvider = ({
     }
   }, []);
 
-  // // Initial load
-  // useEffect(() => {
-  //   refreshCart();
-  // }, [refreshCart]);
+
 
   // Merge cart after login
   useEffect(() => {
@@ -90,6 +87,7 @@ export const CartProvider = ({
           const mergedCart = await publicCartApi.mergeCart();
           setCart(mergedCart);
           setIsCartLoaded(true);
+          setItemCount(mergedCart.totalItems); 
           hasMerged.current = true;
         } catch (error) {
           console.error("Failed to merge cart:", error);

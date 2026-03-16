@@ -13,7 +13,6 @@ const WishlistPage = () => {
     const { items, count, loading, error, removeItem, moveToCart } = useWishlist();
     const {  refreshCart , getItemQuantity } = useCart();
    
-      
 
     const handleMoveToCart = async (productId: number, quantity: number=1) => {
         const success = await moveToCart(productId,quantity);
@@ -37,7 +36,7 @@ const WishlistPage = () => {
     );
 
     return (
-        <div className="min-h-screen  py-8">
+        <div className="min-h-screen py-8">
             <div className=" mx-auto px-4 ">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
@@ -52,14 +51,10 @@ const WishlistPage = () => {
                             {count} {count === 1 ? 'item' : 'items'}
                         </span>
                     </div>
-                    
-                    <Link 
-                        href="/products"
-                        className=" font-medium flex items-center gap-2"
-                    >
+                    <Link href="/products" className="font-medium flex items-center gap-2">
                         Continue Shopping
                         <span className="text-xl">→</span>
-                    </Link>
+                    </Link> 
                 </div>
 
                 {/* Wishlist Grid */}
@@ -159,8 +154,7 @@ const WishlistPage = () => {
                                         className={`${
                                             item.inStock ? 'w-12' : 'flex-1'
                                         } bg-gray-100 hover:bg-gray-200  py-2.5 px-4  font-medium transition-colors flex items-center justify-center gap-2`}
-                                        title="Remove from wishlist"
-                                    >
+                                            title="Remove from wishlist">
                                         <Trash2 className="w-4 h-4 text-darkbg" />
                                         {!item.inStock && <span>Remove</span>}
                                     </button>

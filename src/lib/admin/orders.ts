@@ -37,8 +37,8 @@ export const adminOrderApi = {
   },
 
   // Get order details by ID
-  getOrderById: async (id: number) => {
-    const response = await apiClient.get<Order>(`/admin/orders/${id}`);
+  getOrderById: async (orderId: number) => {
+    const response = await apiClient.get<Order>(`/admin/orders/${orderId}`);
     return response.data;
   },
 

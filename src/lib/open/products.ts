@@ -27,6 +27,20 @@ export const publicProductApi = {
     return res.data;
   },
 
+  // Get by category
+  getProductsByBrand: async (
+    brandSlug: string,
+    page: number = 0,
+    size: number = 32,
+  ) => {
+    const res = await apiClient.get<PageResponse<Product>>(
+      `/brands/${brandSlug}/products?page=${page}&size=${size}`,
+    );
+    return res.data;
+  },
+  
+
+
   //Get featured
   getFeatured: async (options?: { signal?: AbortSignal }) => {
     const res = await apiClient.get<Product[]>("/products/featured", {

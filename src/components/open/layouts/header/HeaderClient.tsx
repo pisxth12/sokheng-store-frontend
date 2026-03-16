@@ -7,6 +7,7 @@ import { CartSideBar } from "./CartSidebar";
 import MobileMenu from "./MobileMenu";
 import Logo from "./Logo";
 import { Menu } from "lucide-react";
+import { useAuth } from "@/hooks/open/useAuth";
 
 interface HeaderClientProps {
   initialCount: number;
@@ -15,6 +16,8 @@ export default function HeaderClient({ initialCount }: HeaderClientProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const { loading: authLoading } = useAuth();
 
   return (
     <>
@@ -33,6 +36,7 @@ export default function HeaderClient({ initialCount }: HeaderClientProps) {
               onSearchClick={() => setIsSearchOpen(!isSearchOpen)}
               onCartClick={() => setIsCartOpen(true)}
               initialCount={initialCount}
+              isLoading={authLoading}
             />
           </div>
         </div>

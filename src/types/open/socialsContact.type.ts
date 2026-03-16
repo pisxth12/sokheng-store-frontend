@@ -1,4 +1,4 @@
-export interface ContactSocialResponse {
+export interface ContactInfo {
     id: number;
     phone?: string | null;
     facebook?: string | null;
@@ -6,3 +6,4 @@ export interface ContactSocialResponse {
     tiktok?:string | null;
     googleMap?: string | null
 }
+

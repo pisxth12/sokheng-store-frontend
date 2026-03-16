@@ -184,7 +184,7 @@ export default function OrdersPage() {
                   </td>
                   <td className="px-6 py-4 text-right space-x-3">
                     <button
-                      onClick={() => goToDetails(order.id)}
+                      onClick={() => goToDetails(order.orderId)}
                       className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-black transition-colors"
                       title="View Details"
                     >
@@ -194,7 +194,7 @@ export default function OrdersPage() {
                   
                     <button
                       onClick={() => {
-                        setDeleteId(order.id);
+                        setDeleteId(order.orderId);
                         setDeleteNumber(order.orderNumber);
                       }}
                       className="inline-flex items-center gap-1 text-sm text-red-600 hover:text-red-800 transition-colors"

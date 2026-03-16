@@ -9,19 +9,21 @@ interface Props {
   onSearchClick: () => void;
   onCartClick: () => void;
   initialCount: number;
+  isLoading?: boolean;
 }
 
 export default function HeaderIcons({
   onSearchClick,
   onCartClick,
   initialCount,
+  isLoading = false,
+
 }: Props) {
   const { itemCount } = useCart();
   const { isAuthenticated } = useAuth();
   const { count: itemCountInWishlist } = useWishlist();
 
    const displayCount = itemCount || initialCount;
-
 
   return (
     <div className="flex items-center gap-2">
@@ -64,23 +66,13 @@ export default function HeaderIcons({
         )}
       </button>
 
-       {/*  User Icon / Sign In Button */}
-      {isAuthenticated ? (
-        <Link
+      <Link
           href="/account"
           className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition"
           aria-label="My Account"
         >
           <User className="w-5 h-5" />
-        </Link>
-      ) : (
-        <Link
-          href="/login"
-          className="hidden md:block px-4 py-2 text-sm font-medium text-white bg-black rounded-full hover:bg-gray-800 transition"
-        >
-          Sign In
-        </Link>
-      )}
+      </Link>
 
      
     </div>

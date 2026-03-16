@@ -1,25 +1,19 @@
-
-
 "use client";
 
 import CategorySales from "@/components/admin/analytics/CategorySale";
 import RevenueChart from "@/components/admin/analytics/charts/RevenueChart";
 import StatusChart from "@/components/admin/analytics/charts/StatusChart";
 import ComparisonCard from "@/components/admin/analytics/ComparisonCard";
+import TopBrands from "@/components/admin/analytics/TopBrands";
 import TopProducts from "@/components/admin/analytics/TopProducts";
 import { useAnalytics } from "@/hooks/admin/useAnalytics";
 import { 
-  TrendingUp, 
+   
   DollarSign, 
   ShoppingBag, 
   Users,
   Package,
-  Clock,
-  CheckCircle,
-  XCircle,
   Loader2,
-  ArrowUp,
-  ArrowDown
 } from "lucide-react";
 
 export default function AnalyticsPage() {
@@ -132,9 +126,15 @@ export default function AnalyticsPage() {
         <StatusChart data={data.ordersByStatus} />
         <CategorySales data={data.salesByCategory} />
       </div>
-
-      {/* Top Products */}
-      <TopProducts products={data.topProducts} />
+   {/* Three Column Layout for Products & Brands */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div >
+          <TopProducts products={data.topProducts} />
+        </div>
+        <div>
+          <TopBrands brands={data.topBrands} />
+        </div>
+      </div>
     </div>
   );
 }

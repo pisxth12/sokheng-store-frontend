@@ -12,7 +12,7 @@ export interface OrderItem {
 }
 
 export interface Order {
-  id: number;
+   orderId: number;  
   orderNumber: string;
   customerName: string;
   email: string;
@@ -46,7 +46,7 @@ export interface PageResponse<T> {
 }
 
 export interface OrderListResponse {
-  id: number;
+  orderId: number;
   orderNumber: string;
   customerName: string;
   totalAmount: number;

@@ -11,7 +11,7 @@ import Link from "next/link";
 export default function OrderPage() {
   const params = useParams();
   const router = useRouter();
-  const orderNumber = params.orderId as string;
+  const orderNumber = params.orderNumber as string;
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 export const useDashboard = () => {
   const [data, setData] = useState<DashboardSummary | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchSummary = async () => {

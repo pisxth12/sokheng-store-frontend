@@ -7,7 +7,7 @@ import {
 } from "@/types/open/auth.type";
 import { User } from "@/types/open/user.type";
 import { useRouter } from "next/navigation";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useCallback, useMemo } from "react";
 import toast from "react-hot-toast";
 
 interface AuthContextType {
@@ -31,94 +31,101 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-  const checkAuth = async () => {
-    try {
-      const user = await authApi.getMe();
-      setUser(user);
-    } catch (error) {
-      console.log("Auth check field:", error);
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Memoized helper function
+  const mapAuthResponseToUser = useCallback((res: AuthResponse): User => ({
+    id: res.userId.toString(),
+    name: res.name,
+    email: res.email,
+    role: res.role as "ADMIN" | "USER",
+    emailVerified: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  }), []);
 
-  const login = async (credentials: LoginCredentials) => {
+  // Check auth on mount
+  useEffect(() => {
+    let mounted = true;
+
+    const checkAuth = async () => {
+      try {
+        const user = await authApi.getMe();
+        if (mounted) setUser(user);
+      } catch (error) {
+        if (mounted) setUser(null);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    checkAuth();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const login = useCallback(async (credentials: LoginCredentials) => {
+    setLoading(true);
     try {
       const res: AuthResponse = await authApi.login(credentials);
-      setUser({
-        id: res.userId.toString(),
-        name: res.name,
-        email: res.email,
-        role: res.role as "ADMIN" | "USER",
-        emailVerified: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-      if (res.role === "ADMIN") {
-        router.push("/admin");
-      } else {
-        router.push("/");
-      }
+      setUser(mapAuthResponseToUser(res));
+      
+      // Use setTimeout to prevent potential memory leaks during navigation
+      setTimeout(() => {
+        if (res.role === "ADMIN") {
+          router.push("/admin");
+        } else {
+          router.push("/");
+        }
+      }, 0);
     } catch (error: any) {
       throw new Error(error.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
-  };
+  }, [router, mapAuthResponseToUser]);
 
-  const register = async (data: RegisterCredentials) => {
+  const register = useCallback(async (data: RegisterCredentials) => {
+    setLoading(true);
     try {
       const res: AuthResponse = await authApi.register(data);
-      setUser({
-        id: res.userId.toString(),
-        name: res.name,
-        email: res.email,
-        role: res.role as "ADMIN" | "USER",
-        emailVerified: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-      if (res.role === "ADMIN") {
-        router.push("/admin");
-      } else {
-        router.push("/");
-      }
+      setUser(mapAuthResponseToUser(res));
+      
+      setTimeout(() => {
+        if (res.role === "ADMIN") {
+          router.push("/admin");
+        } else {
+          router.push("/");
+        }
+      }, 0);
     } catch (error: any) {
       throw new Error(error.response?.data?.message || "Register failed");
     } finally {
       setLoading(false);
     }
-  };
+  }, [router, mapAuthResponseToUser]);
 
-  const googleLogin = async (idToken: string) => {
+  const googleLogin = useCallback(async (idToken: string) => {
+    setLoading(true);
     try {
       const res: AuthResponse = await authApi.googleLogin({ idToken });
-      setUser({
-        id: res.userId.toString(),
-        name: res.name,
-        email: res.email,
-        role: res.role as "ADMIN" | "USER",
-        emailVerified: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-      if (res.role === "ADMIN") {
-        router.push("/admin");
-      } else {
-        router.push("/");
-      }
+      setUser(mapAuthResponseToUser(res));
+      
+      setTimeout(() => {
+        if (res.role === "ADMIN") {
+          router.push("/admin");
+        } else {
+          router.push("/");
+        }
+      }, 0);
     } catch (error: any) {
       throw new Error(error.response?.data?.message || "Google login failed");
     } finally {
       setLoading(false);
     }
-  };
+  }, [router, mapAuthResponseToUser]);
 
-  const updateProfile = async (data: UpdateProfileRequest): Promise<void> => {
+  const updateProfile = useCallback(async (data: UpdateProfileRequest): Promise<void> => {
     setLoading(true);
     try {
       const res: AuthResponse = await authApi.updateProfile(data);
@@ -140,9 +147,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       await authApi.logout();
     } catch (error) {
@@ -151,9 +158,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(null);
       router.push("/");
     }
-  };
+  }, [router]);
 
-  const values = {
+  // Memoize context value to prevent unnecessary re-renders of consumers
+  const value = useMemo(() => ({
     user,
     loading,
     login,
@@ -163,7 +171,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     updateProfile,
     isAuthenticated: !!user,
     isAdmin: user?.role === "ADMIN",
-  };
+  }), [user, loading, login, register, googleLogin, logout, updateProfile]);
 
-  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

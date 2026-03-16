@@ -1,39 +1,33 @@
-"use client";
 
-import { useParams } from "next/navigation";
-import { useProducts } from "@/hooks/open/useProducts";
 import { publicProductApi } from "@/lib/open/products";
-import { ProductGrid } from "@/components/open/products/ProductGrid";
-import { useEffect, useState } from "react";
-import { Product } from "@/types/open/product.type";
+import CategoryClient from "./CategoryClient";
+import { notFound } from "next/navigation";
+import { getTopCategoryBySlug } from "@/lib/services/category.server";
 
-export default function CategoryPage() {
-  const params = useParams();
-  const slug = params.slug as string;
+interface PageProps {
+  params: { slug: string };
+  searchParams: { page?: string };
+}
 
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+export default async function CategoryPage({ params, searchParams }: PageProps) {
+  const { slug } = await params; 
+  const { page: pageStr } = await searchParams; 
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await publicProductApi.getProductsByCategory(slug, 0, 32);
-        setProducts(data.content);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
-  }, [slug]);
+  const page = pageStr ? parseInt(pageStr) : 0;
+  const [ category ,initialData] = await Promise.all([
+    getTopCategoryBySlug(slug),
+    await publicProductApi.getProductsByCategory(slug, page, 32)
+  ])
+   if (!category) {
+    notFound();
+  }
 
-  if (loading) return <div>Loading...</div>;
 
   return (
-    <div>
-      <h1>Category: {slug}</h1>
-      <ProductGrid products={products} />
-    </div>
+    <CategoryClient
+      category={category}
+      slug={slug}
+      initialData={initialData}
+    />
   );
 }

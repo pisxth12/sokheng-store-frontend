@@ -9,19 +9,24 @@ import Link from 'next/link';
 export default function OrderDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const id = parseInt(params.id as string);
+  const orderId  = parseInt(params.orderId as string);
   
   
   const { order, loading, error, fetchOrderById, deleteOrder, updateOrderStatus } = useOrders();
 
   useEffect(() => {
-    if (id) fetchOrderById(id);
-  }, [id]);
+    if (orderId) fetchOrderById(orderId);
+  }, [orderId]);
 
+  console.log(orderId );
+  
+
+  
+  
   const handleStatusUpdate = async (status: string) => {
     try {
-      await updateOrderStatus(id, status);
-      await fetchOrderById(id);
+      await updateOrderStatus(orderId, status);
+      await fetchOrderById(orderId );
     } catch (error) {
       alert('Failed to update status');
     }
@@ -30,7 +35,7 @@ export default function OrderDetailPage() {
   const handleDelete = async () => {
     if (!confirm('Delete this order?')) return;
     try {
-      await deleteOrder(id);
+      await deleteOrder(orderId );
       router.push('/admin/orders');
     } catch (error) {
       alert('Failed to delete order');

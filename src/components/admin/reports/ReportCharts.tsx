@@ -48,6 +48,7 @@ export default function ReportCharts({ monthlyData, statusData }: Props) {
                 name="Orders"
               />
             </BarChart>
+            
           </ResponsiveContainer>
         </div>
       </div>

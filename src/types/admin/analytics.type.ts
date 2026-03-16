@@ -1,3 +1,11 @@
+export interface TopBrand {
+    id: number;
+    name: string;
+    logo: string;
+    sold: number;
+    revenue: number;
+    percentage: number;
+}
 export interface AnalyticsData {
     overview: {
     totalOrders: number;
@@ -43,6 +51,7 @@ export interface AnalyticsData {
     sold: number;
     revenue: number;
   }>;
+    topBrands: TopBrand[]; 
   todayVsYesterday: Comparison;
   thisWeekVsLastWeek: Comparison;
   thisMonthVsLastMonth: Comparison;

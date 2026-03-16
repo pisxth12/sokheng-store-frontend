@@ -1,6 +1,7 @@
-import { Product } from "@/types/admin/product.type";
+
 import { useCallback, useEffect, useState } from "react";
 import { publicProductApi } from "../../lib/open/products";
+import { Product } from "@/types/open/product.type";
 
 interface UseRelatedProductsReturn {
   products: Product[];
@@ -8,13 +9,15 @@ interface UseRelatedProductsReturn {
   loadingMore: boolean;
   hasMore: boolean;
   total: number;
-  loadMore: () => void;
+  loadMore: () => Promise<void>;
   reset: () => void;
 }
 
 export const useRelatedProducts = (
   productId: number,
   pageSize: number = 4,
+  initialLoad: boolean = true,
+  
 ): UseRelatedProductsReturn => {
   const [products, setProducts] = useState<Product[]>([]);
   const [page, setPage] = useState(0);
@@ -44,13 +47,15 @@ export const useRelatedProducts = (
         setLoading(false);
       }
     };
+    if (initialLoad) {
     fetchInitial();
+    }
   }, [productId, pageSize]);
 
   //Load more
   const loadMore = useCallback(async () => {
-    if (loadingMore && !hasMore && !productId) return;
-    setLoading(true);
+    if (loadingMore || !hasMore || !productId) return;
+    setLoadingMore(true);
     try {
       const data = await publicProductApi.getRelatedProducts(
         productId,
@@ -62,8 +67,9 @@ export const useRelatedProducts = (
       setPage((prev) => prev + 1);
     } catch (error) {
       console.error("Error loading more related products:", error);
+      throw error;
     } finally {
-      setLoading(false);
+      setLoadingMore(false);
     }
   }, [loadingMore, hasMore, productId, page, pageSize]);
 

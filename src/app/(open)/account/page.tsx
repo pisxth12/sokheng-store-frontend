@@ -22,12 +22,20 @@ export default function AccountPage() {
     const {  } = useOrders();
    const router = useRouter();
    const t = useTranslations('Account')
+
+
+   if (authLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <Loader2 className="w-8 h-8 animate-spin text-pink-600 mx-auto mb-4" />
+                    <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+                </div>
+            </div>
+        );
+    }
+
    
-      useEffect(() => {
-        if (!authLoading && !user) {
-            router.push('/login');
-        }
-    }, [user, authLoading, router]);
 
     const handleSaveProfile = async (data: UpdateProfileRequest) => {
         try {
@@ -48,16 +56,7 @@ export default function AccountPage() {
         logout();
     }
 
-      if (authLoading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                    <Loader2 className="w-8 h-8 animate-spin text-pink-600 mx-auto mb-4" />
-                    <p className="text-gray-600 dark:text-gray-400">Loading...</p>
-                </div>
-            </div>
-        );
-    }
+      
 
 
     return (

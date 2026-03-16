@@ -2,10 +2,12 @@
 import useRecentSearch from "@/hooks/open/useRecentSearch";
 import { useSearchProducts } from "@/hooks/open/useSearchProducts";
 import { useSearchSuggestions } from "@/hooks/open/useSearchSuggestions";
+import {  ProductSuggestion } from "@/types/open/product.type";
 import { History, Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface Props {
   isOpen: boolean;
@@ -21,7 +23,6 @@ export default function SearchDropdown({ isOpen, onClose }: Props) {
  
   const { search: searchProducts, setQuery: setSearchQuery } = useSearchProducts();
   const { 
-    query: suggestionQuery, 
     setQuery: setSuggestionQuery, 
     suggestions, 
     loading 
@@ -29,13 +30,44 @@ export default function SearchDropdown({ isOpen, onClose }: Props) {
   
   const { recentSearches, addRecent, clearRecent, removeRecent } = useRecentSearch(5);
 
-  
-  useEffect(() => {
+   const updateQueries = useCallback(() => {
     setSearchQuery(searchInput);
     setSuggestionQuery(searchInput);
   }, [searchInput, setSearchQuery, setSuggestionQuery]);
 
   useEffect(() => {
+    updateQueries();
+  }, [updateQueries]);
+
+  
+
+   const handleSearch = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    const keyword = searchInput.trim();
+
+    if (keyword) {
+      addRecent(keyword);
+      searchProducts(keyword);  
+      router.push(`/search?q=${encodeURIComponent(keyword)}`);
+      onClose();
+    }
+  }, [searchInput, addRecent, searchProducts, router, onClose]);
+
+   const handleSuggestionClick = useCallback((term: string) => {
+    addRecent(term);
+    setSearchInput(term);
+    searchProducts(term);  
+    router.push(`/search?q=${encodeURIComponent(term)}`);
+    onClose();
+  }, [addRecent, searchProducts, router, onClose]);
+
+  const handleProductClick = useCallback((product: ProductSuggestion) => {
+    addRecent(product.name);
+    router.push(`/products/${product.slug}`);
+    onClose();
+  }, [addRecent, router, onClose]);
+
+   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
@@ -46,26 +78,6 @@ export default function SearchDropdown({ isOpen, onClose }: Props) {
       document.body.style.overflow = "unset";
     };
   }, [isOpen]);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const keyword = searchInput.trim();
-
-    if (keyword) {
-      addRecent(keyword);
-      searchProducts(keyword);  
-      router.push(`/search?q=${encodeURIComponent(keyword)}`);
-      onClose();
-    }
-  };
-
-  const handleSuggestionClick = (term: string) => {
-    addRecent(term);
-    setSearchInput(term);
-    searchProducts(term);  
-    router.push(`/search?q=${encodeURIComponent(term)}`);
-    onClose();
-  };
 
   if (!isOpen) return null;
 
@@ -157,26 +169,32 @@ export default function SearchDropdown({ isOpen, onClose }: Props) {
                 </p>
                 <div className="space-y-2">
                   {suggestions.map((product) => (
-                    <button
-                      key={product.id}
-                      onClick={() => {
-                        addRecent(product.name);
-                        router.push(`/products/${product.slug}`);
-                        onClose();
-                      }}
-                      className="flex items-center gap-3 w-full p-2 hover:bg-gray-100 dark:hover:bg-black/20 cursor-pointer rounded-lg transition"
-                    >
-                      {product.mainImage && (
-                        <img 
-                          src={product.mainImage} 
-                          alt={product.name}
-                          className="w-10 h-10 object-cover rounded"
-                        />
-                      )}
-                      <span className="text-gray-700 dark:text-gray-300">
-                        {product.name}
-                      </span>
-                    </button>
+                      <Link
+                          key={product.id}
+                          href={`/products/${product.slug}`}
+                          onClick={() => {
+                            addRecent(product.name);
+                            onClose();
+                          }}
+                          className="flex items-center justify-between gap-3 w-full p-2 hover:bg-gray-100 dark:hover:bg-black/20 cursor-pointer rounded-lg transition"
+                        >
+                          <div className="flex items-center gap-3">
+                            {product.mainImage && (
+                              <img 
+                                src={product.mainImage} 
+                                alt={product.name}
+                                className="w-10 h-10 object-cover rounded"
+                              />
+                            )}
+                            <span className="text-gray-700 dark:text-gray-300">
+                              {product.name}
+                            </span>
+                          </div>
+                          
+                          <span className="text-gray-500  font-medium">
+                            ${product.price}
+                          </span>
+                        </Link>
                   ))}
                 </div>
               </div>

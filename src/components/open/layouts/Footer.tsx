@@ -1,7 +1,11 @@
 "use client"
-import { useContact } from '@/hooks/open/useSocialsContact';
+import { ContactInfo } from '@/types/open/socialsContact.type';
 import { Facebook, Phone, MapPin, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+
+interface FooterProps {
+  contactInfo: ContactInfo | null;
+}
 
 // TikTok icon as SVG component
 const TikTokIcon = ({ className }: { className?: string }) => (
@@ -27,33 +31,10 @@ const TelegramIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const Footer = () => {
+const Footer = ({ contactInfo }: FooterProps) => {
   const currentYear = new Date().getFullYear();
-  const { contacts, loading, error } = useContact();
-
-  // Show loading state
-  if (loading) {
-    return (
-      <footer className="border-t border-gray-200 dark:border-gray-800 py-6">
-        <div className="container mx-auto px-4 text-center">
-          <Loader2 className="w-5 h-5 animate-spin mx-auto text-pink-500" />
-        </div>
-      </footer>
-    );
-  }
-
-  // Show error state (still show basic copyright)
-  if (error || !contacts) {
-    return (
-      <footer className="border-t border-gray-200 dark:border-gray-800 py-6">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            © {currentYear} BabyShop. All rights reserved.
-          </p>
-        </div>
-      </footer>
-    );
-  }
+  
+    if (!contactInfo) return null;
 
   return (
     <footer className="border-t border-gray-200 dark:border-gray-800 py-6">
@@ -69,16 +50,16 @@ const Footer = () => {
           <div className="flex items-center gap-6">
             
             {/* Phone - Now showing number */}
-            {contacts.phone && (
+            {contactInfo.phone && (
               <a 
-                href={`tel:${contacts.phone}`}
+                href={`tel:${contactInfo.phone}`}
                 className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400  transition-all duration-300 group"
                 aria-label="Call us"
               >
                 <div className="p-2 rounded-full  group-hover:bg-pink-100 dark:group-hover:bg-pink-900/50 transition-colors">
                   <Phone className="w-3.5 h-3.5 text-blue-700" />
                 </div>
-                <span className="font-mono">{contacts.phone}</span>
+                <span className="font-mono">{contactInfo.phone}</span>
               </a>
             )}
 
@@ -89,9 +70,9 @@ const Footer = () => {
             <div className="flex items-center gap-3">
               
               {/* Facebook */}
-              {contacts.facebook && (
+              {contactInfo.facebook && (
                 <Link 
-                  href={contacts.facebook} 
+                  href={contactInfo.facebook} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-pink-500 hover:text-white dark:hover:bg-pink-600 transition-all duration-300"
@@ -102,9 +83,9 @@ const Footer = () => {
               )}
 
               {/* TikTok */}
-              {contacts.tiktok && (
+              {contactInfo.tiktok && (
                 <Link 
-                  href={contacts.tiktok.startsWith('http') ? contacts.tiktok : `https://tiktok.com/@${contacts.tiktok}`}
+                  href={contactInfo.tiktok.startsWith('http') ? contactInfo.tiktok : `https://tiktok.com/@${contactInfo.tiktok}`}
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-pink-500 hover:text-white dark:hover:bg-pink-600 transition-all duration-300"
@@ -115,9 +96,9 @@ const Footer = () => {
               )}
 
               {/* Telegram */}
-              {contacts.telegram && (
+              {contactInfo.telegram && (
                 <Link 
-                  href={contacts.telegram.startsWith('http') ? contacts.telegram : `https://t.me/${contacts.telegram}`} 
+                  href={contactInfo.telegram.startsWith('http') ? contactInfo.telegram : `https://t.me/${contactInfo.telegram}`} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-pink-500 hover:text-white dark:hover:bg-pink-600 transition-all duration-300"
@@ -128,9 +109,9 @@ const Footer = () => {
               )}
 
               {/* Google Maps */}
-              {contacts.googleMap && (
+              {contactInfo.googleMap && (
                 <Link 
-                  href={contacts.googleMap} 
+                  href={contactInfo.googleMap} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-pink-500 hover:text-white dark:hover:bg-pink-600 transition-all duration-300"

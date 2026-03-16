@@ -143,22 +143,22 @@ const QRModal = ({
             className={` py-10 rounded-2xl flex items-center justify-center mb-4 transition-all ${status === "PAID" ? "bg-emerald-50" : "bg-white"}`}
           >
             {!qrString ? (
-              <div className="w-[220px] h-[220px] flex items-center justify-center">
+              <div className="w-55 h-55 flex items-center justify-center">
                 <div className="w-6 h-6 border border-black/20 border-t-black rounded-full animate-spin" />
               </div>
             ) : status === "PAID" ? (
-              <div className="w-[220px] h-[220px] flex items-center justify-center">
+              <div className="w-55 h-55 flex items-center justify-center">
                 <div className="text-5xl">✓</div>
               </div>
             ) : !imageError ? (
               <img
                 src={qrImageUrl}
                 alt="QR Code"
-                className="w-[220px] h-[220px]"
+                className="w-55 h-55"
                 onError={() => setImageError(true)}
               />
             ) : (
-              <div className="w-[220px] h-[220px] flex items-center justify-center text-sm text-red-400">
+              <div className="w-55 h-55 flex items-center justify-center text-sm text-red-400">
                 Failed to load QR
               </div>
             )}
@@ -167,7 +167,7 @@ const QRModal = ({
           {/* Status */}
           <div className="flex items-center justify-center gap-2 mb-5">
             {statusConfig.spin && (
-              <div className="w-3 h-3 border border-white/20 border-t-white rounded-full animate-spin flex-shrink-0" />
+              <div className="w-3 h-3 border border-white/20 border-t-white rounded-full animate-spin shrink-0" />
             )}
             <p className={`text-xs ${statusConfig.color}`}>
               {statusConfig.text}

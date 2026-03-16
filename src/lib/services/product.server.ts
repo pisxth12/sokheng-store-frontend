@@ -1,3 +1,4 @@
+// lib/api/product.server.ts
 import "server-only";
 import { apiServerService } from "../api/server";
 import { Product } from "@/types/open/product.type";

@@ -25,12 +25,23 @@ export default function AdminDashboardPage() {
     );
   }
 
-  if (error || !data) {
+  if (error) {
     return (
       <div className="p-6 text-center">
         <p className="text-red-600">{error || "No data available"}</p>
         <button onClick={refresh} className="mt-4 px-4 py-2 bg-gray-900 text-white rounded-lg">
           Try Again
+        </button>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="p-6 text-center">
+        <p className="text-gray-600">No data available</p>
+        <button onClick={refresh} className="mt-4 px-4 py-2 bg-gray-900 text-white rounded-lg">
+          Refresh
         </button>
       </div>
     );

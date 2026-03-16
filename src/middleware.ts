@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
     const token = request.cookies.get("token")?.value;
+     const isAccountPage = request.nextUrl.pathname.startsWith('/account');
 
     // Skip static files
     if (
@@ -22,6 +23,11 @@ export function middleware(request: NextRequest) {
         '/register',
         '/checkout/guest',
     ];
+
+    //redirect to login when unAuthenticate
+    if (isAccountPage && !token) {
+        return NextResponse.redirect(new URL('/login', request.url));
+    }
 
 
     const isPublicRoute = publicRoutes.some((route) => {
