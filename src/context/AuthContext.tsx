@@ -70,14 +70,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const res: AuthResponse = await authApi.login(credentials);
       setUser(mapAuthResponseToUser(res));
       
-      // Use setTimeout to prevent potential memory leaks during navigation
-      setTimeout(() => {
-        if (res.role === "ADMIN") {
-          router.push("/admin");
+      if (res.role === "ADMIN") {
+          window.location.href = '/admin';
         } else {
-          router.push("/");
+          window.location.href = '/';
         }
-      }, 0);
     } catch (error: any) {
       throw new Error(error.response?.data?.message || "Login failed");
     } finally {
@@ -90,20 +87,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const res: AuthResponse = await authApi.register(data);
       setUser(mapAuthResponseToUser(res));
-      
-      setTimeout(() => {
-        if (res.role === "ADMIN") {
-          router.push("/admin");
-        } else {
-          router.push("/");
-        }
-      }, 0);
+    
+      window.location.href = res.role === "ADMIN" ? "/admin" : "/";
     } catch (error: any) {
       throw new Error(error.response?.data?.message || "Register failed");
     } finally {
       setLoading(false);
     }
-  }, [router, mapAuthResponseToUser]);
+  }, [mapAuthResponseToUser]);
 
   const googleLogin = useCallback(async (idToken: string) => {
     setLoading(true);
@@ -152,11 +143,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = useCallback(async () => {
     try {
       await authApi.logout();
+      toast.success("Logged out successfully");
     } catch (error) {
       console.log("Logout field:", error);
     } finally {
       setUser(null);
-      router.push("/");
+      window.location.href = '/';
     }
   }, [router]);
 

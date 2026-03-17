@@ -185,9 +185,9 @@ export default function AccountPage() {
                         </div>
 
                         {/* Help Card */}
-                        <div className="bg-linear-to-br from-pink-500 to-purple-600 rounded-md p-6 text-white">
+                        <div className="bg-gray-50 dark:bg-darkbg shadow-sm border border-gray-200 dark:border-gray-800 rounded-md p-6 ">
                             <h3 className="font-semibold mb-2">{t('help.title')}</h3>
-                            <p className="text-sm text-white/90 mb-4">
+                            <p className="text-sm  mb-4">
                                 {t('help.description')}
                             </p>
                             <button className="w-full bg-white/20 hover:bg-white/30 rounded-lg py-2 text-sm font-medium transition">

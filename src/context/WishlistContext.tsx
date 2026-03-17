@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/open/useAuth";
 import { publicWishlistApi } from "@/lib/open/wishlist";
 import { WishlistItem } from "@/types/open/wishlist.types";
 import { createContext, useCallback, useEffect, useState } from "react";
@@ -25,6 +26,9 @@ export default function WishlistProvider({
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+   const { isAuthenticated } = useAuth(); // បន្ថែមនេះ
+  const [prevAuthState, setPrevAuthState] = useState(isAuthenticated);
 
   //
   const fetchWishlist = useCallback(async () => {
@@ -126,6 +130,13 @@ export default function WishlistProvider({
     },
     [addItem, removeItem],
   );
+
+  useEffect(() => {
+    if (isAuthenticated && !prevAuthState) {
+      fetchWishlist();
+    }
+    setPrevAuthState(isAuthenticated);
+  }, [isAuthenticated, prevAuthState, fetchWishlist]);
 
   // Load on mount
   useEffect(() => {

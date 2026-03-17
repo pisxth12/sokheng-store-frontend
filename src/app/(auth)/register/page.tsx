@@ -2,29 +2,91 @@
 import { useAuth } from "@/hooks/open/useAuth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { User, Mail, Lock, Eye, EyeOff, UserPlus } from "lucide-react";
+import { User, Mail, Lock, Eye, EyeOff, UserPlus, Phone, CheckCircle } from "lucide-react";
 import { GoogleLogin } from "@react-oauth/google";
+import OtpModal from "@/components/open/accounts/OtpModal";
+import { authApi } from "@/lib/open/auth";
+import toast from "react-hot-toast";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [otpLoading, setOtpLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [isPhoneVerified, setIsPhoneVerified] = useState(false);
   const { register, googleLogin } = useAuth();
   const router = useRouter();
 
+  // Handle sending OTP
+  const handleSendOtp = async () => {
+    if (!formData.phone || formData.phone.length < 10) {
+      setError("Please enter a valid phone number");
+      return;
+    }
+    
+    setOtpLoading(true);
+    setError(null);
+    
+    try {
+      await authApi.sendOtp(formData.phone);
+      setShowOtpModal(true);
+      toast.success("OTP sent to your phone");
+    } catch (error: any) {
+      setError(error.response?.data?.message || "Failed to send OTP");
+      toast.error("Failed to send OTP");
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
+  // Handle verifying OTP
+  const handleVerifyOtp = async (otp: string) => {
+    try {
+      await authApi.verifyOtp(formData.phone, otp);
+      
+      setIsPhoneVerified(true);
+      setShowOtpModal(false);
+      toast.success("Phone verified successfully!");
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || "Invalid OTP");
+    }
+  };
+
+  // Handle resending OTP
+  const handleResendOtp = async () => {
+    try {
+      await authApi.sendOtp(formData.phone);
+      toast.success("OTP resent successfully");
+      return Promise.resolve();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to resend OTP");
+      throw new Error(error.response?.data?.message || "Failed to resend OTP");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!isPhoneVerified) {
+      setError("Please verify your phone number first");
+      return;
+    }
+    
     setLoading(true);
     setError(null);
     try {
       await register(formData);
+      toast.success("Registration successful!");
     } catch (error: any) {
-      setError(error.message || "Registration failed");
+      setError(error.message );
+      toast.error(error.message || "Registration failed");
     } finally {
       setLoading(false);
     }
@@ -44,6 +106,7 @@ const RegisterPage = () => {
       await googleLogin(credentialResponse.credential);
     } catch (error: any) {
       setError(error.message || "Google login failed");
+      toast.error(error.message || "Google login failed");
     } finally {
       setLoading(false);
     }
@@ -112,6 +175,41 @@ const RegisterPage = () => {
               </div>
             </div>
 
+            {/* Phone Field with Verification */}
+            <div>
+              <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                Phone Number
+              </label>
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <Phone className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="+855 12 345 678"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    disabled={isPhoneVerified}
+                    className="w-full pl-7 pr-3 py-2 text-xs bg-gray-50 dark:bg-[#2a2a2a] border border-gray-200 dark:border-gray-700 focus:border-gray-400 dark:focus:border-gray-500 outline-none text-gray-900 dark:text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                    required
+                  />
+                  {isPhoneVerified && (
+                    <CheckCircle className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-green-500" />
+                  )}
+                </div>
+                {!isPhoneVerified && (
+                  <button
+                    type="button"
+                    onClick={handleSendOtp}
+                    disabled={otpLoading || !formData.phone || formData.phone.length < 10}
+                    className="px-3 py-2 bg-gray-900 hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 dark:text-gray-900 text-white text-xs font-medium disabled:opacity-50 whitespace-nowrap"
+                  >
+                    {otpLoading ? "Sending..." : "Verify"}
+                  </button>
+                )}
+              </div>
+            </div>
+
             {/* Password Field */}
             <div>
               <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
@@ -145,7 +243,7 @@ const RegisterPage = () => {
             {/* Register Button */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !isPhoneVerified}
               className="w-full py-2 px-3 bg-gray-900 hover:bg-gray-800 dark:bg-white dark:hover:bg-gray-100 dark:text-gray-900 text-white text-xs font-medium flex items-center justify-center gap-1.5 disabled:opacity-50 mt-3"
             >
               {loading ? (
@@ -187,17 +285,6 @@ const RegisterPage = () => {
             />
           </div>
 
-          {/* Register Link */}
-          <p className="mt-4 text-center text-[9px] text-gray-500 dark:text-gray-400">
-            New here?{" "}
-            <button
-              onClick={() => router.push("/register")}
-              className="font-medium text-gray-900 dark:text-white hover:underline"
-            >
-              Create account
-            </button>
-          </p>
-
           {/* Login Link */}
           <p className="mt-4 text-center text-[9px] text-gray-500 dark:text-gray-400">
             Already have an account?{" "}
@@ -217,6 +304,15 @@ const RegisterPage = () => {
           </div>
         </div>
       </div>
+
+      {/* OTP Modal */}
+      <OtpModal
+        isOpen={showOtpModal}
+        onClose={() => setShowOtpModal(false)}
+        phone={formData.phone}
+        onVerify={handleVerifyOtp}
+        onResend={handleResendOtp}
+      />
     </div>
   );
 };

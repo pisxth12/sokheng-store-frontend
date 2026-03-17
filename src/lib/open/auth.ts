@@ -17,6 +17,21 @@ export const authApi = {
     return response.data;
   },
 
+  // ========== NEW OTP METHODS ==========
+  sendOtp: async (phoneNumber: string) => {
+    const response = await apiClient.post("/auth/send-otp", { phoneNumber });
+    return response.data;
+  },
+
+  verifyOtp: async (phoneNumber: string, otp: string) => {
+    const response = await apiClient.post("/auth/verify-otp", { 
+      phoneNumber, 
+      otp 
+    });
+    return response.data;
+  },
+
+
   googleLogin: async (idToken: GoogleLoginRequest) => {
     const response = await apiClient.post("/auth/google", idToken);
     return response.data;
