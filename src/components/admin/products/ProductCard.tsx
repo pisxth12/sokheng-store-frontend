@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import DeleteModal from "../products/deleteProductModal";
+import Link from "next/link";
 
 interface ProductCardProps {
   product: Product;
@@ -53,7 +54,6 @@ export default function ProductCard({
   const displayPrice = salePrice || price;
   const originalPrice = salePrice ? price : null;
   const imageUrl = mainImage || images?.[0]?.imageUrl;
-
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -130,8 +130,7 @@ export default function ProductCard({
             `}
       >
         {/* Status Bar */}
-        <div
-          className={`absolute top-0 left-0 right-0 h-1 rounded-t-xl`}/>
+        <div className={`absolute top-0 left-0 right-0 h-1 rounded-t-xl`} />
 
         {/* Image Section */}
         <div className="p-4 pb-0">
@@ -168,13 +167,11 @@ export default function ProductCard({
                 <div className="flex items-center gap-1 px-2 py-1 bg-red-500 text-white rounded-lg shadow-sm">
                   <BadgePercent className="w-3 h-3" />
                   <span className="text-xs font-medium">
-                    -{product.discountPercent}% 
+                    {product.discountPercent}% 
                   </span>
                 </div>
               </div>
             )}
-
-         
 
             {/* Image Count */}
             {images && images.length > 0 && (
@@ -189,18 +186,20 @@ export default function ProductCard({
         <div className="p-4">
           {/* Product Name and Status */}
           <div className="flex items-start justify-between gap-2 mb-2">
-            <h3 className="font-medium text-gray-900 text-sm line-clamp-2 flex-1">
+            <Link
+              href={`/admin/products/${id}`}
+              className="font-medium text-gray-900 text-sm line-clamp-2 flex-1"
+            >
               {name}
-            </h3>
-          
-         {
-          brandName && (
-            <span className="px-2 py-0.5 font-bold bg-gray-100 text-gray-600  text-xs rounded-full">
-              {brandName.length > 10 ? brandName.slice(0, 10) + "..." : brandName}
-            </span>
-          )
-         }
-          
+            </Link>
+
+            {brandName && (
+              <span className="px-2 py-0.5 font-bold bg-gray-100 text-gray-600  text-xs rounded-full">
+                {brandName.length > 10
+                  ? brandName.slice(0, 10) + "..."
+                  : brandName}
+              </span>
+            )}
           </div>
 
           {/* Price Section */}
@@ -209,7 +208,6 @@ export default function ProductCard({
               <div className="flex items-baseline gap-2">
                 <span className="text-lg font-bold text-gray-900">
                   ${displayPrice.toFixed(2)}
-                  
                 </span>
                 <span className="text-sm text-gray-400 line-through">
                   ${originalPrice.toFixed(2)}

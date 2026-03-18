@@ -23,6 +23,21 @@ export const useOrders = (initialFilters?: OrderFilters) => {
 
   const router = useRouter();
 
+   // Helper function to extract error message
+  const extractErrorMessage = (err: any): string => {
+    if (err.response?.data?.message) {
+      return err.response.data.message;
+    }
+    if (err.response?.data?.error) {
+      return err.response.data.error;
+    }
+    if (err.message) {
+      return err.message;
+    }
+    return "An unexpected error occurred";
+  };
+
+
   // Fetch all orders
   const fetchOrders = useCallback(async () => {
     setLoading(true);
@@ -49,7 +64,7 @@ export const useOrders = (initialFilters?: OrderFilters) => {
         pageSize: response.size,
       });
     } catch (err: any) {
-      setError(err.message || "Failed to fetch orders");
+      setError(extractErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -63,7 +78,7 @@ export const useOrders = (initialFilters?: OrderFilters) => {
       const data = await adminOrderApi.getOrderById(id);
       setOrder(data);
     } catch (err: any) {
-      setError(err.message || "Failed to fetch order");
+      setError(extractErrorMessage(err))
     } finally {
       setLoading(false);
     }
@@ -83,8 +98,7 @@ export const useOrders = (initialFilters?: OrderFilters) => {
         }
         return updated;
       } catch (err: any) {
-        setError(err.message || "Failed to update status");
-        throw err;
+       setError(extractErrorMessage(err));
       } finally {
         setLoading(false);
       }
@@ -102,8 +116,7 @@ export const useOrders = (initialFilters?: OrderFilters) => {
         // Refresh list
         fetchOrders();
       } catch (err: any) {
-        setError(err.message || "Failed to delete order");
-        throw err;
+        setError(extractErrorMessage(err));
       } finally {
         setLoading(false);
       }
@@ -151,7 +164,7 @@ export const useOrders = (initialFilters?: OrderFilters) => {
     if (window.location.pathname === "/admin/orders") {
       fetchOrders();
     }
-  }, [fetchOrders, filters]);
+  }, [filters]);
 
   return {
     // State

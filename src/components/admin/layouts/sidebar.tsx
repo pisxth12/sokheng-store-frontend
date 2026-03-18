@@ -41,17 +41,18 @@ const navItems: NavItem[] = [
     icon: <FileText className="w-4 h-4" />,
   },
   {
-    name: "Products",
-    href: "/admin/products",
-    icon: <Package className="w-4 h-4" />,
-    badge: "12",
-  },
-  {
     name: "Orders",
     href: "/admin/orders",
     icon: <ShoppingBag className="w-4 h-4" />,
-    badge: "9+",
+    // badge: "9+",
   },
+  {
+    name: "Products",
+    href: "/admin/products",
+    icon: <Package className="w-4 h-4" />,
+    // badge: "12",
+  },
+  
   {
     name: "Brands",
     href: "/admin/brands",
@@ -152,7 +153,7 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
               <ShoppingBag size={15} color="#fff" />
             </div>
             <span className="text-sm font-extrabold text-gray-900 tracking-tight">
-              ShopAdmin
+              VANNESA
             </span>
           </div>
 
@@ -174,7 +175,7 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
           <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-black/25 px-2.5 pt-2 pb-1.5">
             Main
           </p>
-          {navItems.slice(0, 3).map((item) => (
+          {navItems.slice(0, 4).map((item) => (
             <NavLink key={item.name} item={item} />
           ))}
 
@@ -183,7 +184,7 @@ export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
           <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-black/25 px-2.5 pt-2 pb-1.5">
             Catalog
           </p>
-          {navItems.slice(3, 8).map((item) => (
+          {navItems.slice(4, 8).map((item) => (
             <NavLink key={item.name} item={item} />
           ))}
 

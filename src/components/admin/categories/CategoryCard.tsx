@@ -4,6 +4,7 @@ import { Category } from "@/types/admin/category.type";
 import { Edit, Eye, EyeOff, Trash2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import DeleteModal from "../products/deleteProductModal";
+import toast from "react-hot-toast";
 
 interface CategoryCardProps {
   category: Category;
@@ -31,6 +32,10 @@ export default function CategoryCard({
     {
       try {
         await onDelete(id);
+        toast.success("Category deleted successfully");
+      } catch (error) {
+        toast.error("Failed to delete category");
+        console.error("Error deleting category:", error);
       } finally {
         setIsDeleting(false);
       }
@@ -91,6 +96,7 @@ export default function CategoryCard({
             className="p-1.5 hover:bg-gray-100 rounded-md transition-colors"
             title="Delete category"
           >
+            
             <Trash2 className="w-4 h-4 text-red-600" />
           </button>
           {/* Delete Modal */}

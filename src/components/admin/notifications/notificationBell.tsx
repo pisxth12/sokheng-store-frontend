@@ -2,7 +2,7 @@
 import { useNotifications } from "@/hooks/admin/useNotifications";
 import { CheckCheck , ExternalLink , Trash2 , Bell  , Trash } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function NotificationBell() {
     const [isOpen, setIsOpen] = useState(false);
@@ -38,6 +38,12 @@ export default function NotificationBell() {
                 default: return "bg-gray-100 text-gray-600";
                 }
     };
+
+    const handleGoToNoti = useCallback(() => {
+        window.location.href = "/admin/notifications";
+        setIsOpen(false);
+    },[])
+    
 
 
       return (
@@ -76,13 +82,13 @@ export default function NotificationBell() {
                   <CheckCheck className="w-4 h-4" />
                 </button>
               )}
-              <Link
-                href="/admin/notifications"
+              <button
+                onClick={() =>  handleGoToNoti()}
                 className="p-2 hover:bg-gray-100 rounded-lg text-sm text-gray-600"
                 title="View all"
               >
                 <ExternalLink className="w-4 h-4" />
-              </Link>
+              </button>
             </div>
           </div>
 

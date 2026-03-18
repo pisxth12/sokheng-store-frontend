@@ -5,6 +5,9 @@ export function middleware(request: NextRequest) {
     const token = request.cookies.get("token")?.value;
      const isAccountPage = request.nextUrl.pathname.startsWith('/account');
 
+
+
+
     // Skip static files
     if (
         pathname.includes("/_next") ||
@@ -23,6 +26,15 @@ export function middleware(request: NextRequest) {
         '/register',
         '/checkout/guest',
     ];
+
+    
+     if (pathname.startsWith('/admin')) {
+        if (!token) {
+            return NextResponse.redirect(new URL('/login', request.url));
+        }
+        return NextResponse.next();
+    }
+
 
     //redirect to login when unAuthenticate
     if (isAccountPage && !token) {

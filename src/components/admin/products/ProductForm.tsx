@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import { Product } from "@/types/admin/product.type";
-import { X, Upload, Trash2, Star, Loader2 } from "lucide-react";
+import { X, Upload, Trash2, Star, Loader2, AlertCircle } from "lucide-react";
 import { useProducts } from "@/hooks/admin/useProduct";
 import { useCategory } from "@/hooks/admin/useCategory";
-import ProductImageGallery from "./ProductImageGallery";
 import { useBrand } from "@/hooks/admin/useBrand";
 
 interface ProductFormProps {
@@ -20,18 +19,11 @@ export default function ProductForm({
   onClose,
   onSuccess,
 }: ProductFormProps) {
-  const {
-    createProduct,
-    updateProduct,
-    saving,
-    toggleMainImage,
-    deleteImage,
-    reorderImages,
-    updateImageAltText,
-  } = useProducts();
+  const { createProduct, updateProduct, saving, toggleMainImage, deleteImage } =
+    useProducts();
 
   const { categories } = useCategory();
-  const { brands } = useBrand(); 
+  const { brands } = useBrand();
 
   // Form state
   const [name, setName] = useState(product?.name || "");
@@ -49,7 +41,6 @@ export default function ProductForm({
   const [categoryId, setCategoryId] = useState(product?.categoryId || 0);
   const [brandId, setBrandId] = useState(product?.brandId || 0);
 
-
   // Image state
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -60,6 +51,67 @@ export default function ProductForm({
   //Error message
   const [formMessage, setFormMessage] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+
+  //Dicount error handler
+  const [salePriceError, setSalePriceError] = useState<string | null>(null);
+  const [saleEndDateError, setSaleEndDateError] = useState<string | null>(null);
+  
+  //Slug generate
+  const [slugEdited, setSlugEdited] = useState(false);
+
+  useEffect(() => {
+    if (salePrice && price > 0) {
+      const salePriceNum = parseFloat(salePrice);
+      if (salePriceNum >= price) {
+        setSalePriceError(
+          `Sale price ($${salePriceNum.toFixed(2)}) must be less than regular price ($${price.toFixed(2)})`,
+        );
+      } else {
+        setSalePriceError(null);
+      }
+    } else {
+      setSalePriceError(null);
+    }
+  }, [price, salePrice]);
+
+  //error date if have sale no endDate
+  useEffect(() => {
+      if (salePrice && !saleEndDate) {
+        setSaleEndDateError("Sale end date is required when sale price is set");
+      } else if (saleEndDate && new Date(saleEndDate) < new Date()) {
+        setSaleEndDateError("Sale end date cannot be in the past");
+      } else {
+        setSaleEndDateError(null);
+      }
+    }, [salePrice, saleEndDate]);
+
+  const generateSlug = useCallback((value: string) => {
+    return value
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-");
+  }, []);
+
+  const handleNameChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setName(value);
+      if (!slugEdited) {
+        setSlug(generateSlug(value));
+      }
+    },
+    [slugEdited],
+  );
+
+  const handleSlugChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSlug(generateSlug(e.target.value));
+      setSlugEdited(true);
+    },
+    [],
+  );
 
   useEffect(() => {
     if (product?.saleEndDate) {
@@ -81,7 +133,6 @@ export default function ProductForm({
       setIsFeatured(product.isFeatured || false);
       setCategoryId(product.categoryId || 0);
       setBrandId(product.brandId || 0);
-
     } else {
       // Reset form for new product
       setName("");
@@ -131,89 +182,119 @@ export default function ProductForm({
     setAltTexts((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const removeExistingImage = (imageId: number) => {
-    setDeleteImageIds((prev) => [...prev, imageId]);
-    setImagePreviews((prev) =>
-      prev.filter((_, i) => {
-        if (product?.images && i < product.images.length) {
-          return product.images[i].id !== imageId;
+  const updateMainImage = useCallback(
+    async (productId: number, imageId: number) => {
+      try {
+        await toggleMainImage(productId, imageId);
+      } catch (error) {
+        console.error("Error updating main image:", error);
+      }
+    },
+    [toggleMainImage],
+  );
+
+  const deleteProductImage = useCallback(
+    async (productId: number, imageId: number) => {
+      if (!confirm("Are you sure you want to delete this image?")) return;
+      try {
+        await deleteImage(productId, imageId);
+      } catch (error) {
+        console.error("Error deleting product image:", error);
+      }
+    },
+    [deleteImage],
+  );
+
+  const isFormValid = useCallback(() => {
+    if (!name || !price || !categoryId) return false;
+    if (salePriceError) return false;
+    if (saleEndDateError) return false;
+    return true;
+  }, [name, price, categoryId, salePriceError, saleEndDateError]);
+
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+
+      if (salePriceError) {
+        setFormError(salePriceError);
+        return;
+      }
+
+      setFormMessage(null);
+      setFormError(null);
+
+      try {
+        const formData = new FormData();
+        formData.append("name", name);
+        if (description) formData.append("description", description);
+        formData.append("price", price.toString());
+        if (salePrice) formData.append("salePrice", salePrice);
+        if (saleEndDate) {
+          formData.append("saleEndDate", `${saleEndDate}T00:00:00`);
         }
-        return true;
-      }),
-    );
-  };
+        formData.append("stock", stock.toString());
+        if (slug) formData.append("slug", slug);
+        formData.append("isFeatured", isFeatured.toString());
+        formData.append("categoryId", categoryId.toString());
 
-  const updateMainImage = async (productId: number, imageId: number) => {
-    try {
-      await toggleMainImage(productId, imageId);
-    } catch (error) {
-      console.error("Error updating main image:", error);
-    }
-  };
+        if (brandId && brandId !== 0) {
+          formData.append("brandId", brandId.toString());
+        }
 
-  const deleteProductImage = async (productId: number, imageId: number) => {
-    if (!confirm("Are you sure you want to delete this image?")) return;
+        if (product) {
+          imageFiles.forEach((file) => formData.append("newImages", file));
+          altTexts.forEach((text) => formData.append("newAltTexts", text));
+          deleteImageIds.forEach((id) =>
+            formData.append("deleteImageIds", id.toString()),
+          );
+          if (setMainImageId)
+            formData.append("setMainImageId", setMainImageId.toString());
 
-    try {
-      await deleteImage(productId, imageId);
-    } catch (error) {
-      console.error("Error deleting product image:", error);
-    }
-  };
+          await updateProduct(product.id, formData);
+          setFormMessage("Product updated successfully ✅");
+        } else {
+          imageFiles.forEach((file) => formData.append("images", file));
+          altTexts.forEach((text) => formData.append("altTexts", text));
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+          await createProduct(formData);
+          setFormMessage("Product created successfully ✅");
+        }
 
-    setFormMessage(null);
-    setFormError(null);
-
-    try {
-      const formData = new FormData();
-      formData.append("name", name);
-      if (description) formData.append("description", description);
-      formData.append("price", price.toString());
-      if (salePrice) formData.append("salePrice", salePrice);
-      if (saleEndDate) {
-        formData.append("saleEndDate", `${saleEndDate}T00:00:00`);
-      }
-      formData.append("stock", stock.toString());
-      if (slug) formData.append("slug", slug);
-      formData.append("isFeatured", isFeatured.toString());
-      formData.append("categoryId", categoryId.toString());
-
-      if(brandId && brandId !== null){
-        formData.append("brandId", brandId.toString());
-      }
-
-      if (product) {
-        imageFiles.forEach((file) => formData.append("newImages", file));
-        altTexts.forEach((text) => formData.append("newAltTexts", text));
-        deleteImageIds.forEach((id) =>
-          formData.append("deleteImageIds", id.toString()),
+        onSuccess();
+        onClose();
+      } catch (error: any) {
+        console.error(error);
+        setFormError(
+          error?.response?.data?.message ||
+            "Something went wrong. Please try again.",
         );
-        if (setMainImageId)
-          formData.append("setMainImageId", setMainImageId.toString());
-
-        await updateProduct(product.id, formData);
-        setFormMessage("Product updated successfully ✅");
-      } else {
-        imageFiles.forEach((file) => formData.append("images", file));
-        altTexts.forEach((text) => formData.append("altTexts", text));
-
-        await createProduct(formData);
-        setFormMessage("Product created successfully ✅");
       }
+    },
+    [
+      name,
+      description,
+      price,
+      salePrice,
+      saleEndDate,
+      stock,
+      slug,
+      isFeatured,
+      categoryId,
+      brandId,
+      product,
+      imageFiles,
+      altTexts,
+      deleteImageIds,
+      setMainImageId,
+      salePriceError,
+      updateProduct,
+      createProduct,
+      onSuccess,
+      onClose,
+    ],
+  );
 
-      onSuccess();
-      onClose();
-    } catch (error: any) {
-      console.error(error);
-      setFormError(
-        error?.response?.data?.message ||
-          "Something went wrong. Please try again.",
-      );
-    }
-  };
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -245,7 +326,7 @@ export default function ProductForm({
               <input
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={handleNameChange}
                 className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
@@ -288,8 +369,18 @@ export default function ProductForm({
                 min="0"
                 value={salePrice}
                 onChange={(e) => setSalePrice(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 ${
+                  salePriceError
+                    ? "border-red-300 focus:ring-red-500"
+                    : "border-gray-200 focus:ring-blue-500"
+                }`}
               />
+              {salePriceError && (
+                <div className="flex items-center gap-1 mt-1 text-xs text-red-600">
+                  <AlertCircle className="w-3 h-3" />
+                  <span>{salePriceError}</span>
+                </div>
+              )}
             </div>
 
             <div>
@@ -299,9 +390,21 @@ export default function ProductForm({
               <input
                 type="date"
                 value={saleEndDate}
+                min={new Date().toISOString().split("T")[0]}
                 onChange={(e) => setSaleEndDate(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+                className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 ${
+                    saleEndDateError
+                      ? "border-red-300 focus:ring-red-500"
+                      : "border-gray-200 focus:ring-blue-500"
+                  }`}
+                  required={!!salePrice}
+                />
+                {saleEndDateError && (
+                  <div className="flex items-center gap-1 mt-1 text-xs text-red-600">
+                    <AlertCircle className="w-3 h-3" />
+                    <span>{saleEndDateError}</span>
+                  </div>
+                )}
             </div>
 
             <div>
@@ -325,7 +428,7 @@ export default function ProductForm({
               <input
                 type="text"
                 value={slug}
-                onChange={(e) => setSlug(e.target.value)}
+                onChange={handleSlugChange}
                 className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -349,8 +452,7 @@ export default function ProductForm({
               </select>
             </div>
 
-                
-             <div>
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Brand (Optional)
               </label>
@@ -367,7 +469,6 @@ export default function ProductForm({
                 ))}
               </select>
             </div>
-
           </div>
 
           {/* Featured Checkbox */}
@@ -500,7 +601,7 @@ export default function ProductForm({
             </button>
             <button
               type="submit"
-              disabled={saving}
+              disabled={saving || !isFormValid()}
               className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
             >
               {saving ? (

@@ -51,6 +51,7 @@ export interface OrderListResponse {
   customerName: string;
   totalAmount: number;
   status: OrderStatus;
+  itemCounts: number;
   createdAt: string;
 }
 

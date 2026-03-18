@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Menu, Search, Bell, Mail, ChevronDown, X } from "lucide-react";
 
 import { useSearch } from "@/hooks/admin/useSearch";
@@ -20,20 +20,47 @@ export default function Navbar({ toggleSidebar }: NavbarProps) {
   const { searchQuery, setSearchQuery } = useSearch();
   const { logout, user } = useAuth();
 
+  const profileRef = useRef<HTMLDivElement>(null);
+
+  // click outside handler
+useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+      setOpenProfileDetail(false);
+    }
+  };
+
+  document.addEventListener('mousedown', handleClickOutside);
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+  };
+}, []);
+
   const router = useRouter();
 
-  const handleLogout = () => {
-    if (confirm("Are you sure you want to logout?")) {
+  const handleLogout = useCallback(() => {
+   if (confirm("Are you sure you want to logout?")) {
       logout();
+      setOpenProfileDetail(false);
     }
-  };
+  }, [logout, router]);
 
-  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+
+  const handleSearch = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     e.preventDefault();
+      e.preventDefault();
     if (searchQuery.trim() !== "") {
+      setOpenProfileDetail(false);
       router.push(`/admin/${searchQuery}`);
     }
-  };
+    }, [router, searchQuery]);
+
+  const handleGoToSettings = useCallback(() => {
+    router.push("/admin/settings");
+    setOpenProfileDetail(false);
+  }, [router]);
+
+
 
   return (
     <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-10">
@@ -86,12 +113,14 @@ export default function Navbar({ toggleSidebar }: NavbarProps) {
               className="flex items-center cursor-pointer gap-2 pl-2 pr-1 py-1 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <div className="w-8 h-8 bg-linear-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-medium text-sm shadow-sm">
-                {user?.name?.charAt(0)?.toUpperCase() || "A"}
+                
+                  <img src="/images/admin.jpg" alt="" />
+                
               </div>
               <ChevronDown className="w-4 h-4 text-gray-500 hidden sm:block" />
             </button>
             {opeProfileDetail && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+              <div ref={profileRef} className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
                 <div className="px-4 py-2 border-b border-gray-100">
                   <p className="text-sm font-medium text-gray-800">
                     {user?.name}
@@ -100,7 +129,7 @@ export default function Navbar({ toggleSidebar }: NavbarProps) {
                 </div>
 
                 <button
-                  onClick={() => router.push("/admin/settings")}
+                  onClick={()=> handleGoToSettings()}
                   className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                 >
                   Settings

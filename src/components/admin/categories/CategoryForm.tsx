@@ -23,11 +23,36 @@ export default function CategoryForm({
   const [title, setTitle] = useState(category?.title || "");
   const [description, setDescription] = useState(category?.description || "");
   const [slug, setSlug] = useState(category?.slug || "");
+  const [slugEdited, setSlugEdited] = useState(false);
   const [isActive, setIsActive] = useState(category?.isActive ?? true);
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(
     category?.imageUrl || null,
   );
+
+  const generateSlug = (value: string) => {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "") // remove special characters
+    .replace(/\s+/g, "-")         // spaces → -
+    .replace(/-+/g, "-");         // remove duplicate -
+};
+
+const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const value = e.target.value;
+  setTitle(value);
+  if (!slugEdited) {
+    setSlug(generateSlug(value));
+  }
+}, [slugEdited]);
+
+const handleSlugChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  setSlug(generateSlug(e.target.value)); 
+  setSlugEdited(true);
+}, [])
+
+  
 
   const handleImageChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,7 +166,7 @@ export default function CategoryForm({
             <input
               type="text"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={handleNameChange}
               className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:border-gray-400 transition-colors"
               maxLength={100}
               required
@@ -170,7 +195,7 @@ export default function CategoryForm({
             <input
               type="text"
               value={slug}
-              onChange={(e) => setSlug(e.target.value)}
+              onChange={handleSlugChange}
               className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:border-gray-400 transition-colors"
               maxLength={100}
             />
