@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { publicPaymentApi } from "@/lib/open/payment";
 import QRModal from "@/components/checkout/QRModal";
@@ -7,6 +7,8 @@ import { publicOrderApi } from "@/lib/open/order";
 import { Order } from "@/types/admin/order.type";
 import { QRData, PaymentStatusResponse } from "@/types/open/payment.type";
 import Link from "next/link";
+import toast from "react-hot-toast";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 export default function OrderPage() {
   const params = useParams();
@@ -18,6 +20,10 @@ export default function OrderPage() {
   const [showQRModal, setShowQRModal] = useState(false);
   const [qrData, setQrData] = useState<QRData | null>(null);
 
+  //Confirm modal
+   const [selectedOrder, setSelectedOrder] = useState<string | null>(null);
+   const [showCancelModal, setShowCancelModal] = useState(false);
+
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationStatus, setVerificationStatus] = useState("");
   const [paymentCompleted, setPaymentCompleted] = useState(false);
@@ -25,6 +31,9 @@ export default function OrderPage() {
   const pollingIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const verificationAttemptsRef = useRef(0);
   const MAX_VERIFICATION_ATTEMPTS = 60;
+
+
+
 
   useEffect(() => {
     fetchOrder();
@@ -62,12 +71,8 @@ export default function OrderPage() {
     pollingIntervalRef.current = setInterval(async () => {
       try {
         verificationAttemptsRef.current++;
-        console.log(
-          `⏱️ Verification attempt #${verificationAttemptsRef.current}`,
-        );
-
+  
         const status = await publicPaymentApi.verifyPayment(orderNumber, md5);
-        console.log("📊 Payment status:", status);
 
         setVerificationStatus(status.message);
 
@@ -127,6 +132,22 @@ export default function OrderPage() {
     setIsVerifying(false);
     setShowQRModal(false);
   };
+
+  const handleCancelClick = (orderNumber: string) => {
+    setSelectedOrder(orderNumber);
+    setShowCancelModal(true);
+  }
+
+  const handleCancelConfirm = useCallback(async () => {
+    if (!selectedOrder) return;
+      try{
+        await publicOrderApi.cancelOrder(selectedOrder);
+        toast.success("Cancel order successfully!")
+        window.location.reload();
+      }catch(error){
+        console.error("Failed to to Cancel Order:", error);
+      }
+  },[selectedOrder]);
 
   const handlePayWithQR = async () => {
     try {
@@ -255,7 +276,6 @@ export default function OrderPage() {
               </div>
             ))}
           </div>
-
           {/* Total */}
           <div className="border-t border-white/6 px-5 py-4 flex justify-between items-center">
             <span className="text-sm text-white/40">Total</span>
@@ -265,38 +285,61 @@ export default function OrderPage() {
           </div>
         </div>
 
-        {/* Verification Status */}
-        {isVerifying && !showQRModal && (
-          <div className="text-center py-3">
-            <p className="text-sm text-white/40">{verificationStatus}</p>
-          </div>
-        )}
+       <div className="flex justify-between gap-5 ">
+            {!isVerifying && !showQRModal && (
+              <button
+                onClick={()=>handleCancelClick(order.orderNumber)}
+                disabled={order.status === "CANCELLED"}
+                className={`pay-btn w-full py-4 ${order.status === "CANCELLED" ? "hidden" : "block"} rounded-2xl border border-white/15 text-red-400 font-medium text-sm tracking-wide
+                                ${isVerifying ? "opacity-50 cursor-not-allowed" : ""}`}
+              >
+                Cancel order
+              </button>
+            )}
+         {/* Verification Status */}
+            {isVerifying && !showQRModal && (
+              <div className="text-center py-3">
+                <p className="text-sm text-white/40">{verificationStatus}</p>
+              </div>
+            )}
 
-        {isPending && !paymentCompleted && (
-          <button
-            onClick={handlePayWithQR}
-            disabled={isVerifying}
-            className={`pay-btn w-full py-4 rounded-2xl border border-white/15 text-white font-medium text-sm tracking-wide
-                            ${isVerifying ? "opacity-50 cursor-not-allowed" : ""}`}
-          >
-            {isVerifying
-              ? "Processing..."
-              : `Pay $${order?.totalAmount?.toFixed(2)} with QR`}
-          </button>
-        )}
+            {isPending && !paymentCompleted && (
+              <button
+                onClick={handlePayWithQR}
+                disabled={isVerifying}
+                className={`pay-btn w-full py-4 rounded-2xl border border-white/15 text-white font-medium text-sm tracking-wide
+                                ${isVerifying ? "opacity-50 cursor-not-allowed" : ""}`}
+              >
+                {isVerifying
+                  ? "Processing..."
+                  : `Pay $${order?.totalAmount?.toFixed(2)} with QR`} 
+              </button>
+            )}
 
-        {isCancelled && (
-          <div className="w-full py-4 rounded-2xl border border-red-500/20 bg-red-500/5 text-red-400 text-sm font-medium text-center">
-            ✗ This order has been cancelled
-          </div>
-        )}
+            {isCancelled && (
+              <div className="w-full py-4 rounded-2xl border border-red-500/20 bg-red-500/5 text-red-400 text-sm font-medium text-center">
+                ✗ This order has been cancelled
+              </div>
+            )}
 
-        {isCompleted && (
-          <div className="w-full py-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 text-emerald-400 text-sm font-medium text-center">
-            ✓ Payment confirmed
-          </div>
-        )}
+            {isCompleted && (
+              <div className="w-full py-4 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 text-emerald-400 text-sm font-medium text-center">
+                ✓ Payment confirmed
+              </div>
+            )}
+       </div>
       </div>
+        {/* Cancel Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showCancelModal}
+        onClose={() => setShowCancelModal(false)}
+        onConfirm={handleCancelConfirm}
+        title="Cancel Order"
+        message="Are you sure you want to cancel this order? This action cannot be undone."
+        confirmText="Yes, Cancel Order"
+        cancelText="No, Keep Order"
+        type="danger"
+      />
     </div>
   );
 }

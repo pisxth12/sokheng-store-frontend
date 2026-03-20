@@ -1,6 +1,6 @@
 import { OrderPageResponse } from "@/types/open/order.type";
 import apiClient from "../api/client";
-import { Order } from "@/types/admin/order.type";
+import { Order, TrackOrderResponse } from "@/types/admin/order.type";
 
 export const publicOrderApi = {
   getMyOrders: async (page = 0, size = 10): Promise<OrderPageResponse> => {
@@ -15,7 +15,17 @@ export const publicOrderApi = {
     return res.data;
   },
 
-  cancelOrder: async (orderNumber: number): Promise<void> => {
-    await apiClient.put(`/${orderNumber}/cancel`);
+  cancelOrder: async (orderNumber: string): Promise<void> => {
+    const res = await apiClient.put(`/orders/${orderNumber}/cancel`);
+    return res.data;
   },
+
+  trackGuestOrder: async (data:{orderNumber:  string, email: string ,phone: string}): Promise<TrackOrderResponse>=> {
+    const params = new URLSearchParams();
+    params.set("orderNumber", data.orderNumber);
+    params.set("email", data.email);
+    params.set("phone", data.phone);
+    const res = await apiClient.get(`/guest/orders/track?${params.toString()}`);
+    return res.data;
+  }
 };

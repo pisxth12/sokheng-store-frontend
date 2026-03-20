@@ -1,3 +1,4 @@
+import "server-only";
 import { CartResponse } from "@/types/open/cart.type";
 import { apiServerService } from "../api/server";
 import { CACHE_TIME } from "../config/constants";

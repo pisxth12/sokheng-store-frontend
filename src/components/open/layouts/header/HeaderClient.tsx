@@ -11,8 +11,9 @@ import { useAuth } from "@/hooks/open/useAuth";
 
 interface HeaderClientProps {
   initialCount: number;
+  initialWishlistCount: number;
 }
-export default function HeaderClient({ initialCount }: HeaderClientProps) {
+export default function HeaderClient({ initialCount, initialWishlistCount}: HeaderClientProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -36,6 +37,7 @@ export default function HeaderClient({ initialCount }: HeaderClientProps) {
               onSearchClick={() => setIsSearchOpen(!isSearchOpen)}
               onCartClick={() => setIsCartOpen(true)}
               initialCount={initialCount}
+              initialWishlistCount={initialWishlistCount}
               isLoading={authLoading}
             />
           </div>

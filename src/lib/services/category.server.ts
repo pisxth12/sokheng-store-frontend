@@ -2,7 +2,7 @@ import "server-only";
 import { apiServerService } from "../api/server";
 import { TopCategory, TopCategoryResponse } from "@/types/open/category.type";
 
-export async function getTopCategories(limit: number = 8) {
+export async function getTopCategories(limit: number = 8): Promise<TopCategory[]>{
   try {
     return (
       (await apiServerService.get<TopCategory[]>("/categories/top", {

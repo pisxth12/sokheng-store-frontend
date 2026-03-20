@@ -3,7 +3,7 @@ import "server-only";
 import { apiServerService } from "../api/server";
 import { Product } from "@/types/open/product.type";
 
-export async function getFeaturedProducts() {
+export async function getFeaturedProducts(): Promise<Product[]>{
   try {
     return (
       (await apiServerService.get<Product[]>("/products/featured", {

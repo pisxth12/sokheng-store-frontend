@@ -19,7 +19,6 @@ export interface Order {
     items: OrderItem[];
     createdAt: string;
 }
-
 export interface OrderPageResponse {
     content: Order[];
     totalPages: number;

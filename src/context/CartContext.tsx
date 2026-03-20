@@ -2,6 +2,7 @@ import { useAuth } from "@/hooks/open/useAuth";
 import { publicCartApi } from "@/lib/open/cart";
 import { CartResponse, CheckoutRequest } from "@/types/open/cart.type";
 import { CheckoutResponse } from "@/types/open/checkout";
+import { useRouter } from "next/navigation";
 import { createContext, useCallback, useEffect, useRef, useState } from "react";
 
 interface CartContextType {
@@ -17,7 +18,6 @@ interface CartContextType {
   getItemQuantity: (productId: number) => number;
   loadCart: () => Promise<void>;
   isCartLoaded: boolean;
-  refreshCount: () => Promise<void>;
 }
 
 export const CartContext = createContext<CartContextType | undefined>(
@@ -35,21 +35,10 @@ export const CartProvider = ({
   const [cart, setCart] = useState<CartResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [isCartLoaded, setIsCartLoaded] = useState(false);
-  const { user, isAuthenticated } = useAuth();
-  const hasMerged = useRef(false);
 
-  const refreshCount = useCallback(async () => {
-    try {
-      const count = await publicCartApi.getCartItemCount();
-      setItemCount(count);
-    } catch (error) {
-      console.error("Failed to refresh count:", error);
-    }
-  }, []);
+  const route = useRouter();
 
   const loadCart = useCallback(async () => {
-    if (isCartLoaded) return;
-
     setLoading(true);
     try {
       const data = await publicCartApi.getCart();
@@ -64,7 +53,7 @@ export const CartProvider = ({
   }, [isCartLoaded]);
 
   const refreshCart = useCallback(async () => {
-    if (!isCartLoaded) return; 
+    if (!isCartLoaded) return;
     setLoading(true);
     try {
       const data = await publicCartApi.getCart();
@@ -77,38 +66,20 @@ export const CartProvider = ({
     }
   }, []);
 
-
-
-  // Merge cart after login
-  useEffect(() => {
-    if (isAuthenticated && user && isCartLoaded && !hasMerged.current) {
-      const mergeCart = async () => {
-        try {
-          const mergedCart = await publicCartApi.mergeCart();
-          setCart(mergedCart);
-          setIsCartLoaded(true);
-          setItemCount(mergedCart.totalItems); 
-          hasMerged.current = true;
-        } catch (error) {
-          console.error("Failed to merge cart:", error);
-        }
-      };
-      mergeCart();
-    }
-  }, [isAuthenticated, user, isCartLoaded]);
-
   // Add item to cart
   const addToCart = async (productId: number, quantity: number) => {
     if (!isCartLoaded) {
       await loadCart();
     }
     try {
-      const updatedCart = await publicCartApi.addToCart({
+      const res = await publicCartApi.addToCart({
         productId,
         quantity,
       });
-      setCart(updatedCart);
-      setItemCount(updatedCart.totalItems);
+      setCart(res);
+      setItemCount(res.totalItems);
+      route.refresh();
+     
     } catch (error) {
       console.log(error);
       throw error;
@@ -135,6 +106,7 @@ export const CartProvider = ({
       const updatedCart = await publicCartApi.removeFromCart(itemId);
       setCart(updatedCart);
       setItemCount(updatedCart.totalItems);
+      route.refresh();
     } catch (error) {
       console.log(error);
       throw error;
@@ -195,7 +167,6 @@ export const CartProvider = ({
         checkout,
         clearCart,
         getItemQuantity,
-        refreshCount,
       }}
     >
       {children}

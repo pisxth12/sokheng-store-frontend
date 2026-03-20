@@ -7,6 +7,7 @@ export const publicWishlistApi = {
     return res.data;
   },
 
+
   add: async (productId: number): Promise<WishlistResponse> => {
     const res = await apiClient.post<WishlistResponse>(
       `/wishlist/add/${productId}`,
@@ -26,10 +27,7 @@ export const publicWishlistApi = {
     return res.data;
   },
 
-  count: async (): Promise<number> => {
-    const res = await apiClient.get<number>("/wishlist/count");
-    return res.data;
-  },
+
 
   moveToCart: async (
     productId: number,

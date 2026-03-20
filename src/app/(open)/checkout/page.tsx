@@ -3,14 +3,11 @@ import { useAuth } from "@/hooks/open/useAuth";
 import { useCart } from "@/hooks/open/useCart";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { PaymentMethod } from "@/types/open/cart.type";
 import EmptyCart from "@/components/ui/EmptyCart";
 import Link from "next/link";
-import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import EditProfileModal from "@/components/open/accounts/EditProfile";
 import { UpdateProfileRequest } from "@/types/open/auth.type";
 import { Edit } from "lucide-react";
-import toast from "react-hot-toast";
 
 export default function CheckoutPage() {
     const { user, isAuthenticated , updateProfile} = useAuth();
@@ -69,7 +66,6 @@ export default function CheckoutPage() {
     return (
         <>
             <div className="min-h-screen bg-[#080808] text-white">
-           
 
             {/* Top bar */}
             <div className="border-b px-6 py-4 flex items-center justify-between">

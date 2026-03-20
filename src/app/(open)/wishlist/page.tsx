@@ -8,13 +8,22 @@ import { ShoppingCart, Trash2, Heart, Minus } from 'lucide-react';
 import Link from 'next/link';
 import { useCart } from '@/hooks/open/useCart';
 import toast from 'react-hot-toast';
+import { useCallback, useEffect, useRef } from 'react';
 
 const WishlistPage = () => {
-    const { items, count, loading, error, removeItem, moveToCart } = useWishlist();
+    const { items, count, loading, error, removeItem, moveToCart , loadWishlist, isLoaded} = useWishlist();
     const {  refreshCart , getItemQuantity } = useCart();
+    const hasLoaded = useRef(false); 
    
+    useEffect(() => {
+        if (!isLoaded && !hasLoaded.current) {
+             hasLoaded.current = true;
+            loadWishlist();
 
-    const handleMoveToCart = async (productId: number, quantity: number=1) => {
+        }
+    }, [loadWishlist, isLoaded]);
+
+    const handleMoveToCart = useCallback(async (productId: number, quantity: number = 1) => {
         const success = await moveToCart(productId,quantity);
         if (success) {
              await refreshCart();
@@ -22,9 +31,10 @@ const WishlistPage = () => {
         }else{
             toast.error('Failed to move item to cart.');
         }
-    }
+    }, [moveToCart, refreshCart])
 
-    if (loading) return <LoadingSpinner />;
+
+    if (loading && !isLoaded) return <LoadingSpinner />;
     if (error) return <Error error={error} />;
     if (items.length === 0) return (
         <EmptyWishlist 
@@ -72,16 +82,11 @@ const WishlistPage = () => {
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 />
                                 
-                                {/* Discount Badge */}
-                                {item.isOnSale || item.discountPercent  && (
-                                    <div className="absolute top-3 right-3 bg-red-500 text-white px-2 py-1  text-sm font-semibold">
-                                      {item.discountPercent}% 
-                                    </div>
-                                )}
+                               
                             </Link>
                             {item.isOnSale && item.salePrice && (
-                                    <span className='absolute top-3 right-3 z-10 bg-red-500 px-3'>
-                                     -{item.discountPercent}%
+                                    <span className='absolute text-white top-3 right-3 z-10 bg-red-500 px-3'>
+                                    -{item.discountPercent}%
                                     </span>
                                 )}
 

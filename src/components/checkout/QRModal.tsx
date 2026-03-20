@@ -43,7 +43,6 @@ const QRModal = ({
     intervalRef.current = setInterval(async () => {
       try {
         const res = await publicPaymentApi.getPaymentStatus(orderNumber);
-        console.log("Poll result:", res);
         setStatus(res.status);
 
         if (res.status === "PAID") {

@@ -12,7 +12,7 @@ const RegisterPage = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
+    phone: "+855969851100",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);

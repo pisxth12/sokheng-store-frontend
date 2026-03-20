@@ -24,8 +24,6 @@ export default function LoginPage() {
       await login({ email, password });
     } catch (error: any) {
       setError(t('errors.invalid'));
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -33,11 +31,10 @@ export default function LoginPage() {
     try {
       setLoading(true);
       await googleLogin(credentialResponse.credential);
+      
     } catch (error: any) {
       setError(t('errors.googleFailed'));
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   return (

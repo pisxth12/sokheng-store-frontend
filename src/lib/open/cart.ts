@@ -38,11 +38,6 @@ export const publicCartApi = {
     await apiClient.delete("/cart");
   },
 
-  // POST /api/v1/cart/merge - Merge guest cart with user cart
-  mergeCart: async (): Promise<CartResponse> => {
-    const res = await apiClient.post<CartResponse>("/cart/merge");
-    return res.data;
-  },
 
   // POST /api/v1/cart/checkout - Checkout (FIXED: added data parameter)
   checkout: async (data: CheckoutRequest): Promise<CheckoutResponse> => {
@@ -50,11 +45,7 @@ export const publicCartApi = {
     return res.data;
   },
 
-  // GET /api/v1/cart/count - Get cart item count
-  getCartItemCount: async (): Promise<number> => {
-    const res = await apiClient.get<number>("/cart/count");
-    return res.data;
-  },
+
 
   // Helper: Remove item (set quantity to 0)
   removeFromCart: async (itemId: number): Promise<CartResponse> => {

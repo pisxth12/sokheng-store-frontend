@@ -1,7 +1,8 @@
 import { useAuth } from "@/hooks/open/useAuth";
 import { publicWishlistApi } from "@/lib/open/wishlist";
 import { WishlistItem } from "@/types/open/wishlist.types";
-import { createContext, useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { createContext, useCallback, useEffect, useRef, useState } from "react";
 
 interface WishlistContextType {
   items: WishlistItem[];
@@ -14,6 +15,8 @@ interface WishlistContextType {
   moveToCart: (productId: number, quantity?: number) => Promise<boolean>;
   toggleItem: (productId: number, inWishlist: boolean) => Promise<boolean>;
   refresh: () => Promise<void>;
+  loadWishlist: () => Promise<void>;
+  isLoaded: boolean;
 }
 export const WishlistContext = createContext<WishlistContextType | null>(null);
 
@@ -26,34 +29,41 @@ export default function WishlistProvider({
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  const [isLoaded, setIsLoaded] = useState(false); 
 
-   const { isAuthenticated } = useAuth(); // បន្ថែមនេះ
-  const [prevAuthState, setPrevAuthState] = useState(isAuthenticated);
+  const hasLoadedRef = useRef(false);
+  const route = useRouter();
 
-  //
-  const fetchWishlist = useCallback(async () => {
+
+  const loadWishlist = useCallback(async (force: boolean = false) => {
+    if (!force && hasLoadedRef.current) return;
     setLoading(true);
     setError(null);
     try {
       const res = await publicWishlistApi.getAll();
       setItems(res.items);
       setCount(res.totalItems);
+      setIsLoaded(true);
+      hasLoadedRef.current = true;
     } catch (error) {
       setError("Failed to fetch wishlist");
       console.error("Error fetching wishlist:", error);
     } finally {
       setLoading(false);
     }
-  }, []);
+  },[]);
+
+ 
+
 
   // Add item
   const addItem = useCallback(async (productId: number): Promise<boolean> => {
     setError(null);
     try {
-      const res = await publicWishlistApi.add(productId);
-      setItems(res.items);
-      setCount(res.totalItems);
-      return true;
+       await publicWishlistApi.add(productId);
+       route.refresh();
+       return true;
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Failed to add item to wishlist",
@@ -68,9 +78,10 @@ export default function WishlistProvider({
     async (productId: number): Promise<boolean> => {
       setError(null);
       try {
-        const res = await publicWishlistApi.remove(productId);
-        setItems(res.items);
-        setCount(res.totalItems);
+         const res = await publicWishlistApi.remove(productId);
+         setItems(res.items);
+         setCount(res.totalItems);
+         route.refresh();
         return true;
       } catch (err) {
         setError(
@@ -131,17 +142,16 @@ export default function WishlistProvider({
     [addItem, removeItem],
   );
 
-  useEffect(() => {
-    if (isAuthenticated && !prevAuthState) {
-      fetchWishlist();
-    }
-    setPrevAuthState(isAuthenticated);
-  }, [isAuthenticated, prevAuthState, fetchWishlist]);
 
-  // Load on mount
-  useEffect(() => {
-    fetchWishlist();
-  }, [fetchWishlist]);
+
+  const refresh = useCallback( async () => {
+    hasLoadedRef.current = false;
+    setIsLoaded(false);
+    await loadWishlist();
+  },[loadWishlist]);
+
+
+
 
   const value = {
     items,
@@ -153,7 +163,9 @@ export default function WishlistProvider({
     checkItem,
     moveToCart,
     toggleItem,
-    refresh: fetchWishlist,
+    refresh,
+    loadWishlist,
+    isLoaded,
   };
 
   return (

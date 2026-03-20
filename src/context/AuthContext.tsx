@@ -70,11 +70,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const res: AuthResponse = await authApi.login(credentials);
       setUser(mapAuthResponseToUser(res));
       
-      if (res.role === "ADMIN") {
-          window.location.href = '/admin';
-        } else {
-          window.location.href = '/';
-        }
+            window.location.href = res.role === "ADMIN" ? "/admin" : "/";
+        
     } catch (error: any) {
       throw new Error(error.response?.data?.message || "Login failed");
     } finally {
@@ -102,19 +99,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const res: AuthResponse = await authApi.googleLogin({ idToken });
       setUser(mapAuthResponseToUser(res));
       
-      setTimeout(() => {
-        if (res.role === "ADMIN") {
-          router.push("/admin");
-        } else {
-          router.push("/");
-        }
-      }, 0);
+       window.location.replace(res.role === "ADMIN" ? "/admin" : "/");
     } catch (error: any) {
       throw new Error(error.response?.data?.message || "Google login failed");
     } finally {
       setLoading(false);
     }
-  }, [router, mapAuthResponseToUser]);
+  }, [mapAuthResponseToUser]);
 
   const updateProfile = useCallback(async (data: UpdateProfileRequest): Promise<void> => {
     setLoading(true);
