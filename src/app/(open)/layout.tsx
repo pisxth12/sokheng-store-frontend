@@ -1,4 +1,4 @@
-import Footer from "@/components/open/layouts/Footer";
+import Footer from "@/components/open/layouts/footer/Footer";
 import HeaderServer from "@/components/open/layouts/header/HeaderServer";
 import { getContactInfo } from "@/lib/services/contact.server";
 import type { Metadata } from "next";

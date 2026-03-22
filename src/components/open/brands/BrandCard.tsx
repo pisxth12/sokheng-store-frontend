@@ -14,7 +14,7 @@ export const BrandCard = memo(function BrandCard({ brand }: BrandCardProps) {
 
     return (
         <Link
-            href={`/brands/${brand.slug}`}
+            href={`/${brand.slug}`}
             prefetch={false}
             className="group relative overflow-hidden aspect-square rounded-lg"
         >

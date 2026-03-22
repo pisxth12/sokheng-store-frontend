@@ -24,9 +24,33 @@ const RegisterPage = () => {
   const { register, googleLogin } = useAuth();
   const router = useRouter();
 
-  // Handle sending OTP
+  const formatPhone = (phone: string) => {
+  if (!phone || phone.trim() === "") return "";
+  const cleaned = phone.replace(/\D/g, '');
+  if (cleaned.length < 9 || cleaned.length > 10) {
+    return phone;
+  }
+  if (phone.startsWith('+855')) {
+    return '+' + cleaned;
+  }
+  if (phone.startsWith('0')) {
+    return '+855' + cleaned.substring(1);
+  }
+  if (cleaned.startsWith('855')) {
+    return '+' + cleaned;
+  }
+  return '+855' + cleaned;
+}
+
+ 
   const handleSendOtp = async () => {
-    if (!formData.phone || formData.phone.length < 10) {
+    const formattedPhone = formatPhone(formData.phone);
+    if (!formattedPhone || formattedPhone.length < 12 || formattedPhone.length > 13) {
+    setError("Please enter a valid Cambodia phone number (9-10 digits)");
+    return;
+  }
+    
+    if (!formattedPhone) {
       setError("Please enter a valid phone number");
       return;
     }
@@ -35,7 +59,8 @@ const RegisterPage = () => {
     setError(null);
     
     try {
-      await authApi.sendOtp(formData.phone);
+      
+      await authApi.sendOtp(formattedPhone);
       setShowOtpModal(true);
       toast.success("OTP sent to your phone");
     } catch (error: any) {
@@ -49,7 +74,9 @@ const RegisterPage = () => {
   // Handle verifying OTP
   const handleVerifyOtp = async (otp: string) => {
     try {
-      await authApi.verifyOtp(formData.phone, otp);
+      const formattedPhone = formatPhone(formData.phone);
+      
+      await authApi.verifyOtp( formattedPhone || formData.phone, otp);
       
       setIsPhoneVerified(true);
       setShowOtpModal(false);

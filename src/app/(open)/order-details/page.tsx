@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useRef, useCallback } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { publicPaymentApi } from "@/lib/open/payment";
 import QRModal from "@/components/checkout/QRModal";
 import { publicOrderApi } from "@/lib/open/order";
@@ -12,8 +12,9 @@ import ConfirmModal from "@/components/ui/ConfirmModal";
 
 export default function OrderPage() {
   const params = useParams();
+   const searchParams = useSearchParams(); 
   const router = useRouter();
-  const orderNumber = params.orderNumber as string;
+  const orderNumber = searchParams.get('orderID') as string;
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -157,9 +158,10 @@ export default function OrderPage() {
       setShowQRModal(true);
 
       startPaymentVerification(qr.md5);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to generate QR:", error);
       setVerificationStatus("Failed to generate QR code");
+      toast.error( error.response?.data?.message || error.message || "Failed to generate QR code");
     }
   };
 

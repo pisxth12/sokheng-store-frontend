@@ -1,27 +1,36 @@
 import "server-only";
 import { CartResponse } from "@/types/open/cart.type";
 import { apiServerService } from "../api/server";
-import { CACHE_TIME } from "../config/constants";
 
-export async function getServerCartCount(sessionId?: string): Promise<number> {
+export async function getCartCountForUser(token: string): Promise<number> {
   try {
-    const count = await apiServerService.get<number>("/cart/count", {
-      sessionId,
-    });
-    return count ?? 0;
-  } catch {
+    const response = await apiServerService.get<number>("/cart/count", { token });
+    return response ?? 0;
+  } catch (error) {
+    console.error("Error fetching cart count for user:", error);
     return 0;
   }
 }
 
+export async function getCartCountForGuest(sessionId: string): Promise<number> {
+  try {
+    const response = await apiServerService.get<number>("/cart/count", { sessionId });
+    return response ?? 0;
+  } catch (error) {
+    console.error("Error fetching cart count for guest:", error);
+    return 0;
+  }
+}
+
+
+
 export async function getServerCart(
+  token?: string,
   sessionId?: string,
 ): Promise<CartResponse | null> {
   try {
-    return await apiServerService.get<CartResponse>("/cart", {
-      sessionId,
-      cacheTime: CACHE_TIME.CART,
-    });
+    const options = token ? { token } : { sessionId };
+    return await apiServerService.get<CartResponse>("/cart", options);
   } catch {
     return null;
   }

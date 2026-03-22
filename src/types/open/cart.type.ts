@@ -4,6 +4,7 @@ export interface CartItemResponse {
     id: number;
     productId: number;
     slug: string;
+    categorySlug: string;
     productName: string;
     productImage?: string | null;
     price: number;
@@ -42,9 +43,9 @@ export interface CheckoutRequest{
     customerName: string;
     email: string;
     phone: string;
-    address?: string;
+    address: string;
     note?: string;
     items: CartItemResponse[];
- 
+
 }
 

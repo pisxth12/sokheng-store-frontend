@@ -62,6 +62,7 @@ export default function WishlistProvider({
     setError(null);
     try {
        await publicWishlistApi.add(productId);
+        
        route.refresh();
        return true;
     } catch (err) {
@@ -115,9 +116,8 @@ export default function WishlistProvider({
     async (productId: number, quantity: number = 1): Promise<boolean> => {
       setError(null);
       try {
-        const res = await publicWishlistApi.moveToCart(productId, quantity);
-        setItems(res.items);
-        setCount(res.totalItems);
+       await publicWishlistApi.moveToCart(productId, quantity);
+        route.refresh();
         return true;
       } catch (err) {
         setError(
@@ -127,7 +127,7 @@ export default function WishlistProvider({
         return false;
       }
     },
-    [],
+    [route],
   );
 
   // Toggle wishlist
@@ -149,8 +149,6 @@ export default function WishlistProvider({
     setIsLoaded(false);
     await loadWishlist();
   },[loadWishlist]);
-
-
 
 
   const value = {

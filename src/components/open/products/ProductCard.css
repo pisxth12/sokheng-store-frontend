@@ -1,0 +1,463 @@
+/* ─── Product Card ───────────────────────────────────────────── */
+
+.pc-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.pc-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ─── Image Container ────────────────────────────────────────── */
+.pc-image-wrap {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--surface-subtle, #f7f7f5);
+}
+
+.dark .pc-image-wrap {
+  background: #1a1a18;
+}
+
+/* Images */
+.pc-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pc-img--main {
+  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.pc-img--alt {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 2;
+}
+
+.pc-link:hover .pc-img--main {
+  transform: scale(1.05);
+  opacity: 0;
+}
+
+.pc-link:hover .pc-img--alt {
+  opacity: 1;
+}
+
+/* No second image — just scale */
+.pc-wrap--single .pc-img--main {
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pc-link:hover .pc-wrap--single .pc-img--main {
+  opacity: 1;
+  transform: scale(1.04);
+}
+
+/* ─── Badges ─────────────────────────────────────────────────── */
+.pc-badge-sale {
+  position: absolute;
+  top: 0.875rem;
+  right: 0.875rem;
+  background: #c8102e;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  z-index: 5;
+}
+
+.pc-badge-oos {
+  position: absolute;
+  top: 0.875rem;
+  left: 0.875rem;
+  background: rgba(10, 10, 9, 0.75);
+  color: rgba(255,255,255,0.85);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  backdrop-filter: blur(4px);
+  z-index: 5;
+}
+
+/* ─── Quick action overlay ───────────────────────────────────── */
+.pc-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.875rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 4;
+}
+
+.pc-link:hover .pc-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pc-quick-view {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.55);
+  padding: 0.45rem 1.25rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  pointer-events: none; /* cosmetic only, link handles nav */
+}
+
+/* ─── Info ───────────────────────────────────────────────────── */
+.pc-info {
+  padding: 0.875rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.pc-category {
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted, #a3a39f);
+}
+
+.dark .pc-category {
+  color: #5a5a57;
+}
+
+.pc-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--text-primary, #111110);
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.2s;
+  letter-spacing: -0.01em;
+}
+
+.dark .pc-name {
+  color: #f5f5f3;
+}
+
+.pc-link:hover .pc-name {
+  color: var(--text-secondary, #6b6b67);
+}
+
+.dark .pc-link:hover .pc-name {
+  color: #9a9a96;
+}
+
+/* Price */
+.pc-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.pc-price {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1rem;
+  color: var(--text-primary, #111110);
+  letter-spacing: -0.01em;
+}
+
+.dark .pc-price {
+  color: #f5f5f3;
+}
+
+.pc-price--sale {
+  color: #c8102e;
+}
+
+.pc-price-original {
+  font-size: 0.8rem;
+  color: var(--text-muted, #a3a39f);
+  text-decoration: line-through;
+  font-weight: 300;
+}
+
+.dark .pc-price-original {
+  color: #5a5a57;
+}
+
+.pc-oos-label {
+  font-size: 0.75rem;
+  color: var(--text-muted, #a3a39f);
+  font-weight: 300;
+  margin-top: 0.3rem;
+}
+
+/* Low stock */
+.pc-low-stock {
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: #d97706;
+  margin-top: 0.15rem;
+}
+
+.dark .pc-low-stock {
+  color: #f59e0b;
+}/* ─── Product Card ───────────────────────────────────────────── */
+
+.pc-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.pc-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ─── Image Container ────────────────────────────────────────── */
+.pc-image-wrap {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--surface-subtle, #f7f7f5);
+}
+
+.dark .pc-image-wrap {
+  background: #1a1a18;
+}
+
+/* Images */
+.pc-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pc-img--main {
+  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.pc-img--alt {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 2;
+}
+
+.pc-link:hover .pc-img--main {
+  transform: scale(1.05);
+  opacity: 0;
+}
+
+.pc-link:hover .pc-img--alt {
+  opacity: 1;
+}
+
+/* No second image — just scale */
+.pc-wrap--single .pc-img--main {
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pc-link:hover .pc-wrap--single .pc-img--main {
+  opacity: 1;
+  transform: scale(1.04);
+}
+
+/* ─── Badges ─────────────────────────────────────────────────── */
+.pc-badge-sale {
+  position: absolute;
+  top: 0.875rem;
+  right: 0.875rem;
+  background: #c8102e;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  z-index: 5;
+}
+
+.pc-badge-oos {
+  position: absolute;
+  top: 0.875rem;
+  left: 0.875rem;
+  background: rgba(10, 10, 9, 0.75);
+  color: rgba(255,255,255,0.85);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  backdrop-filter: blur(4px);
+  z-index: 5;
+}
+
+/* ─── Quick action overlay ───────────────────────────────────── */
+.pc-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.875rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 4;
+}
+
+.pc-link:hover .pc-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pc-quick-view {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.55);
+  padding: 0.45rem 1.25rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  pointer-events: none; /* cosmetic only, link handles nav */
+}
+
+/* ─── Info ───────────────────────────────────────────────────── */
+.pc-info {
+  padding: 0.875rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.pc-category {
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted, #a3a39f);
+}
+
+.dark .pc-category {
+  color: #5a5a57;
+}
+
+.pc-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--text-primary, #111110);
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.2s;
+  letter-spacing: -0.01em;
+}
+
+.dark .pc-name {
+  color: #f5f5f3;
+}
+
+.pc-link:hover .pc-name {
+  color: var(--text-secondary, #6b6b67);
+}
+
+.dark .pc-link:hover .pc-name {
+  color: #9a9a96;
+}
+
+/* Price */
+.pc-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.pc-price {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1rem;
+  color: var(--text-primary, #111110);
+  letter-spacing: -0.01em;
+}
+
+.dark .pc-price {
+  color: #f5f5f3;
+}
+
+.pc-price--sale {
+  color: #c8102e;
+}
+
+.pc-price-original {
+  font-size: 0.8rem;
+  color: var(--text-muted, #a3a39f);
+  text-decoration: line-through;
+  font-weight: 300;
+}
+
+.dark .pc-price-original {
+  color: #5a5a57;
+}
+
+.pc-oos-label {
+  font-size: 0.75rem;
+  color: var(--text-muted, #a3a39f);
+  font-weight: 300;
+  margin-top: 0.3rem;
+}
+
+/* Low stock */
+.pc-low-stock {
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: #d97706;
+  margin-top: 0.15rem;
+}
+
+.dark .pc-low-stock {
+  color: #f59e0b;
+}

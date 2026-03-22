@@ -10,10 +10,11 @@ export default function useRecentSearch(limit: number = 5){
     },[]);
 
     const addRecent = useCallback((keyword: string) => {
-    if (!keyword.trim()) return;
+    const normalized  = keyword.trim().toLowerCase();
+    if(recentSearches.includes(normalized)) return;
 
     setRecentSearches(prev => {
-        const updated = [keyword, ...prev.filter(item => item !== keyword)].slice(0, limit);
+        const updated = [normalized, ...prev.filter(item => item !== keyword)].slice(0, limit);
         localStorage.setItem("recentSearches", JSON.stringify(updated));
         return updated;
     });

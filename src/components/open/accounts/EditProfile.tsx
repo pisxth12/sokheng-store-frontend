@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { X, User, Phone, MapPin, Save, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
-import { useAuth } from '@/hooks/open/useAuth';
 import { UpdateProfileRequest } from '@/types/open/auth.type';
 import { useTranslations } from 'next-intl';
 import OtpModal from './OtpModal';
@@ -13,17 +12,20 @@ interface EditProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (data: UpdateProfileRequest) => Promise<void>;
+  initialData: UpdateProfileRequest
 }
 
-const EditProfileModal = ({ isOpen, onClose, onSave }: EditProfileModalProps) => {
+const EditProfileModal = ({ isOpen, onClose, onSave, initialData}: EditProfileModalProps) => {
   const t = useTranslations('EditProfile'); 
-  const { user } = useAuth();
+  
 
   const [formData, setFormData] = useState<UpdateProfileRequest>({
-    name: user?.name || '',
-    phone: user?.phone || '',
-    address: user?.address || '',
+   name: initialData?.name ||'',
+    phone:  initialData?.phone ||'',
+    address:  initialData?.address ||'',
   });
+
+  
 
   const [loading, setLoading] = useState(false);
   const [otpLoading, setOtpLoading] = useState(false);
@@ -32,18 +34,6 @@ const EditProfileModal = ({ isOpen, onClose, onSave }: EditProfileModalProps) =>
   const [isPhoneVerified, setIsPhoneVerified] = useState(false);
   const [phoneChanged, setPhoneChanged] = useState(false);
 
-  // Reset form when modal opens or user changes
-  useEffect(() => {
-    if (user && isOpen) {
-      setFormData({
-        name: user.name || '',
-        phone: user.phone || '',
-        address: user.address || ''
-      });
-      setPhoneChanged(false);
-      setIsPhoneVerified(false);
-    }
-  }, [user, isOpen]);
 
   // Memoized change handler
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {

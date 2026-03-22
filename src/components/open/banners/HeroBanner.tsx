@@ -1,8 +1,8 @@
 "use client"
-import { useBanner } from "@/hooks/open/useBanner";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
+import "./HeroBanner.css";
 
 interface Banner{
    id: number;
@@ -30,7 +30,7 @@ export default function HeroBanner({ banners }: HeroBannerProps) {
         ? [banners[banners.length - 1], ...banners, banners[0]]
         : [];
 
-    const SLIDE_DURATION = 4000;
+    const SLIDE_DURATION = 9000;
 
     const goTo = useCallback((index: number, animate = true) => {
         const container = containerRef.current;
@@ -134,29 +134,22 @@ export default function HeroBanner({ banners }: HeroBannerProps) {
 
     return (
         <section
-            className="relative w-full overflow-hidden select-none bg-black"
-            style={{ height: "clamp(220px, 42vw, 580px)" }}
+            className="hb-section"
             onMouseDown={handlePointerDown}
             onMouseUp={handlePointerUp}
             onMouseLeave={() => isDragging && setIsDragging(false)}
             onTouchStart={handlePointerDown}
             onTouchEnd={handlePointerUp}
         >
-            {/* Slide Track */}
+            {/* ── Slide Track ── */}
             <div
                 ref={containerRef}
-                className="flex h-full"
-                style={{
-                    width: `${cloned.length * 100}vw`,
-                    willChange: "transform",
-                }}
+                className="hb-track"
+                style={{ width: `${cloned.length * 100}vw` }}
             >
                 {cloned.map((banner, i) => (
-                    <div
-                        key={`${banner.id}-${i}`}
-                        className="relative h-full flex-shrink-0"
-                        style={{ width: "100vw" }}
-                    >
+                    <div key={`${banner.id}-${i}`} className="hb-slide">
+
                         <Image
                             src={banner.imageUrl}
                             alt={banner.title}
@@ -168,80 +161,73 @@ export default function HeroBanner({ banners }: HeroBannerProps) {
                             draggable={false}
                         />
 
-                        {/* Gradient overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/20 to-transparent" />
+                        <div className="hb-grad-bottom" />
+                        <div className="hb-grad-left" />
 
                         {/* Content */}
-                        <div className="absolute inset-0 flex items-end justify-center pb-12 sm:pb-16 md:pb-20 text-center px-4">
-                            <div className="max-w-xl">
-                                <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold text-white drop-shadow-xl leading-tight mb-3">
-                                    {banner.title}
-                                </h1>
+                        <div className="hb-content">
+                            <div className="hb-content-inner">
+
+                                {/* Eyebrow */}
+                                <div className="hb-eyebrow">
+                                    <span className="hb-eyebrow-line" />
+                                    <span className="hb-eyebrow-text">
+                                        {realIndex + 1} / {banners.length}
+                                    </span>
+                                </div>
+
+                                {/* Title */}
+                                <h1 className="hb-title">{banner.title}</h1>
+
+                                {/* CTA */}
                                 {banner.link && (
                                     <Link
                                         href={banner.link}
-                                        className="inline-block px-5 py-2 sm:px-7 sm:py-2.5 border-2 border-white text-white  font-semibold roundedtext-black font-semibold rounded bg-transparent text-sm sm:text-base hover:-translate-y-1 active:scale-95 transition-all duration-150 shadow-lg"
+                                        className="hb-cta"
                                         onClick={e => isDragging && e.preventDefault()}
                                     >
                                         Shop Now
+                                        <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                                            <path d="M1 5h12M8 1l4 4-4 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
                                     </Link>
                                 )}
+
                             </div>
                         </div>
                     </div>
                 ))}
             </div>
 
-            {/* Prev / Next arrows (desktop only) */}
+            {/* ── Arrows ── */}
             {banners.length > 1 && (
                 <>
-                    <button
-                        onClick={prev}
-                        aria-label="Previous slide"
-                        className="absolute left-3 top-1/2 -translate-y-1/2 hidden md:flex items-center justify-center w-9 h-9 rounded-full bg-black/30 backdrop-blur-sm text-white hover:bg-black/50 transition-colors z-10"
-                    >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <button className="hb-arrow hb-arrow--prev" onClick={prev} aria-label="Previous slide">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                             <polyline points="15 18 9 12 15 6" />
                         </svg>
                     </button>
-                    <button
-                        onClick={next}
-                        aria-label="Next slide"
-                        className="absolute right-3 top-1/2 -translate-y-1/2 hidden md:flex items-center justify-center w-9 h-9 rounded-full bg-black/30 backdrop-blur-sm text-white hover:bg-black/50 transition-colors z-10"
-                    >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <button className="hb-arrow hb-arrow--next" onClick={next} aria-label="Next slide">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                             <polyline points="9 18 15 12 9 6" />
                         </svg>
                     </button>
                 </>
             )}
 
-            {/* Dot indicators */}
+            {/* ── Dots ── */}
             {banners.length > 1 && (
-                <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
+                <div className="hb-dots">
                     {banners.map((_, i) => (
                         <button
                             key={i}
+                            className="hb-dot-btn"
                             onClick={() => goToReal(i)}
                             aria-label={`Go to slide ${i + 1}`}
-                            className="flex items-center justify-center p-1"
                         >
-                            <span
-                                className={`block rounded-full transition-all duration-300 ${
-                                    i === realIndex
-                                        ? "w-5 h-1.5 bg-white"
-                                        : "w-1.5 h-1.5 bg-white/45 hover:bg-white/70"
-                                }`}
-                            />
+                            <span className={`hb-dot-line ${i === realIndex ? "hb-dot-line--active" : ""}`} />
                         </button>
                     ))}
-                </div>
-            )}
-
-            {/* Slide counter – top right, subtle */}
-            {banners.length > 1 && (
-                <div className="absolute top-3 right-3 text-white/50 text-[11px] font-medium tracking-widest bg-black/20 backdrop-blur-sm px-2.5 py-1 rounded-full z-10 tabular-nums">
-                    {realIndex + 1}/{banners.length}
                 </div>
             )}
         </section>

@@ -4,7 +4,6 @@ import "server-only";
 import { apiServerService } from "../api/server";
 import type { Brand } from "@/types/open/brand.type";
 
-// 🏠 សម្រាប់ Homepage - យក brands មកបង្ហាញ
 export async function getBrands(limit: number = 8): Promise<Brand[]> {
     try {
         const brands = await apiServerService.get<Brand[]>("/brands/homepage", {

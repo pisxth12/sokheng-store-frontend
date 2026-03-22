@@ -4,15 +4,16 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useSearchProducts } from "@/hooks/open/useSearchProducts";
 import ProductCard from "@/components/open/products/ProductCard";
 import { useEffect, useRef, useState } from "react";
-import { Loader2, Search as SearchIcon, Search, Filter } from "lucide-react";
+import { Search, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
-import FilterModal from "../../../components/open/searchs/FilterModal";
+import FilterModal from "../../../components/open/filters/FilterModal";
 import ProductCardSkeletonGrid from "@/components/open/loadings/ProductCardSkeletonGrid";
 import { useTranslations } from "next-intl";
 import { ScrollToTop } from "@/components/ui/ScrollToTop";
+import "./SearchPage.css";
 
 export default function SearchPage() {
-  const t = useTranslations('SearchPage'); 
+  const t = useTranslations("SearchPage");
   const searchParams = useSearchParams();
   const query = searchParams.get("q") || "";
   const [searchInput, setSearchInput] = useState(query);
@@ -21,238 +22,203 @@ export default function SearchPage() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const router = useRouter();
 
-  // Intersection Observer for infinite scroll
+  const loadMoreRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
-   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-
-  // Get filter values from URL
   const minPrice = searchParams.get("minPrice") || "";
   const maxPrice = searchParams.get("maxPrice") || "";
   const categoryId = searchParams.get("categoryId") || "";
   const sortBy = searchParams.get("sortBy") || "createdAt";
   const sortOrder = searchParams.get("sortOrder") || "desc";
 
-  const {
-    results,
-    loading,
-    hasMore,
-    loadMore,
-    search,
-    filters,
-    applyFilters
-  } = useSearchProducts(query, 32, {
-    minPrice: minPrice ? Number(minPrice) : undefined,
-    maxPrice: maxPrice ? Number(maxPrice) : undefined,
-    categoryId: categoryId ? Number(categoryId) : undefined,
-    sortBy,
-    sortOrder
-  });
-
-  useEffect(() => {
-    if (query) {
-      search(query);
-      setSearchInput(query);
-    }
-  }, [query, search]);
-
-  // Scroll handler
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 10) {
-        setShowHeader(false);
-      } else {
-        setShowHeader(true);
-      }
-      setLastScrollY(currentScrollY);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
-
-    // Infinite scroll setup
-     useEffect(() => {
-    if (loading) return;
-
-    if (observerRef.current) {
-      observerRef.current.disconnect();
-    }
-
-    observerRef.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore && !loading) {
-        loadMore();
-      }
+  const { results, loading, hasMore, loadMore, search, filters, applyFilters } =
+    useSearchProducts(query, 32, {
+      minPrice: minPrice ? Number(minPrice) : undefined,
+      maxPrice: maxPrice ? Number(maxPrice) : undefined,
+      categoryId: categoryId ? Number(categoryId) : undefined,
+      sortBy,
+      sortOrder,
     });
 
-    if (loadMoreRef.current) {
-      observerRef.current.observe(loadMoreRef.current);
-    }
+  useEffect(() => {
+    if (query) { search(query); setSearchInput(query); }
+  }, [query, search]);
 
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      setShowHeader(y <= lastScrollY || y <= 10);
+      setLastScrollY(y);
     };
-  }, [loading, hasMore, loadMore]);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [lastScrollY]);
 
+  useEffect(() => {
+    if (loading) return;
+    observerRef.current?.disconnect();
+    observerRef.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && hasMore && !loading) loadMore();
+    });
+    if (loadMoreRef.current) observerRef.current.observe(loadMoreRef.current);
+    return () => observerRef.current?.disconnect();
+  }, [loading, hasMore, loadMore]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchInput.trim()) {
+    if (searchInput.trim())
       router.push(`/search?q=${encodeURIComponent(searchInput)}`);
-    }
   };
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-    
     if (value === "recommend") {
       updateUrlWithFilters({ sortBy: "recommend", sortOrder: "desc" });
       applyFilters({ sortBy: "recommend", sortOrder: "desc" });
     } else {
-      const [newSortBy, newSortOrder] = value.split('-');
-      updateUrlWithFilters({ sortBy: newSortBy, sortOrder: newSortOrder });
-      applyFilters({ sortBy: newSortBy, sortOrder: newSortOrder });
+      const [sb, so] = value.split("-");
+      updateUrlWithFilters({ sortBy: sb, sortOrder: so });
+      applyFilters({ sortBy: sb, sortOrder: so });
     }
   };
 
   const handleApplyFilters = (newFilters: any) => {
-    const filtersToApply = {
+    setOpenFilterModal(false);
+    const f = {
       sortBy: newFilters.sortBy,
       sortOrder: newFilters.sortOrder,
       minPrice: newFilters.minPrice ? Number(newFilters.minPrice) : undefined,
       maxPrice: newFilters.maxPrice ? Number(newFilters.maxPrice) : undefined,
-      categoryId: newFilters.categoryId ? Number(newFilters.categoryId) : undefined
+      categoryId: newFilters.categoryId ? Number(newFilters.categoryId) : undefined,
     };
-    
-    updateUrlWithFilters(filtersToApply);
-    applyFilters(filtersToApply);
+    updateUrlWithFilters(f);
+    applyFilters(f);
   };
 
   const updateUrlWithFilters = (newFilters: any) => {
     const params = new URLSearchParams(searchParams.toString());
-    
-    if (newFilters.minPrice) params.set("minPrice", newFilters.minPrice.toString());
-    else params.delete("minPrice");
-    
-    if (newFilters.maxPrice) params.set("maxPrice", newFilters.maxPrice.toString());
-    else params.delete("maxPrice");
-    
-    if (newFilters.categoryId) params.set("categoryId", newFilters.categoryId.toString());
-    else params.delete("categoryId");
-    
+    newFilters.minPrice ? params.set("minPrice", newFilters.minPrice) : params.delete("minPrice");
+    newFilters.maxPrice ? params.set("maxPrice", newFilters.maxPrice) : params.delete("maxPrice");
+    newFilters.categoryId ? params.set("categoryId", newFilters.categoryId) : params.delete("categoryId");
     if (newFilters.sortBy) params.set("sortBy", newFilters.sortBy);
     if (newFilters.sortOrder) params.set("sortOrder", newFilters.sortOrder);
-    
     router.push(`/search?${params.toString()}`, { scroll: false });
   };
 
   if (loading && results.length === 0) {
     return (
-      <div className="container mt-40 mx-auto  py-8">
-      <ProductCardSkeletonGrid count={20} />
-    </div>
+      <div className="container mt-40 mx-auto py-8">
+        <ProductCardSkeletonGrid count={20} />
+      </div>
     );
   }
 
   return (
     <>
-      <div className="min-h-screen ">
-        {/* Search Header */}
-        <div
-          className={` max-w-primary px-4 shadow-md sticky dark:bg-darkbg bg-white top-15 z-10   transition-transform duration-300 ${
-            showHeader ? "translate-y-0" : "-translate-y-full"
-          }`}
-        >
-          <div className=" mx-auto ">
-            <form onSubmit={handleSearch} className="py-3">
-              <div className="flex items-center gap-2">
-                <div className="flex-1 border-b border-slate-400  flex items-center rounded-g py-2">
-                  <input
-                    type="text"
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                     placeholder={t('searchPlaceholder')} 
-                    className="w-full outline-none text-lg "
-                  />
-                  <button type="submit" className="ml-2">
-                    <Search className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
+      <div className="sp-page">
+
+        {/* ── Sticky Header ── */}
+        <div className={`sp-header ${showHeader ? "" : "sp-header--hidden"}`}>
+
+          {/* Search bar */}
+          <div className="sp-search-row">
+            <form onSubmit={handleSearch} className="sp-search-form">
+              <Search size={16} className="sp-search-icon" />
+              <input
+                type="text"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder={t("searchPlaceholder")}
+                className="sp-search-input"
+              />
+              <button type="submit" className="sp-search-btn" aria-label="Search">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
             </form>
           </div>
-          <div className="flex justify-between   py-5">
-          <button 
-            onClick={() => setOpenFilterModal(true)} 
-            className="flex justify-between gap-2 items-center px-3 border-2 py-1 rounded-sm"
-          >
-            <Filter /> 
-            <span>
-              {t('filters')}
-            </span>
-          </button>
 
-           <select 
-              className="border-2 p-1 rounded-sm bg-transparent" 
-              value={filters.sortBy === "recommend" ? "recommend" : `${filters.sortBy}-${filters.sortOrder}`}
+          {/* Filter + Sort row */}
+          <div className="sp-controls-row">
+            <button
+              className="sp-filter-btn"
+              onClick={() => setOpenFilterModal(true)}
+            >
+              <SlidersHorizontal size={13} />
+              {t("filters")}
+            </button>
+
+            <select
+              className="sp-sort-select"
+              value={
+                filters.sortBy === "recommend"
+                  ? "recommend"
+                  : `${filters.sortBy}-${filters.sortOrder}`
+              }
               onChange={handleSortChange}
             >
-              <option className="dark:bg-darkbg" value="recommend">{t('sortOptions.recommend')}</option>
-              <option className="dark:bg-darkbg" value="createdAt-desc">{t('sortOptions.newest')}</option>
-              <option className="dark:bg-darkbg" value="createdAt-asc">{t('sortOptions.oldest')}</option>
-              <option className="dark:bg-darkbg" value="price-asc">{t('sortOptions.priceLowHigh')}</option>
-              <option className="dark:bg-darkbg" value="price-desc">{t('sortOptions.priceHighLow')}</option>
+              <option className="bg-white dark:bg-black " value="recommend">{t("sortOptions.recommend")}</option>
+              <option className="bg-white dark:bg-black " value="createdAt-desc">{t("sortOptions.newest")}</option>
+              <option className="bg-white dark:bg-black " value="createdAt-asc">{t("sortOptions.oldest")}</option>
+              <option className="bg-white dark:bg-black " value="price-asc">{t("sortOptions.priceLowHigh")}</option>
+              <option className="bg-white dark:bg-black " value="price-desc">{t("sortOptions.priceHighLow")}</option>
             </select>
+          </div>
         </div>
-      </div>
 
-        
-
-        {/* Main Content */}
-        <div className="max-w-primary mx-auto py-8">
+        {/* ── Content ── */}
+        <div className="sp-content">
           {results.length === 0 ? (
-            <div className="text-center py-16">
-              <SearchIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-              <h2 className="text-xl font-semibold mb-2">{t('noResults.title')}</h2>
-              <p className="text-gray-500 mb-6">
-                 {t('noResults.message', { query })}
+
+            /* Empty state */
+            <div className="sp-empty">
+              <Search size={48} className="sp-empty-icon" />
+              <h2 className="sp-empty-title">{t("noResults.title")}</h2>
+              <p className="sp-empty-sub">
+                {t("noResults.message", { query })}
               </p>
-              <Link
-                href="/products"
-                className="inline-block bg-black text-white px-6 py-3 rounded-lg"
-              >
-                {t('noResults.button')}
+              <Link href="/products" className="sp-empty-cta">
+                {t("noResults.button")}
               </Link>
             </div>
+
           ) : (
             <>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+              {/* Result count */}
+              {query && (
+                <p className="sp-result-meta">
+                  <strong>{results.length}</strong> results for &ldquo;{query}&rdquo;
+                </p>
+              )}
+
+              {/* Grid */}
+              <div className="sp-grid">
                 {results.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
 
-               {/* Loading indicator and observer target */}
-              <div ref={loadMoreRef} className="w-full py-8 flex justify-center">
+              {/* Infinite scroll sentinel */}
+              <div ref={loadMoreRef} className="sp-sentinel">
                 {loading && (
-                  <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+                  <div className="sp-loading-dots">
+                    <span className="sp-loading-dot" />
+                    <span className="sp-loading-dot" />
+                    <span className="sp-loading-dot" />
+                  </div>
                 )}
                 {!hasMore && results.length > 0 && (
-                  <p className="text-sm text-gray-400">{t('noMoreProducts')}</p>
+                  <span className="sp-end-label">End of results</span>
                 )}
               </div>
-             
             </>
           )}
         </div>
       </div>
 
-      {openFilterModal && (
-        <FilterModal 
-          isOpen={openFilterModal} 
+        <FilterModal
+          isOpen={openFilterModal}
           onClose={() => setOpenFilterModal(false)}
           onApply={handleApplyFilters}
           currentFilters={{
@@ -260,11 +226,10 @@ export default function SearchPage() {
             maxPrice: filters.maxPrice?.toString() || "",
             categoryId: filters.categoryId?.toString() || "",
             sortBy: filters.sortBy,
-            sortOrder: filters.sortOrder
+            sortOrder: filters.sortOrder,
           }}
         />
-      )}
-      <ScrollToTop/>
+      <ScrollToTop />
     </>
   );
 }

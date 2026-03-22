@@ -1,28 +1,24 @@
+// lib/services/user.server.ts
 import "server-only";
 import { apiServerService } from "../api/server";
 import { User } from "@/types/open/user.type";
 
-export async function getUserProfile(sessionId?: string): Promise<User | null> {
-
-  if (!sessionId) {
+export async function getUserProfile(token?: string): Promise<User | null> {
+  if (!token) {
     return null;
   }
 
   try {
     const user = await apiServerService.get<User>("/users/me", {
-      sessionId,
-      cacheTime: 60, 
+      token,  
     });
+
+    console.log("=============================== user =" + user);
+    
     
     return user ?? null;
     
   } catch (error) {
-    console.error("❌ Failed to fetch user profile:", {
-      error: error instanceof Error ? error.message : "Unknown error",
-      sessionId: sessionId ? "present" : "missing",
-      timestamp: new Date().toISOString()
-    });
-    
     return null;
   }
 }

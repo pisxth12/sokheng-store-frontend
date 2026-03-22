@@ -10,6 +10,7 @@ const apiClient: AxiosInstance = axios.create({
   },
 });
 
+
 // Response interceptor - handle 401 errors
 apiClient.interceptors.response.use(
   (response) => response,

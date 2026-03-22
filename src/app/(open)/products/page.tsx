@@ -6,7 +6,7 @@ import { useProducts } from "@/hooks/open/useProducts";
 import { publicProductApi } from "@/lib/open/products";
 import { useCallback, useEffect, useRef } from "react";
 
-export default function ProductsPage() {
+export default function ProductPage() {
   const { products, loading, hasMore, total, error, loadMore, reset } =
     useProducts(publicProductApi.getAllProducts);
 

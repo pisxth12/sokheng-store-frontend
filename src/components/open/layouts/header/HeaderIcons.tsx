@@ -1,30 +1,25 @@
 "use client"
-import { useCart } from "@/hooks/open/useCart";
-import { useWishlist } from "@/hooks/open/useWishlist";  
 import { ShoppingCart, User, Search, Heart } from "lucide-react";
 import Link from "next/link";
-import { useEffect } from "react";
 
 interface Props {
   onSearchClick: () => void;
-  onCartClick: () => void;
+  userData: any;
   initialCount: number;
   initialWishlistCount: number;
   isLoading?: boolean;
 }
 
 export default function HeaderIcons({
+  userData,
   onSearchClick,
-  onCartClick,
+  // onCartClick,
   initialCount,
   initialWishlistCount,
   isLoading = false,
 }: Props) {
 
-
   const displayCartCount = initialCount;
-
-
   const displayWishlistCount = initialWishlistCount;
 
   if (isLoading) {
@@ -64,8 +59,9 @@ export default function HeaderIcons({
       </Link>
 
       {/* Cart Icon */}
-      <button
-        onClick={onCartClick}
+      <Link
+        href="/cart"
+        prefetch={false}
         className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition relative"
         aria-label="Cart"
       >
@@ -75,16 +71,25 @@ export default function HeaderIcons({
             {displayCartCount > 99 ? '99+' : displayCartCount}
           </span>
         )}
-      </button>
-
-      <Link
-        href="/account"
-        prefetch={false}
-        className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition"
-        aria-label="My Account"
-      >
-        <User className="w-5 h-5" />
       </Link>
+
+      {userData ? (
+        <Link
+            href="/account"
+            prefetch={false}
+            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition"
+            aria-label="My Account"
+          >
+            <User className="w-5 h-5" />
+          </Link>
+          ) : (
+            <Link
+                href="/login"
+                className="px-2 py-2 text-sm font-medium  transition duration-200 "
+              >
+                Sign In
+            </Link>
+          )}
     </div>
   );
 }

@@ -27,9 +27,8 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
         setIsInWishlist(status);
     };
 
-    const handleClick = async (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
+    const handleClick = async () => {
+        if (loading) return;
         
         setLoading(true);
         const success = await toggleItem(productId, isInWishlist);
@@ -41,15 +40,20 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
         setLoading(false);
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleClick();
+        }
+    };
+
     return (
-        <button
+        <div
             onClick={handleClick}
-            disabled={loading}
-            className={` rounded-full flex items-center justify-center transition-all duration-200 ${
-                isInWishlist 
-                    ? 'text-red-500 hover:text-red-600' 
-                    : 'text-gray-400 hover:text-gray-600'
-            } ${className}`}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
+            className={`flex items-center justify-center cursor-pointer transition-all duration-200 ${className}`}
             aria-label={isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
         >
             {loading ? (
@@ -57,11 +61,11 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
             ) : (
                 <Heart 
                     className={`w-6 h-6 transition-transform hover:scale-110 ${
-                        isInWishlist ? 'fill-red-500' : ''
+                        isInWishlist ? 'fill-red-500 text-red-500' : 'text-gray-400'
                     }`} 
                 />
             )}
-        </button>
+        </div>
     );
 };
 

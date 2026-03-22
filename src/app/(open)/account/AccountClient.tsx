@@ -130,7 +130,9 @@ export default function AccountClient({
                   { icon: Package, label: t('quickActions.myOrders'), href: '/account/orders' },
                   { icon: Heart, label: t('quickActions.wishlist'), href: '/wishlist' },
                   { icon: MapPin, label: t('quickActions.addresses'), href: '/account/addresses' },
-                  { icon: CreditCard, label: t('quickActions.paymentMethods'), href: '/account/payments' },
+                  // { icon: CreditCard, label: t('quickActions.paymentMethods'), href: '/account/payments' },
+                  { icon: CreditCard, label:"Find Your Order", href: '/track-order' },
+
                 ].map((item) => (
                   <Link
                     key={item.label}
@@ -209,6 +211,11 @@ export default function AccountClient({
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         onSave={handleSaveProfile}
+        initialData={{
+          name: user.name,
+          phone: user.phone,
+          address: user.address,
+        }}
       />
     </div>
   );

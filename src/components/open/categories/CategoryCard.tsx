@@ -12,7 +12,7 @@ export const CategoryCard = memo(function CategoryCard({ category }: { category:
 
     return (
         <Link
-            href={`/categories/${category.slug}`}
+            href={`/${category.slug}`}
             prefetch={false}
             className="group relative overflow-hidden aspect-square "
         >

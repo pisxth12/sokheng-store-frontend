@@ -4,6 +4,7 @@ import { CartResponse, CheckoutRequest } from "@/types/open/cart.type";
 import { CheckoutResponse } from "@/types/open/checkout";
 import { useRouter } from "next/navigation";
 import { createContext, useCallback, useEffect, useRef, useState } from "react";
+import { useToast } from "./ToastContext";
 
 interface CartContextType {
   cart: CartResponse | null;
@@ -35,6 +36,11 @@ export const CartProvider = ({
   const [cart, setCart] = useState<CartResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [isCartLoaded, setIsCartLoaded] = useState(false);
+const {  showToast  } =  useToast();
+  
+
+  console.log("this is cartContext ========" +itemCount);
+  
 
   const route = useRouter();
 
@@ -50,7 +56,7 @@ export const CartProvider = ({
     } finally {
       setLoading(false);
     }
-  }, [isCartLoaded]);
+  }, []);
 
   const refreshCart = useCallback(async () => {
     if (!isCartLoaded) return;
@@ -68,18 +74,26 @@ export const CartProvider = ({
 
   // Add item to cart
   const addToCart = async (productId: number, quantity: number) => {
-    if (!isCartLoaded) {
-      await loadCart();
-    }
+ 
     try {
       const res = await publicCartApi.addToCart({
         productId,
         quantity,
       });
+
+        const addedItem = res.items.find(item => item.productId === productId);
+  
+        if (addedItem) {
+          showToast({
+            id: addedItem.productId,
+            name: addedItem.productName,
+            price: addedItem.price,
+            image: addedItem.productImage || '',
+            quantity: quantity,
+          });
+        }
       setCart(res);
       setItemCount(res.totalItems);
-      route.refresh();
-     
     } catch (error) {
       console.log(error);
       throw error;
@@ -89,11 +103,9 @@ export const CartProvider = ({
   // Update item quantity
   const updateQuantity = async (itemId: number, quantity: number) => {
     try {
-      const updatedCart = await publicCartApi.updateCartItem(itemId, {
+     await publicCartApi.updateCartItem(itemId, {
         quantity,
       });
-      setCart(updatedCart);
-      setItemCount(updatedCart.totalItems);
     } catch (error) {
       console.log(error);
       throw error;

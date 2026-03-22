@@ -2,8 +2,9 @@ export interface WishlistItem {
     id: number;
     productId: number;
     productName: string;
-    productSlug?: string;
-    productSku?: string;
+    productSlug: string;
+    categorySlug: string;
+    categoryName: string;
     price: number;
     salePrice: number | null;
     discountPercent?: number;

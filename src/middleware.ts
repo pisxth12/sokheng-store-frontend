@@ -43,13 +43,15 @@ export function middleware(request: NextRequest) {
 
 
     const isPublicRoute = publicRoutes.some((route) => {
+        // return pathname === route || pathname.startsWith(route + '/');
         return pathname === route || pathname.startsWith(route + '/');
+        
     });
 
     if (isPublicRoute) {
-        if (pathname === '/checkout/guest' && token) {
-            return NextResponse.redirect(new URL("/", request.url));
-        }
+        // if (pathname === '/checkout/guest' && token) {
+        //     return NextResponse.redirect(new URL("/", request.url));
+        // }
         return NextResponse.next();
     }
 

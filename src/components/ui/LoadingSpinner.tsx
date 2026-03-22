@@ -1,8 +1,35 @@
-export const LoadingSpinner = ({ message = "Loading..." }) => {
+export const LoadingSpinner = ({ message = "Loading" }) => {
   return (
-    <div className="fixed inset-0 backdrop-blur-sm bg-[#f2f3f5]/50 dark:bg-[#1a1a1a]/55 z-50 flex flex-col items-center justify-center gap-3.5">
-      <div className="w-10 h-10 rounded-full border-[3px] border-slate-200/60 dark:border-slate-600/30 border-t-blue-500 dark:border-t-blue-400 animate-spin" />
-      <p className="text-[0.8rem] font-medium tracking-wide text-slate-500 dark:text-slate-400">{message}</p>
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-7 bg-white/85 dark:bg-[#0f0f0e]/85 backdrop-blur-md">
+
+      {/* Three pulsing dots */}
+      <div className="flex items-center gap-2.5">
+        {[0, 1, 2].map((i) => (
+          <span
+            key={i}
+            className="block w-1.5 h-1.5 rounded-full bg-[#c8102e]"
+            style={{
+              animation: "ld-pulse 1.5s ease-in-out infinite",
+              animationDelay: `${i * 0.2}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Label */}
+      <span
+        className="text-[0.65rem] tracking-[0.22em] uppercase text-[#a3a39f] dark:text-[#5a5a57] font-normal select-none"
+        style={{ fontFamily: "'DM Sans', sans-serif" }}
+      >
+        {message}
+      </span>
+
+      <style>{`
+        @keyframes ld-pulse {
+          0%, 100% { transform: scale(1);   opacity: 0.2; }
+          50%       { transform: scale(1.6); opacity: 1;   }
+        }
+      `}</style>
     </div>
   );
 };

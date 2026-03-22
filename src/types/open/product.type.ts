@@ -11,18 +11,18 @@ export interface Product{
     slug: string;
     brandName: string;
     categoryName: string;
+    categorySlug: string;
     mainImage: string;
     images: ProductImage[];
 }
 
 export interface ProductDetail extends Product {
-   description: string;          
+    description: string;
+    sku: string;          
     categoryId: number;           
     categorySlug: string;         
     brandId?: number;             
-    brandSlug?: string;           
-    isFeatured: boolean;          
-    createdAt: string;            
+    brandSlug?: string;                          
     images: ProductDetailImage[];
 }
 
@@ -40,6 +40,7 @@ export interface ProductSuggestion {
   id: number;
   name: string;
   slug: string;
+  categorySlug: string;
   price: number;
   mainImage: string;
 }

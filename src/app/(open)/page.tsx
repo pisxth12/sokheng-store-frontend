@@ -19,8 +19,8 @@ export default async function HomePage() {
   return (
     <div className="m-w-primary">
       <HeroBanner banners={banners} />
-      <TopCategories categories={categories} />
       <BrandSection brands={brands} />
+      <TopCategories categories={categories} />
       <FeaturedPage products={featured} />
     </div>
   );

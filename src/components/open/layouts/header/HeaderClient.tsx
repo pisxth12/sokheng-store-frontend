@@ -1,28 +1,30 @@
 "use client";
 import { useState } from "react";
 import DesktopNav from "./DesktopNav";
-import HeaderIcons from "./HeaderIcons";
-import SearchDropdown from "./SearchDropdown";
-import { CartSideBar } from "./CartSidebar";
+import SearchDropdown from "../dropdown/SearchDropdown";
 import MobileMenu from "./MobileMenu";
 import Logo from "./Logo";
 import { Menu } from "lucide-react";
-import { useAuth } from "@/hooks/open/useAuth";
+import { CartSideBar } from "../cart/CartSidebar";
+import { User } from "@/types/open/user.type";
+import HeaderIcons from "./HeaderIcons";
+
 
 interface HeaderClientProps {
+  userData: User | null;
   initialCount: number;
   initialWishlistCount: number;
 }
-export default function HeaderClient({ initialCount, initialWishlistCount}: HeaderClientProps) {
+export default function HeaderClient({ userData ,initialCount, initialWishlistCount}: HeaderClientProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
+  // const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const { loading: authLoading } = useAuth();
+  
 
   return (
     <>
-      <header className="bg-white  dark:bg-darkbg border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 transition-colors duration-300">
+      <header className="bg-white  dark:bg-darkbg border-b border-gray-200 dark:border-gray-800 sticky top-0 z-40 transition-colors duration-300">
         <div className=" mx-auto max-w-primary  ">
           <div className="flex items-center justify-between h-16 px-3">
             <div className="flex items-center space-x-1 ">
@@ -34,11 +36,10 @@ export default function HeaderClient({ initialCount, initialWishlistCount}: Head
             </div>
             <DesktopNav />
             <HeaderIcons
+              userData={userData}
               onSearchClick={() => setIsSearchOpen(!isSearchOpen)}
-              onCartClick={() => setIsCartOpen(true)}
               initialCount={initialCount}
               initialWishlistCount={initialWishlistCount}
-              isLoading={authLoading}
             />
           </div>
         </div>
@@ -47,7 +48,7 @@ export default function HeaderClient({ initialCount, initialWishlistCount}: Head
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
       />
-      <CartSideBar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      {/* <CartSideBar  isOpen={isCartOpen} onClose={() => setIsCartOpen(false)}   user={userData}   /> */}
       <MobileMenu
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}

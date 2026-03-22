@@ -1,7 +1,9 @@
 import React from "react";
 import "./globals.css";
-import { AppProvider } from "@/providers/AppProvider";
 import { NextIntlClientProvider } from "next-intl";
+import { cookies } from "next/headers";
+import { getUserProfile } from "@/lib/services/user.server";
+import ServerProviders from "@/providers/ServerProviders";
 
 type Props = {
   children: React.ReactNode;
@@ -13,7 +15,7 @@ export default async function RootLayout({ children }: Props) {
       <body>
          <React.StrictMode>
           <NextIntlClientProvider locale="en">
-            <AppProvider>{children}</AppProvider>
+            <ServerProviders>{children}</ServerProviders>
           </NextIntlClientProvider>
         </React.StrictMode>
       </body>
