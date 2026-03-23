@@ -23,8 +23,9 @@ export async function apiServer<T>(
     (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
   }
 
+   let cookieHeader = '';
   if (sessionId) {
-    (headers as Record<string, string>)['X-Session-Id'] = sessionId;
+    cookieHeader = `cartSessionId=${sessionId}`;
   }
 
   const url = `${API.BASE_URL}/api/${API.VERSION}${endpoint}`;
@@ -32,8 +33,11 @@ export async function apiServer<T>(
   try {
     const res = await fetch(url, {
       ...fetchOptions,
-      headers,
-      next: cacheTime ? { revalidate: cacheTime } : undefined,
+      headers: {
+        ...headers,
+        ...(cookieHeader && { Cookie: cookieHeader }), 
+      },
+      credentials: 'include', 
     });
 
     if (!res.ok) {
@@ -60,4 +64,16 @@ export const apiServerService = {
       body: JSON.stringify(data),
       ...options 
     }),
+  
+  put: <T>(endpoint: string, option?: { token?: string; sessionId?: string }) =>
+    apiServer<T>(endpoint, { 
+      method: 'PUT',
+      body: JSON.stringify(option),
+      ...option 
+    }),
+  delete: <T>(endpoint: string, options?: { token?: string; sessionId?: string }) =>
+  apiServer<T>(endpoint, { 
+    method: 'DELETE',
+    ...options 
+  })
 };

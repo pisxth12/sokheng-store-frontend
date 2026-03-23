@@ -257,7 +257,7 @@ export default function TrackOrder() {
                 </div>
                 <div className="space-y-3">
                   {order.items.map((item, index) => (
-                    <Link href={`/products/${item.slug}`} key={index} className="flex gap-4 p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-s transition group">
+                    <Link href={`/${item.id}/${item.slug}`} key={index} className="flex gap-4 p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-s transition group">
                       {item.productImage && (
                         <img 
                           src={item.productImage} 

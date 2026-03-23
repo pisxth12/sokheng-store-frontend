@@ -14,7 +14,7 @@ const FeaturedProducts = memo(function FeaturedPage({ products }: FeaturedProduc
     
   
     const containerClass = useMemo(() => 
-        "mx-auto max-w-primary py-8 ", 
+        "mx-auto max-w-primary px-primary py-8 ", 
     []);
 
    

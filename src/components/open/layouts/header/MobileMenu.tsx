@@ -1,9 +1,9 @@
 'use client';
-
-import { X } from 'lucide-react';
+import { X, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
-import { useAuth } from '@/hooks/open/useAuth';
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import './Header.css';
 
 interface Props {
   isOpen: boolean;
@@ -12,85 +12,75 @@ interface Props {
 
 const navLinks = [
   { href: '/products', label: 'All Products' },
-  { href: '/sale', label: 'Sale',  },
-  { href: '/about', label: 'About Us' },
+  { href: '/sale',     label: 'Sale', sale: true },
+  { href: '/about',    label: 'About Us' },
 ];
 
-const categories = ['Women', 'Men', 'Kids', 'Accessories'];
-
 export default function MobileMenu({ isOpen, onClose }: Props) {
-  const { user, isAuthenticated } = useAuth();
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [closing, setClosing] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => { setMounted(true); return () => setMounted(false); }, []);
 
   useEffect(() => {
     if (isOpen) {
+      setVisible(true);
+      setClosing(false);
       document.body.style.overflow = 'hidden';
-      setIsAnimating(true);
-    } else {
+    } else if (visible) {
+      setClosing(true);
+      setTimeout(() => { setVisible(false); setClosing(false); }, 280);
       document.body.style.overflow = 'unset';
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
+    return () => { document.body.style.overflow = 'unset'; };
   }, [isOpen]);
 
-  if (!isOpen && !isAnimating) return null;
+  const handleClose = () => {
+    setClosing(true);
+    setTimeout(() => { setVisible(false); setClosing(false); onClose(); }, 280);
+  };
 
-  return (
-    <div className="fixed inset-0 z-50 md:hidden">
-      {/* Backdrop with fade animation */}
-      <div 
-        className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${
-          isOpen ? 'opacity-100' : 'opacity-0'
-        }`} 
-        onClick={onClose}
-        onTransitionEnd={() => {
-          if (!isOpen) setIsAnimating(false);
-        }}
+  if (!visible || !mounted) return null;
+
+  return createPortal(
+    <div className="md:hidden">
+      <div
+        className={`mm-overlay ${closing ? 'mm-overlay--closing' : ''}`}
+        onClick={handleClose}
       />
+      <div className={`mm-panel ${closing ? 'mm-panel--closing' : ''}`}>
 
-      {/* Left sliding panel */}
-      <div 
-        className={`absolute left-0 top-0 bottom-0 w-80 bg-white dark:bg-darkbg shadow-xl transform transition-transform duration-300 ease-in-out ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-      >
-        <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between p-4 border-b">
-            <span className="font-semibold text-lg">Menu</span>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition"
-              aria-label="Close menu"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          <nav className="flex-1 p-4 overflow-y-auto">
-            <div className="space-y-2">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`block p-3 hover:bg-gray-200/20 rounded-lg transition`}
-                  onClick={onClose}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-
-            
-          </nav>
-
-          <div className="p-4 border-t">
-            <p className="text-sm text-gray-500 text-center">
-              © 2026 VANNESA. All rights reserved.
-            </p>
-          </div>
+        {/* Header */}
+        <div className="mm-header">
+          <span className="mm-header-logo">PISETH SORN</span>
+          <button className="mm-close-btn" onClick={handleClose} aria-label="Close">
+            <X size={13} />
+          </button>
         </div>
+
+        {/* Nav */}
+        <nav className="mm-nav">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`mm-nav-link ${link.sale ? 'mm-nav-link--sale' : ''}`}
+              onClick={handleClose}
+            >
+              {link.label}
+              <ChevronRight size={13} strokeWidth={1.5} />
+            </Link>
+          ))}
+        </nav>
+
+        {/* Footer */}
+        <div className="mm-footer">
+          <p className="mm-footer-copy">© 2026 Piseth Sorn</p>
+        </div>
+
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

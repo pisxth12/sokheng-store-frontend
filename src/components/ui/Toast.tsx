@@ -33,7 +33,7 @@ export function Toast({ id, product, onClose }: ToastProps) {
   return (
     <div
       style={{ fontFamily: "'DM Sans', sans-serif", width: '20rem' }}
-      className={`transform transition-all duration-300 ease-out ${
+      className={`transform mt-12 transition-all duration-300 ease-out ${
         isVisible && !isExiting
           ? 'translate-x-0 opacity-100'
           : 'translate-x-full opacity-0'

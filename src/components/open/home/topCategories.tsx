@@ -26,7 +26,7 @@ export const TopCategories = memo(function TopCategories({ categories }: TopCate
     if (categories.length < 1) return null;
 
     return (
-        <section className="max-w-primary mx-auto  py-12">
+        <section className="max-w-primary px-primary mx-auto  py-12">
             {/* Categories Grid */}
             <div className={gridClass}>
                 {categories.map((category) => (

@@ -1,25 +1,23 @@
 // lib/api/wishlist.server.ts
 import "server-only";
 import { apiServerService } from "../api/server";
+import { cookies } from "next/headers";
 
-export async function getWishlistCountForUser(token?: string): Promise<number> {
+
+export async function getWishlistCounts(): Promise<number> {
   try {
-    const count = await apiServerService.get<number>("/wishlist/count", {
-      token,
-    });
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
+    const sessionId = cookieStore.get("JSESSIONID")?.value; 
+    
+    if (!token && !sessionId) {
+      return 0;
+    }
+    const options = token ? { token } : { sessionId };
+    const count = await apiServerService.get<number>("/wishlist/count", options);
     return count ?? 0;
   } catch {
     return 0;
   }
 }
 
-export async function getWishlistCountForGuest(sessionId:string) {
-  try {
-    const count = await apiServerService.get<number>("/wishlist/count", {
-      sessionId,
-    });
-    return count ?? 0;
-  } catch {
-    return 0;
-  }
-}

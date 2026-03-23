@@ -61,8 +61,17 @@ html {
   margin: 0 auto;
 }
 
-@utility p-primary {
-  padding: 100px;
+@layer utilities {
+  .px-primary {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .max-w-primary {
+    max-width: 1520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 /* ======================================

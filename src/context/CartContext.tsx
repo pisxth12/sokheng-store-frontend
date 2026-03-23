@@ -3,7 +3,7 @@ import { publicCartApi } from "@/lib/open/cart";
 import { CartResponse, CheckoutRequest } from "@/types/open/cart.type";
 import { CheckoutResponse } from "@/types/open/checkout";
 import { useRouter } from "next/navigation";
-import { createContext, useCallback, useEffect, useRef, useState } from "react";
+import { createContext, useCallback, useRef, useState } from "react";
 import { useToast } from "./ToastContext";
 
 interface CartContextType {
@@ -39,9 +39,6 @@ export const CartProvider = ({
 const {  showToast  } =  useToast();
   
 
-  console.log("this is cartContext ========" +itemCount);
-  
-
   const route = useRouter();
 
   const loadCart = useCallback(async () => {
@@ -74,7 +71,6 @@ const {  showToast  } =  useToast();
 
   // Add item to cart
   const addToCart = async (productId: number, quantity: number) => {
- 
     try {
       const res = await publicCartApi.addToCart({
         productId,
@@ -115,9 +111,7 @@ const {  showToast  } =  useToast();
   // Remove item  (set quantity to 0)
   const removeItem = async (itemId: number) => {
     try {
-      const updatedCart = await publicCartApi.removeFromCart(itemId);
-      setCart(updatedCart);
-      setItemCount(updatedCart.totalItems);
+     await publicCartApi.removeFromCart(itemId);
       route.refresh();
     } catch (error) {
       console.log(error);

@@ -1,17 +1,13 @@
 // app/(open)/checkout/page.tsx (Server Component)
-import { cookies } from "next/headers";
 import { getUserProfile } from "@/lib/services/user.server";
-import { getServerCart } from "@/lib/services/cart.server";
 import { redirect } from "next/navigation";
 import CheckoutClient from "./CheckoutClient";
+import { getCart } from "@/lib/services/cart.server";
 
 export default async function CheckoutPage() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-  const sessionId = cookieStore.get("cartSessionId")?.value;
-
-  const user = await getUserProfile(token);
-  const cart = await getServerCart(sessionId);
+  
+  const user = await getUserProfile();
+  const cart = await getCart();
 
   if (!user) {
     redirect("/checkout/guest");

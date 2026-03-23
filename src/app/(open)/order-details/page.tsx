@@ -254,7 +254,7 @@ export default function OrderPage() {
               >
                 {item.productImage && (
                   <Link
-                    href={`/products/${item.slug}`}
+                    href={`/${item.productId}/${item.slug}`}
                     className="w-10 h-10 rounded-xl overflow-hidden bg-white/5 shrink-0"
                   >
                     <img

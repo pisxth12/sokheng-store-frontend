@@ -8,7 +8,7 @@ import { UpdateProfileRequest } from "@/types/open/auth.type";
 import { Edit } from "lucide-react";
 import { useCart } from "@/hooks/open/useCart";
 
-import { CartResponse } from "@/types/open/cart.type";
+import { CartItemResponse, CartResponse } from "@/types/open/cart.type";
 import { User } from "@/types/open/user.type";
 import { useAuth } from "@/hooks/open/useAuth";
 
@@ -71,7 +71,7 @@ export default function CheckoutClient({ initialUser, cart }: Props) {
   if (!isAuthenticated) return null;
 
   const subtotal =
-    cart?.items?.reduce((sum: number, i: any) => sum + i.totalPrice, 0) || 0;
+    cart?.items?.reduce((sum: number, i: CartItemResponse) => sum + i.totalPrice, 0) || 0;
 
   return (
     <>
@@ -142,14 +142,14 @@ export default function CheckoutClient({ initialUser, cart }: Props) {
             </div>
 
             <div className="divide-y divide-white/4">
-              {cart?.items?.map((item: any) => (
+              {cart?.items?.map((item: CartItemResponse) => (
                 <div
                   key={item.id}
                   className="item-row flex items-center gap-4 px-5 py-3.5"
                 >
                   {item.productImage && (
                     <Link
-                      href={`/products/${item.slug}`}
+                      href={`/${item.categorySlug}/${item.slug}`}
                       className="w-10 h-10 rounded-xl overflow-hidden bg-white/5 shrink-0"
                     >
                       <img

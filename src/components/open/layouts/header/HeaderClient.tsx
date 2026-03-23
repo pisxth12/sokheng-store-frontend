@@ -5,54 +5,53 @@ import SearchDropdown from "../dropdown/SearchDropdown";
 import MobileMenu from "./MobileMenu";
 import Logo from "./Logo";
 import { Menu } from "lucide-react";
-import { CartSideBar } from "../cart/CartSidebar";
 import { User } from "@/types/open/user.type";
 import HeaderIcons from "./HeaderIcons";
-
+import './Header.css';
 
 interface HeaderClientProps {
   userData: User | null;
   initialCount: number;
   initialWishlistCount: number;
 }
-export default function HeaderClient({ userData ,initialCount, initialWishlistCount}: HeaderClientProps) {
+
+export default function HeaderClient({ userData, initialCount, initialWishlistCount }: HeaderClientProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  // const [isCartOpen, setIsCartOpen] = useState(false);
-
-  
 
   return (
     <>
-      <header className="bg-white  dark:bg-darkbg border-b border-gray-200 dark:border-gray-800 sticky top-0 z-40 transition-colors duration-300">
-        <div className=" mx-auto max-w-primary  ">
-          <div className="flex items-center justify-between h-16 px-3">
-            <div className="flex items-center space-x-1 ">
-              <Menu
-                onClick={() => setIsMobileMenuOpen(true)}
-                className="w-6 h-6 text-gray-500 dark:text-gray-400 cursor-pointer md:hidden  "
-              />
-              <Logo />
-            </div>
-            <DesktopNav />
-            <HeaderIcons
-              userData={userData}
-              onSearchClick={() => setIsSearchOpen(!isSearchOpen)}
-              initialCount={initialCount}
-              initialWishlistCount={initialWishlistCount}
-            />
+      <header className="hd-header">
+        <div className="hd-inner max-w-primary px-primary">
+
+          {/* Left: hamburger + logo */}
+          <div className="flex items-center gap-1">
+            <button
+              className="hd-menu-btn  block md:hidden! "
+              onClick={() => setIsMobileMenuOpen(true)}
+              aria-label="Open menu"
+            >
+              <Menu size={20} strokeWidth={1.5} />
+            </button>
+            <Logo />
           </div>
+
+          {/* Center: desktop nav */}
+          <DesktopNav />
+
+          {/* Right: icons */}
+          <HeaderIcons
+            userData={userData}
+            onSearchClick={() => setIsSearchOpen(!isSearchOpen)}
+            initialCount={initialCount}
+            initialWishlistCount={initialWishlistCount}
+          />
+
         </div>
       </header>
-      <SearchDropdown
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-      />
-      {/* <CartSideBar  isOpen={isCartOpen} onClose={() => setIsCartOpen(false)}   user={userData}   /> */}
-      <MobileMenu
-        isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)}
-      />
+
+      <SearchDropdown isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
     </>
   );
 }

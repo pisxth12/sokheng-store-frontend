@@ -6,9 +6,9 @@ export interface OrderItem {
     slug: string;
     productName: string;
     productImage: string;
-  quantity: number;
-  unitPrice: number;
-  subtotal: number;
+    quantity: number;
+    unitPrice: number;
+    subtotal: number;
 }
 
 export interface Order {
