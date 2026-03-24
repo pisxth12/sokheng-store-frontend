@@ -7,13 +7,12 @@ import { authApi } from "@/lib/open/auth";
 import toast from "react-hot-toast";
 import { CheckCircle } from "lucide-react";
 import OtpModal from "@/components/open/accounts/OtpModal";
-import CustomSelect from "@/components/ui/CustomSelect";
 
 export default function GuestCheckoutPage() {
     const { cart, loading, checkout, loadCart, isCartLoaded, itemCount } = useCart();
     const router = useRouter();
     const [formData, setFormData] = useState({ 
-        name: '', email: '', phone: '+855987368833', address: '' , note: ''
+        name: '', email: '', phone: '+855969851100', address: '' , note: ''
     });
     const [showQRModal, setShowQRModal] = useState(false);
     const [showOtpModal, setShowOtpModal] = useState(false);
@@ -174,7 +173,7 @@ export default function GuestCheckoutPage() {
             });
             
             toast.success("Order placed successfully!");
-            router.push(`/orders/${result.order.orderNumber}`);
+            router.push(`/orders-details/${result.order.orderNumber}`);
             
         } catch (error: any) {
             const errorMessage = error?.response?.data?.message || "Checkout failed";
@@ -358,7 +357,7 @@ export default function GuestCheckoutPage() {
                                 </div>
 
                                 <div className="flex gap-5">
-                                    {/* <textarea
+                                    <textarea
                                         ref={addressRef}
                                         name="address"
                                         value={formData.address}
@@ -367,8 +366,8 @@ export default function GuestCheckoutPage() {
                                         placeholder="Delivery address"
                                         rows={3}
                                         className="w-full px-4 py-3  bg-white dark:bg-black/50 rounded-sm focus:outline-none focus:ring-1 focus:ring-gray-400 dark:focus:ring-gray-500 transition-colors text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 resize-none"
-                                    /> */}
-                                      <CustomSelect 
+                                    />
+                                      {/* <CustomSelect 
                                             options={["Cambodia", "Vietnam"]}
                                             placeholder="Select Country"
                                            onChange={(value) => {
@@ -382,7 +381,7 @@ export default function GuestCheckoutPage() {
                                             // Handle province change
                                             setFormData({...formData, address: value});
                                             }}
-                                        />
+                                        /> */}
                                   </div>
                                 
                                 <div>

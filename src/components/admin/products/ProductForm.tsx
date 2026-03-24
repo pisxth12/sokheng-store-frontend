@@ -299,7 +299,7 @@ export default function ProductForm({
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b sticky top-0 bg-white">
+        <div className="flex items-center justify-between p-4 border-b sticky top-0 bg-white text-gray-500">
           <h2 className="text-lg font-semibold">
             {product ? "Edit Product" : "New Product"}
           </h2>
@@ -327,7 +327,7 @@ export default function ProductForm({
                 type="text"
                 value={name}
                 onChange={handleNameChange}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
@@ -340,7 +340,7 @@ export default function ProductForm({
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
@@ -354,7 +354,7 @@ export default function ProductForm({
                 min="0"
                 value={price}
                 onChange={(e) => setPrice(parseFloat(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
@@ -369,7 +369,7 @@ export default function ProductForm({
                 min="0"
                 value={salePrice}
                 onChange={(e) => setSalePrice(e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 ${
+                className={`w-full px-3 text-gray-600 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 ${
                   salePriceError
                     ? "border-red-300 focus:ring-red-500"
                     : "border-gray-200 focus:ring-blue-500"
@@ -392,7 +392,7 @@ export default function ProductForm({
                 value={saleEndDate}
                 min={new Date().toISOString().split("T")[0]}
                 onChange={(e) => setSaleEndDate(e.target.value)}
-                className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 ${
+                className={`w-full px-3 py-2 border text-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 ${
                     saleEndDateError
                       ? "border-red-300 focus:ring-red-500"
                       : "border-gray-200 focus:ring-blue-500"
@@ -416,7 +416,7 @@ export default function ProductForm({
                 value={stock}
                 min="0"
                 onChange={(e) => setStock(parseInt(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
@@ -429,7 +429,7 @@ export default function ProductForm({
                 type="text"
                 value={slug}
                 onChange={handleSlugChange}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
@@ -440,7 +440,7 @@ export default function ProductForm({
               <select
                 value={categoryId}
                 onChange={(e) => setCategoryId(parseInt(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               >
                 <option value="">Select category</option>
@@ -459,7 +459,7 @@ export default function ProductForm({
               <select
                 value={brandId}
                 onChange={(e) => setBrandId(parseInt(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="0">No brand</option>
                 {brands.map((brand) => (

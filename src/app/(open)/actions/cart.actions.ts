@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import { apiServerService } from "@/lib/api/server";
 import { CartResponse, UpdateCartItemRequest, AddToCartRequest, CheckoutRequest } from "@/types/open/cart.type";
 import { CheckoutResponse } from "@/types/open/checkout";
+import { getCart } from "@/lib/services/cart.server";
 
 
 export async function addToCart(
@@ -116,3 +117,7 @@ export async function checkout(
   }
 }
 
+
+export async function refreshCartAction(){
+  return await getCart();
+}

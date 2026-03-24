@@ -1,7 +1,11 @@
+import { getCart } from '@/lib/services/cart.server';
 import { getWishlist } from '../actions/wishlist.actions';
 import WishlistClient from './WishlistClient';
 
 export default async function WishlistPage() {
-  const wishlist = await getWishlist();
-  return <WishlistClient initialWishlist={wishlist} />;
+  const [wishlist, cart] = await Promise.all([
+      getWishlist(),
+      getCart()
+  ]);
+  return <WishlistClient initialWishlist={wishlist}    initialCart={cart} />;
 }

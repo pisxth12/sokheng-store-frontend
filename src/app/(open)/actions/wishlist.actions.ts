@@ -1,5 +1,6 @@
 "use server"
 import { apiServerService } from "@/lib/api/server";
+import { CartResponse } from "@/types/open/cart.type";
 import { WishlistResponse } from "@/types/open/wishlist.types";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -64,7 +65,7 @@ export async function removeFromWishlist(productId: number): Promise<WishlistRes
 export async function moveToCartFromWishlist(
   productId: number, 
   quantity: number = 1
-): Promise<{ wishlist: WishlistResponse; cart: any }> {
+): Promise<{ wishlist: WishlistResponse; cart: CartResponse }> {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
@@ -78,7 +79,7 @@ export async function moveToCartFromWishlist(
       options
     );
     
-    const cart = await apiServerService.get<any>("/cart", options);
+    const cart = await apiServerService.get<CartResponse>("/cart", options);
     
     revalidatePath("/wishlist");
     revalidatePath("/cart");

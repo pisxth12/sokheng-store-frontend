@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import ProductDetailClient from "./ProductDetailClient";
 import RelatedProductsSection from "./RelatedProductsSection";
 import "./RelatedProductsClient.css";
+import { getWishlist } from "../../actions/wishlist.actions";
 
 interface ProductPageProps {
   params: Promise<{
@@ -14,13 +15,18 @@ interface ProductPageProps {
 export default async function ProductPage({ params }: ProductPageProps) {
   const { productSlug } = await params;
   const product = await getProductBySlug(productSlug);
+   const wishlist = await getWishlist();
+
+
+   const isInWishlist = wishlist?.items?.some(item => item.productId === product?.id) || false;
+  
 
   if (!product) {
     notFound();
   }
 
   return (
-     <ProductDetailClient product={product}>
+     <ProductDetailClient product={product}  initialIsInWishlist={isInWishlist} >
       <RelatedProductsSection productId={product.id} />
     </ProductDetailClient>
   )

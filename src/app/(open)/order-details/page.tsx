@@ -292,8 +292,8 @@ export default function OrderPage() {
               <button
                 onClick={()=>handleCancelClick(order.orderNumber)}
                 disabled={order.status === "CANCELLED"}
-                className={`pay-btn w-full py-4 ${order.status === "CANCELLED" ? "hidden" : "block"} rounded-2xl border border-white/15 text-red-400 font-medium text-sm tracking-wide
-                                ${isVerifying ? "opacity-50 cursor-not-allowed" : ""}`}
+                className={`pay-btn w-full py-4 ${order.status === "CANCELLED" || isCompleted ? "hidden" : "block"} rounded-2xl border border-white/15 text-red-400 font-medium text-sm tracking-wide
+                                ${isVerifying  ? "opacity-50 cursor-not-allowed" : ""}`}
               >
                 Cancel order
               </button>

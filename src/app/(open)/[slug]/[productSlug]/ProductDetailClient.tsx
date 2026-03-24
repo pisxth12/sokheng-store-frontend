@@ -19,30 +19,35 @@ import toast from "react-hot-toast";
 import ImageModal from "@/components/ui/productImageModal";
 import { ProductDetail } from "@/types/open/product.type";
 import "./ProductDetailClient.css";
+import { useRouter } from "next/navigation";
 
 const PLACEHOLDER_IMAGE =
   "https://placehold.co/600x600/e2e8f0/1e293b?text=No+Image";
 
 interface ProductDetailClientProps {
   product: ProductDetail;  
+  initialIsInWishlist: boolean;
   children?: React.ReactNode;
 }
 
-export default function ProductDetailClient({ product, children}: ProductDetailClientProps) {
+export default function ProductDetailClient({ product, children, initialIsInWishlist = false}: ProductDetailClientProps) {
   const t = useTranslations("ProductDetail");
   const [selectedImage, setSelectedImage] = useState(0);
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
   const [quantity, setQuantity] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImageIndex, setModalImageIndex] = useState(0);
+  const router = useRouter()
 
   const { addToCart, getItemQuantity } = useCart();
 
-  const handleAddToCart = useCallback(async () => {
+  const handleAddToCart = useCallback(async (e: React.MouseEvent) => {
+    e.preventDefault();
     if (!product) return;
     try {
       await addToCart(product.id, quantity);
       setQuantity(1);
+     
     } catch {
       toast.error("Could not add to cart");
     }
@@ -268,7 +273,10 @@ export default function ProductDetailClient({ product, children}: ProductDetailC
               </button>
 
               <button className="pd-btn-wish" aria-label="Wishlist">
-                <WishlistButton productId={product.id} />
+                 <WishlistButton 
+                  productId={product.id} 
+                  initialIsInWishlist={initialIsInWishlist} 
+                   />
               </button>
             </div>
 

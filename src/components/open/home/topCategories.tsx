@@ -2,7 +2,6 @@
 
 import { TopCategory } from '@/types/open/category.type';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
 import { memo, useMemo, useState } from 'react';
 import { CategoryCard } from '../categories/CategoryCard';
 
@@ -21,8 +20,6 @@ export const TopCategories = memo(function TopCategories({ categories }: TopCate
     []);
 
 
-
-    // Empty state
     if (categories.length < 1) return null;
 
     return (

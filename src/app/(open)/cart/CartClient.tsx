@@ -26,7 +26,6 @@ export default function CartClient({ initialCart }: CartClientProps) {
       try {
         const updatedCart = await updateCartItem(itemId, newQuantity);
         setCart(updatedCart);
-        // No need for router.refresh() because we're updating state
       } catch (error) {
         console.error('Failed to update cart:', error);
       } finally {
@@ -42,7 +41,6 @@ export default function CartClient({ initialCart }: CartClientProps) {
       try {
         const updatedCart = await removeCartItem(itemId);
         setCart(updatedCart);
-        // No need for router.refresh() because we're updating state
       } catch (error) {
         console.error('Failed to remove item:', error);
       } finally {

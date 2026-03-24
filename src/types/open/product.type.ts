@@ -76,3 +76,38 @@ export interface PageResponse<T> {
 }
 
 
+
+
+//  Add these for filters
+export interface Category {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export interface Brand {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+export interface FilterState {
+  sortBy: string;
+  sortOrder: string;
+  minPrice: string;
+  maxPrice: string;
+  categoryId: string;
+  brandId: string;
+}
+
+export interface PriceRange {
+  min: number;
+  max: number;
+}
+
+export interface ProductsWithPriceRangeResponse {
+  products: PageResponse<Product>;
+  minPrice: number;
+  maxPrice: number;
+  hasMore: boolean;
+}

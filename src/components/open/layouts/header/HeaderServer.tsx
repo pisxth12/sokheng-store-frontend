@@ -13,14 +13,7 @@ export default async function HeaderServer() {
     getCartCount(),
     getWishlistCounts(),
   ])
-  
 
-    console.log("📤 HeaderServer sending to client:", {
-    user: user?.id || null,
-    cartCount,
-    wishlistCount
-  });
-  
 
   return (
     <HeaderClient 

@@ -42,7 +42,9 @@ export default function CheckoutClient({ initialUser, cart }: Props) {
         note: "",
         items: cart.items,
       });
+      // router.push(`/order-details?orderID=${result.order.orderNumber}`);
       router.push(`/order-details?orderID=${result.order.orderNumber}`);
+
       router.refresh(); 
     } catch (error) {
       console.error(error);

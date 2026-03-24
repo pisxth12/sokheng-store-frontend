@@ -1,31 +1,24 @@
-"use client"
-import { useWishlist } from '@/hooks/open/useWishlist';
-import React, { useState, useEffect } from 'react';
+"use client";
+import React, { useState } from 'react';
 import { Heart } from 'lucide-react';
+import { useWishlist } from '@/hooks/open/useWishlist';
 
 interface WishlistButtonProps {
     productId: number;
+    initialIsInWishlist?: boolean;  // ✅ Receive initial state from server
     className?: string;
     onToggle?: (inWishlist: boolean) => void;
 }
 
 const WishlistButton: React.FC<WishlistButtonProps> = ({ 
     productId, 
+    initialIsInWishlist = false,  // ✅ Initial state from server
     className = '',
     onToggle 
 }) => {
-    const [isInWishlist, setIsInWishlist] = useState(false);
+    const [isInWishlist, setIsInWishlist] = useState(initialIsInWishlist);  // ✅ No API call needed
     const [loading, setLoading] = useState(false);
-    const { checkItem, toggleItem } = useWishlist();
-
-    useEffect(() => {
-        checkStatus();
-    }, [productId]);
-
-    const checkStatus = async () => {
-        const status = await checkItem(productId);
-        setIsInWishlist(status);
-    };
+    const { toggleItem } = useWishlist();  // ✅ Only need toggle, not check
 
     const handleClick = async () => {
         if (loading) return;

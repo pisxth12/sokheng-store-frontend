@@ -19,6 +19,8 @@ export default function HeaderClient({ userData, initialCount, initialWishlistCo
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+  
+
   return (
     <>
       <header className="hd-header">

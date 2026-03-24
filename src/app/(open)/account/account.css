@@ -1,0 +1,313 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+/* ── Page entrance ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Apply to sections ── */
+.account-header   { animation: fadeUp 0.45s ease both; }
+.account-left     { animation: fadeUp 0.45s ease both 0.07s; }
+.account-right    { animation: fadeUp 0.45s ease both 0.14s; }
+
+/* ── Cards ── */
+.account-card {
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+}
+.account-card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  transform: translateY(-1px);
+}
+.dark .account-card:hover {
+  box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+}
+
+/* ── Avatar ── */
+.account-avatar {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+}
+.account-avatar:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 3px rgba(217, 30, 39, 0.18);
+}
+
+/* ── Edit button ── */
+.account-edit-btn {
+  transition: transform 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+.account-edit-btn:hover {
+  transform: rotate(14deg) scale(1.12);
+  color: #D91E27;
+}
+
+/* ── Stat boxes ── */
+.account-stat {
+  transition: background 0.2s ease, transform 0.18s ease;
+  cursor: default;
+}
+.account-stat:hover {
+  transform: translateY(-2px);
+  background: rgba(217, 30, 39, 0.04) !important;
+}
+.dark .account-stat:hover {
+  background: rgba(217, 30, 39, 0.08) !important;
+}
+
+.account-stat-value {
+  transition: transform 0.2s ease;
+}
+.account-stat:hover .account-stat-value {
+  transform: scale(1.04);
+}
+
+/* ── Nav links ── */
+.account-nav-link {
+  transition: background 0.18s ease, transform 0.18s ease, padding-left 0.18s ease;
+  position: relative;
+  overflow: hidden;
+}
+.account-nav-link::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  transform: translateY(-50%) scaleY(0);
+  width: 2.5px;
+  height: 60%;
+  background: #D91E27;
+  border-radius: 999px;
+  transition: transform 0.2s ease;
+}
+.account-nav-link:hover {
+  padding-left: 18px !important;
+  background: var(--nav-hover-bg, rgba(0,0,0,0.03)) !important;
+}
+.dark .account-nav-link:hover {
+  background: rgba(255,255,255,0.05) !important;
+}
+.account-nav-link:hover::before {
+  transform: translateY(-50%) scaleY(1);
+}
+
+.account-nav-link svg {
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+.account-nav-link:hover svg {
+  color: #D91E27 !important;
+  transform: scale(1.15);
+}
+
+/* ── Setting rows ── */
+.account-setting-row {
+  transition: background 0.18s ease;
+}
+.account-setting-row:hover {
+  background: rgba(0,0,0,0.02) !important;
+}
+.dark .account-setting-row:hover {
+  background: rgba(255,255,255,0.03) !important;
+}
+
+/* ── Logout button ── */
+.account-logout-btn {
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+.account-logout-btn:hover {
+  background: #fee2e2 !important;
+  color: #D91E27 !important;
+  transform: translateY(-1px);
+}
+.dark .account-logout-btn:hover {
+  background: rgba(217, 30, 39, 0.12) !important;
+  color: #f87171 !important;
+}
+.account-logout-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ── Help button ── */
+.account-help-btn {
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.account-help-btn:hover {
+  transform: translateY(-1px);
+}
+.account-help-btn:active {
+  transform: scale(0.98);
+}
+
+/* ── Stagger nav items ── */
+.account-nav-link:nth-child(1) { animation: slideRight 0.4s ease both 0.18s; }
+.account-nav-link:nth-child(2) { animation: slideRight 0.4s ease both 0.24s; }
+.account-nav-link:nth-child(3) { animation: slideRight 0.4s ease both 0.30s; }
+.account-nav-link:nth-child(4) { animation: slideRight 0.4s ease both 0.36s; }
+
+/* ── Toggle ── */
+.account-toggle-track {
+  transition: background 0.25s ease !important;
+}
+.account-toggle-thumb {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+/* ============================================ */
+/* ── Language Selector Styles ── */
+/* ============================================ */
+
+.account-lang-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--bg-secondary, #f9fafb);
+  transition: all 0.2s ease;
+  margin: 0 !important;
+}
+
+.account-lang-row:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.dark .account-lang-row {
+  background: rgba(88, 88, 88, 0.5);
+}
+
+.dark .account-lang-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.account-lang-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.account-lang-icon-wrapper {
+  padding: 6px;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.dark .account-lang-icon-wrapper {
+  background: #111827;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.account-lang-icon {
+  width: 16px;
+  height: 16px;
+  color: #6b7280;
+  transition: color 0.2s ease;
+}
+
+.dark .account-lang-icon {
+  color: #9ca3af;
+}
+
+.account-lang-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.dark .account-lang-label {
+  color: #e5e7eb;
+}
+
+/* Select Wrapper */
+.account-lang-select-wrapper {
+  position: relative;
+}
+
+/* Custom Select */
+.account-lang-select {
+  appearance: none;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 28px 8px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1f2937;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.account-lang-select:hover {
+  border-color: #d1d5db;
+  background: #fefefe;
+}
+
+.account-lang-select:focus {
+  outline: none;
+  border-color: #D91E27;
+  box-shadow: 0 0 0 3px rgba(217, 30, 39, 0.1);
+}
+
+.dark .account-lang-select {
+  background: #111827;
+  border-color: #374151;
+  color: #e5e7eb;
+}
+
+.dark .account-lang-select:hover {
+  border-color: #4b5563;
+  background: #1f2937;
+}
+
+.dark .account-lang-select:focus {
+  border-color: #f87171;
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.1);
+}
+
+/* Custom dropdown arrow */
+.account-lang-arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  color: #9ca3af;
+  pointer-events: none;
+  transition: transform 0.2s ease;
+}
+
+.account-lang-select:hover + .account-lang-arrow {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.dark .account-lang-arrow {
+  color: #6b7280;
+}
+
+/* Option styling */
+.account-lang-select option {
+  padding: 8px;
+  background: white;
+  color: #1f2937;
+}
+
+.dark .account-lang-select option {
+  background: #1f2937;
+  color: #e5e7eb;
+}
+
+/* Animation for language row */
+.account-lang-row {
+  animation: fadeUp 0.45s ease both 0.42s;
+}

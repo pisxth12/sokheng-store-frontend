@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { X, ShoppingBag, ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface ToastProps {
   id: string;
@@ -18,11 +19,17 @@ interface ToastProps {
 export function Toast({ id, product, onClose }: ToastProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
+  const router = useRouter();
+
 
   useEffect(() => {
     setTimeout(() => setIsVisible(true), 10);
-    const timer = setTimeout(() => handleClose(), 5000);
+    const timer = setTimeout(() =>  {
+       handleClose()
+    }, 5000);
+  
     return () => clearTimeout(timer);
+
   }, []);
 
   const handleClose = () => {
