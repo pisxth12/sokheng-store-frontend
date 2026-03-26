@@ -97,7 +97,7 @@ export interface FilterState {
   minPrice: string;
   maxPrice: string;
   categoryId: string;
-  brandId: string;
+  brandId?: string;
 }
 
 export interface PriceRange {
@@ -105,9 +105,18 @@ export interface PriceRange {
   max: number;
 }
 
+
 export interface ProductsWithPriceRangeResponse {
-  products: PageResponse<Product>;
-  minPrice: number;
-  maxPrice: number;
-  hasMore: boolean;
+  items: Product[];                   
+  pagination: {
+    page: number;                     
+    pageSize: number;                 
+    total: number;                    
+    totalPages: number;               
+    hasMore: boolean;                 
+  };
+  filters: {
+    minPrice: number;                 
+    maxPrice: number;                 
+  };
 }

@@ -1,0 +1,220 @@
+/* ─── Products Page ────────────────────────────────────────────── */
+
+.pp-page {
+  min-height: 100vh;
+  background: #ffffff;
+  font-family: 'DM Sans', sans-serif;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.dark .pp-page {
+  background: #0f0f0e;
+}
+
+/* ─── Sticky Header ──────────────────────────────────────────── */
+.pp-header {
+  position: sticky;
+  top: 3.75rem;
+  z-index: 20;
+  background: #ffffff;
+  border-bottom: 1px solid #e8e8e4;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-bottom: 2rem;
+}
+
+.dark .pp-header {
+  background: #0f0f0e;
+  border-bottom-color: #2a2a27;
+}
+
+.pp-header--hidden {
+  transform: translateY(-100%);
+}
+
+/* Controls row */
+.pp-controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 0;
+}
+
+.pp-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: 1px solid #e8e8e4;
+  color: #111110;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.dark .pp-filter-btn {
+  border-color: #2a2a27;
+  color: #f5f5f3;
+}
+
+.pp-filter-btn:hover {
+  border-color: #111110;
+  background: #f7f7f5;
+}
+
+.dark .pp-filter-btn:hover {
+  border-color: #f5f5f3;
+  background: #1a1a18;
+}
+
+.pp-sort-select {
+  background: transparent;
+  border: 1px solid #e8e8e4;
+  color: #111110;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  padding: 0.45rem 0.875rem;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23a3a39f' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.625rem center;
+  padding-right: 2rem;
+}
+
+.dark .pp-sort-select {
+  border-color: #2a2a27;
+  color: #f5f5f3;
+  background: #1a1a18;
+}
+
+.pp-sort-select:hover {
+  border-color: #111110;
+}
+
+.dark .pp-sort-select:hover {
+  border-color: #f5f5f3;
+}
+
+/* Header with count */
+.pp-header-count {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin: 2rem 0 1.5rem;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .pp-header-count {
+    flex-direction: row;
+    text-align: left;
+  }
+}
+
+.pp-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #111110;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.dark .pp-title {
+  color: #f5f5f3;
+}
+
+.pp-count {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #a3a39f;
+  margin: 0;
+}
+
+.dark .pp-count {
+  color: #5a5a57;
+}
+
+.pp-count span {
+  color: #111110;
+  font-weight: 500;
+}
+
+.dark .pp-count span {
+  color: #f5f5f3;
+}
+
+/* Sentinel for infinite scroll */
+.pp-sentinel {
+  height: 20px;
+  width: 100%;
+  margin: 2rem 0;
+}
+
+/* Loading dots */
+.pp-loading {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.pp-loading-dots {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.pp-loading-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #c8102e;
+  animation: pp-dot 1.4s ease-in-out infinite;
+}
+
+.pp-loading-dot:nth-child(2) { animation-delay: 0.16s; }
+.pp-loading-dot:nth-child(3) { animation-delay: 0.32s; }
+
+@keyframes pp-dot {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.4); }
+}
+
+/* End label */
+.pp-end-label {
+  text-align: center;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #d0d0cc;
+  padding: 2rem 0;
+}
+
+.dark .pp-end-label {
+  color: #3a3a37;
+}
+
+/* Empty state */
+.pp-empty {
+  text-align: center;
+  padding: 4rem 0;
+  color: #a3a39f;
+  font-size: 0.875rem;
+}
+
+.dark .pp-empty {
+  color: #5a5a57;
+}

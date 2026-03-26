@@ -29,6 +29,7 @@ export default function OrderPage() {
   const [verificationStatus, setVerificationStatus] = useState("");
   const [paymentCompleted, setPaymentCompleted] = useState(false);
 
+
   const pollingIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const verificationAttemptsRef = useRef(0);
   const MAX_VERIFICATION_ATTEMPTS = 60;
@@ -164,6 +165,31 @@ export default function OrderPage() {
       toast.error( error.response?.data?.message || error.message || "Failed to generate QR code");
     }
   };
+
+  
+  useEffect(() => {
+    if (!showQRModal) return; 
+
+  
+    
+    const timer = setTimeout(() => {
+      
+      if (showQRModal && !paymentCompleted) {
+        setShowQRModal(false);
+        setIsVerifying(false);
+      setVerificationStatus("QR code expired");
+      toast.error("QR code expired. Please try again.");
+      
+      
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = undefined;
+      }
+    }
+  }, 30000); 
+
+  return () => clearTimeout(timer); 
+}, [showQRModal, paymentCompleted]);
 
   const isPending = order?.status === "PENDING";
   const isCancelled = order?.status === "CANCELLED";
@@ -333,6 +359,7 @@ export default function OrderPage() {
       </div>
         {/* Cancel Confirmation Modal */}
       <ConfirmModal
+        
         isOpen={showCancelModal}
         onClose={() => setShowCancelModal(false)}
         onConfirm={handleCancelConfirm}

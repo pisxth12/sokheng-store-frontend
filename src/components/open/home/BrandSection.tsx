@@ -68,8 +68,8 @@ export function BrandSection({ brands }: brands) {
                 >
                     <div className="flex gap-4">
                         {brands.map((brand) => (
-                            <div key={brand.id} className="flex-none w-1/2 sm:w-1/3 lg:w-1/4">
-                                <BrandCard brand={brand} />
+                            <div key={brand.id} className="flex-none w-1/2 sm:w-1/4 lg:w-1/5">
+                                <BrandCard key={brand.id} brand={brand} />
                             </div>
                         ))}
                     </div>

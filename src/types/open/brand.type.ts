@@ -4,3 +4,9 @@ export interface Brand {
     slug: string;
     logoUrl?: string;
 }
+
+export interface BrandNameListResponse {
+    id: number;
+    name: string;
+    slug: string;
+}

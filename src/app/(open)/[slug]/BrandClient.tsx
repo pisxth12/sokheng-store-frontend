@@ -1,112 +1,221 @@
-"use client"
+// app/(open)/[slug]/BrandClient.tsx
+"use client";
 
-import { NotFound } from "@/components/open/productDetails/NotFound";
 import { ProductGrid } from "@/components/open/products/ProductGrid";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { ScrollToTop } from "@/components/ui/ScrollToTop";
-import { useBrandProducts } from "@/hooks/open/useBrandProducts";
+import { publicProductApi } from "@/lib/open/products";
+import { Product, FilterState, Category, ProductsWithPriceRangeResponse } from "@/types/open/product.type";
 import { Brand } from "@/types/open/brand.type";
-import { PageResponse, Product } from "@/types/open/product.type";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { SlidersHorizontal } from "lucide-react";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import OffcanvasFilter from "../products/OffcanvasFilter";
+import "./BrandPage.css";
 
-interface BrandClientPageProps{
-    brand: Brand;
-    slug: string;
-    initialData: PageResponse<Product>;
+interface BrandClientProps {
+  brand: Brand;
+  initialData: ProductsWithPriceRangeResponse;
+  initialFilters: FilterState;
+  categories: Category[];
 }
-export default function BrandClientPage({brand, slug, initialData }: BrandClientPageProps){
-    const { products, loading, hasMore, total, error, loadMore, reset } = useBrandProducts(slug, initialData);
 
-    const observerTarget = useRef<HTMLDivElement>(null);
-    const handleObserver = useCallback(
-    (entries: IntersectionObserverEntry[]) => {
-      const [entry] = entries;
-      if (entry.isIntersecting && hasMore && !loading) {
-        loadMore();
-      }
-    },
-    [loadMore, loading, hasMore],
-  );
+export default function BrandClient({ brand, initialData, initialFilters, categories }: BrandClientProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  
+  const [products, setProducts] = useState<Product[]>(initialData.items);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(initialData.pagination.hasMore);
+  const [page, setPage] = useState(initialData.pagination.page);
+  const [total, setTotal] = useState(initialData.pagination.total);
+  const [priceRange, setPriceRange] = useState(initialData.filters);
+  const [openFilterModal, setOpenFilterModal] = useState(false);
+  const [filters, setFilters] = useState<FilterState>(initialFilters);
+  const [showHeader, setShowHeader] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  const observerTarget = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    const element = observerTarget.current;
-    if (!element) return;
-    const observer = new IntersectionObserver(handleObserver, {
-      threshold: 0.1,
-      rootMargin: "100px",
-    });
-    observer.observe(element);
+    setProducts(initialData.items);
+    setTotal(initialData.pagination.total);
+    setHasMore(initialData.pagination.hasMore);
+    setPage(initialData.pagination.page);
+    setPriceRange(initialData.filters);
+    setFilters(initialFilters);
+  }, [initialData, initialFilters]);
 
-    return () => {
-      observer.unobserve(element);
-      observer.disconnect();
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      setShowHeader(y <= lastScrollY || y <= 10);
+      setLastScrollY(y);
     };
-  }, [handleObserver]);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [lastScrollY]);
 
-  
-   if (error) {
-    return (
-      <div className="container mx-auto px-4 py-16 text-center">
-        <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-          Something went wrong
-        </h2>
-        <p className="text-gray-600 mb-8">{error.message}</p>
-        <button
-          onClick={reset}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          Try Again
-        </button>
-      </div>
-    );
-  }
+  const loadMore = useCallback(async () => {
+    if (loading || !hasMore) return;
+    setLoading(true);
+    try {
+      const nextPage = page + 1;
+      const response = await publicProductApi.getProductsByBrandWithFilters(brand.slug, {
+        page: nextPage,
+        size: 32,
+        sortBy: filters.sortBy,
+        sortOrder: filters.sortOrder,
+        minPrice: filters.minPrice ? Number(filters.minPrice) : undefined,
+        maxPrice: filters.maxPrice ? Number(filters.maxPrice) : undefined,
+        categoryId: filters.categoryId ? Number(filters.categoryId) : undefined,
+      });
+      setProducts(prev => [...prev, ...response.items]);
+      setPage(nextPage);
+      setHasMore(response.pagination.hasMore);
+      setTotal(response.pagination.total);
+      setPriceRange(response.filters);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [loading, hasMore, page, filters, brand.slug]);
 
-  if (loading && products.length === 0) {
-    return (
-      <div className="container mx-auto px-4 py-16">
-        <LoadingSpinner />
-      </div>
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loading) loadMore();
+      },
+      { threshold: 0.1, rootMargin: "100px" }
     );
-  }
+    if (observerTarget.current) observer.observe(observerTarget.current);
+    return () => observer.disconnect();
+  }, [hasMore, loading, loadMore]);
+
+  const updateUrl = useCallback((updates: Partial<FilterState>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value && value !== "" && value !== "0") params.set(key, value);
+      else params.delete(key);
+    });
+    params.set("page", "0");
+    router.push(`${pathname}?${params.toString()}`);
+    router.refresh();
+  }, [router, searchParams, pathname]);
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    let sortBy: string, sortOrder: string;
+    if (value === "recommend") {
+      sortBy = "recommend";
+      sortOrder = "desc";
+    } else {
+      [sortBy, sortOrder] = value.split("-");
+    }
+    setFilters(prev => ({ ...prev, sortBy, sortOrder }));
+    updateUrl({ sortBy, sortOrder });
+  };
+
+  const handleApplyFilters = (newFilters: Partial<FilterState>) => {
+    setOpenFilterModal(false);
+    const updatedFilters = { ...filters, ...newFilters };
+    setFilters(updatedFilters);
+    updateUrl({
+      minPrice: updatedFilters.minPrice,
+      maxPrice: updatedFilters.maxPrice,
+      categoryId: updatedFilters.categoryId,
+      sortBy: updatedFilters.sortBy,
+      sortOrder: updatedFilters.sortOrder,
+    });
+  };
+
+  const clearFilters = () => {
+    updateUrl({
+      sortBy: "createdAt", sortOrder: "desc", minPrice: "", maxPrice: "", categoryId: "",
+    });
+  };
+
+  const hasActiveFilters = filters.minPrice || filters.maxPrice || filters.categoryId ||
+    filters.sortBy !== "createdAt" || filters.sortOrder !== "desc";
+
+  if (loading && products.length === 0) return <LoadingSpinner />;
 
   return (
-    <div className="mx-auto max-w-primary py-5">
+    <div className="bp-page">
+      {/* Sticky Header */}
+      <div className={`bp-header ${showHeader ? "" : "bp-header--hidden"}`}>
+        <div className="bp-controls-row">
+          <button className="bp-filter-btn" onClick={() => setOpenFilterModal(true)}>
+            <SlidersHorizontal size={13} />
+            Filters
+            {hasActiveFilters && <span className="bp-active-dot" />}
+          </button>
+          <select
+            className="bp-sort-select"
+            value={filters.sortBy === "recommend" ? "recommend" : `${filters.sortBy}-${filters.sortOrder}`}
+            onChange={handleSortChange}
+          >
+            <option value="recommend">Recommended</option>
+            <option value="createdAt-desc">Newest</option>
+            <option value="createdAt-asc">Oldest</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+          </select>
+        </div>
+      </div>
 
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-        <h2 className="text-2xl font-semibold">
-          {brand.name}
-        </h2>
-        <p className="text-sm text-gray-600 bg-gray-100 px-4 py-2 rounded-full">
-          Showing <span className="font-semibold">{products.length}</span> of{" "}
-          <span className="font-semibold">{total}r</span> products
+      {/* Header with count */}
+      <div className="bp-header-count">
+        <h1 className="bp-title uppercase">{brand.name}</h1>
+        <p className="bp-count">
+          Showing <span>{products.length}</span> of <span>{total}</span> products
+          {hasActiveFilters && (
+            <button onClick={clearFilters} className="bp-clear-filters">
+              Clear all filters
+            </button>
+          )}
         </p>
       </div>
-     
-    
+
       {/* Products Grid */}
       {products.length > 0 ? (
         <>
           <ProductGrid products={products} />
-
-          {/* Observer Target */}
-          <div ref={observerTarget} className="h-4 w-full" />
-
-          {/* Loading Indicator */}
+          <div ref={observerTarget} className="bp-sentinel" />
           {loading && (
-            <div className="flex justify-center py-8">
-              <LoadingSpinner />
+            <div className="bp-loading">
+              <div className="bp-loading-dots">
+                <span className="bp-loading-dot" />
+                <span className="bp-loading-dot" />
+                <span className="bp-loading-dot" />
+              </div>
             </div>
+          )}
+          {!hasMore && products.length > 0 && (
+            <p className="bp-end-label">End of results</p>
           )}
         </>
       ) : (
-        <div className="text-center py-16">
-          <NotFound message="Products not found"/>
+        <div className="bp-empty">
+          <p>No products found</p>
         </div>
       )}
+
       <ScrollToTop />
+
+      <OffcanvasFilter
+        isOpen={openFilterModal}
+        onClose={() => setOpenFilterModal(false)}
+        onApply={handleApplyFilters}
+        currentFilters={filters}
+        categories={categories}
+        brands={[]}
+        priceRange={{ min: priceRange.minPrice, max: priceRange.maxPrice }}
+        showCategoryFilter={true}
+        showBrandFilter={false}
+      />
     </div>
   );
-
-
 }

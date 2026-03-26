@@ -13,21 +13,20 @@ export default function AdminClient({ children }: { children: React.ReactNode })
   const router = useRouter();
 
 
-
-  // useEffect(() => {
-  //   if (loading) return;
-  //   if (!user) {
-  //     router.push('/login?callbackUrl=/admin');
-  //   } else if (!isAdmin) {
-  //     router.push('/');
-  //   }
-  // }, [user, isAdmin, loading, router]);
+  useEffect(() => {
+    if (loading) return;
+    if (!user) {
+      router.push('/login?callbackUrl=/admin');
+    } else if (!isAdmin) {
+      router.push('/');
+    }
+  }, [user, isAdmin, loading, router]);
 
   if (loading) return <LoadingSpinner />;
   if (!user || !isAdmin) return null;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white text-black">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
       <div className="lg:pl-64">
         <Navbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />

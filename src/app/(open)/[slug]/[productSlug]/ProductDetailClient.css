@@ -453,6 +453,7 @@
 /* ─── Related Section ────────────────────────────────────────── */
 .pd-related-wrap {
   margin-top: 6rem;
+  /* padding: 10; */
 }
 
 .pd-related-header {

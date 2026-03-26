@@ -103,7 +103,7 @@ export const useProducts = () => {
     async (id: number, data: FormData) => {
       setSaving(true);
       setError(null);
-      setSuccess(false); // ✅ FIXED
+      setSuccess(false); 
       try {
         await adminProductApi.update(id, data);
         if (isSearching && searchQuery) {

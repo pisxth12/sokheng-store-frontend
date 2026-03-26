@@ -143,7 +143,7 @@ export default function RelatedProductsClient({
           <ChevronRight size={16} />
         </button>
 
-        <div ref={scrollRef} className="rp-track">
+        <div ref={scrollRef} className="rp-track ">
           {products.map((product, index) => (
             <div key={`${product.id}-${index}`} className="rp-card-sloted">
               <ProductCard product={product} />

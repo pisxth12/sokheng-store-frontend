@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import { getUserProfile } from "@/lib/services/user.server";
 import ClientProviders from "./ClientProviders";
 import { getCartCountForUser } from "@/lib/services/cart.server";
@@ -8,11 +7,9 @@ export default async function ServerProviders({
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-  const cartSession = cookieStore.get("cartSessionId")?.value;
-  const initialUser = await getUserProfile(token);
-  const initialCount = await getCartCountForUser(cartSession);
+
+  const initialUser = await getUserProfile();
+  const initialCount = await getCartCountForUser();
 
   return (
     <ClientProviders initialCount={initialCount} initialUser={initialUser}>

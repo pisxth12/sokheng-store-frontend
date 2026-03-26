@@ -2,6 +2,8 @@
 import { searchProducts } from "@/lib/services/product.server";
 import SearchClient from "./SearchClient";
 import { Product } from "@/types/open/product.type";
+import { getCategoryNames } from "@/lib/services/category.server";
+import { getBrandNames } from "@/lib/services/brand.server";
 
 interface SearchPageProps {
   searchParams: Promise<{
@@ -10,6 +12,7 @@ interface SearchPageProps {
     minPrice?: string;
     maxPrice?: string;
     categoryId?: string;
+    brandId?: string;
     sortBy?: string;
     sortOrder?: string;
   }>;
@@ -18,6 +21,11 @@ interface SearchPageProps {
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
   
+  const [categories, brands] = await Promise.all([
+    getCategoryNames(),
+    getBrandNames()
+  ]);
+
   const query = params.q || "";
   const page = parseInt(params.page || "0");
   const size = 32;
@@ -25,13 +33,14 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const minPrice = params.minPrice ? Number(params.minPrice) : undefined;
   const maxPrice = params.maxPrice ? Number(params.maxPrice) : undefined;
   const categoryId = params.categoryId ? Number(params.categoryId) : undefined;
+  const brandId = params.brandId ? Number(params.brandId) : undefined;
   const sortBy = params.sortBy || "createdAt";
   const sortOrder = params.sortOrder || "desc";
-
 
   let initialProducts: Product[] = [];
   let initialTotal = 0;
   let initialHasMore = false;
+  let priceRange = { min: 0, max: 1000 };
 
   if (query) {
     const result = await searchProducts(
@@ -42,11 +51,16 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       sortOrder,
       minPrice,
       maxPrice,
-      categoryId
+      categoryId,
+      brandId
     );
-    initialProducts = result.products;
-    initialTotal = result.total;
-    initialHasMore = result.hasMore;
+    initialProducts = result.items;
+    initialTotal = result.pagination.total;
+    initialHasMore = result.pagination.hasMore;
+    priceRange = {
+      min: result.filters.minPrice,
+      max: result.filters.maxPrice
+    };
   }
 
   return (
@@ -61,9 +75,13 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         minPrice: minPrice?.toString() || "",
         maxPrice: maxPrice?.toString() || "",
         categoryId: categoryId?.toString() || "",
+        brandId: brandId?.toString() || "",
         sortBy,
         sortOrder,
       }}
+      priceRange={priceRange}
+      categories={categories}
+      brands={brands}
     />
   );
 }

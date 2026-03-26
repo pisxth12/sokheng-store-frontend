@@ -34,6 +34,8 @@ export default function AccountClient({
   const [wishlistCount] = useState(initialWishlistCount);
   const [user, setUser] = useState(initialUser);
   
+  
+
   const { updateProfile, logout } = useAuth();
   const t = useTranslations('Account');
 

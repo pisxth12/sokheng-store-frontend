@@ -1,8 +1,6 @@
 "use client";
 import useRecentSearch from "@/hooks/open/useRecentSearch";
-import { useSearchProducts } from "@/hooks/open/useSearchProducts";
 import { useSearchSuggestions } from "@/hooks/open/useSearchSuggestions";
-import { ProductSuggestion } from "@/types/open/product.type";
 import { History, Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -23,16 +21,13 @@ export default function SearchDropdown({ isOpen, onClose }: Props) {
   const [closing, setClosing] = useState(false);
   const [visible, setVisible] = useState(false);
 
-  const { search: searchProducts, setQuery: setSearchQuery } = useSearchProducts();
   const { setQuery: setSuggestionQuery, suggestions, loading } = useSearchSuggestions();
   const { recentSearches, addRecent, clearRecent, removeRecent } = useRecentSearch(5);
 
-  const updateQueries = useCallback(() => {
-    setSearchQuery(searchInput);
+  // Update suggestions when input changes
+  useEffect(() => {
     setSuggestionQuery(searchInput);
-  }, [searchInput, setSearchQuery, setSuggestionQuery]);
-
-  useEffect(() => { updateQueries(); }, [updateQueries]);
+  }, [searchInput, setSuggestionQuery]);
 
   // Mount/unmount with animation
   useEffect(() => {
@@ -50,7 +45,7 @@ export default function SearchDropdown({ isOpen, onClose }: Props) {
       document.body.style.overflow = "unset";
     }
     return () => { document.body.style.overflow = "unset"; };
-  }, [isOpen]);
+  }, [isOpen, visible]);
 
   const handleClose = useCallback(() => {
     setClosing(true);
@@ -67,25 +62,23 @@ export default function SearchDropdown({ isOpen, onClose }: Props) {
     const keyword = searchInput.trim();
     if (keyword) {
       addRecent(keyword);
-      searchProducts(keyword);
       router.push(`/search?q=${encodeURIComponent(keyword)}`);
       handleClose();
     }
-  }, [searchInput, addRecent, searchProducts, router, handleClose]);
+  }, [searchInput, addRecent, router, handleClose]);
 
   const handleSuggestionClick = useCallback((term: string) => {
     addRecent(term);
     setSearchInput(term);
-    searchProducts(term);
     router.push(`/search?q=${encodeURIComponent(term)}`);
+    
     handleClose();
-  }, [addRecent, searchProducts, router, handleClose]);
+  }, [addRecent, router, handleClose]);
 
   if (!visible) return null;
 
   return (
     <div style={{ zIndex: 1000 }} className="absolute top-0 left-0 right-0">
-
       {/* Backdrop */}
       <div
         className={`sd-backdrop ${closing ? "sd-backdrop--closing" : ""}`}
@@ -95,11 +88,9 @@ export default function SearchDropdown({ isOpen, onClose }: Props) {
       {/* Panel */}
       <div className={`sd-panel ${closing ? "sd-panel--closing" : ""}`}>
         <div className="sd-inner">
-
-          {/* ── Search Form ── */}
+          {/* Search Form */}
           <form onSubmit={handleSearch} className="sd-form">
             <Search size={16} className="sd-form-icon" />
-
             <input
               type="text"
               placeholder={t("placeholder")}
@@ -108,7 +99,6 @@ export default function SearchDropdown({ isOpen, onClose }: Props) {
               className="sd-input"
               autoFocus
             />
-
             <div className="sd-form-actions">
               {searchInput && (
                 <button
@@ -131,11 +121,9 @@ export default function SearchDropdown({ isOpen, onClose }: Props) {
             </div>
           </form>
 
-          {/* ── Results ── */}
+          {/* Results */}
           <div className="sd-results">
-
             {searchInput.length < 2 ? (
-
               /* Recent Searches */
               recentSearches.length > 0 && (
                 <>
@@ -165,19 +153,13 @@ export default function SearchDropdown({ isOpen, onClose }: Props) {
                   </div>
                 </>
               )
-
             ) : loading ? (
-
-              /* Loading */
               <div className="sd-loading">
                 <span className="sd-loading-dot" />
                 <span className="sd-loading-dot" />
                 <span className="sd-loading-dot" />
               </div>
-
             ) : suggestions.length > 0 ? (
-
-              /* Product suggestions */
               <>
                 <span className="sd-section-label">Suggestions</span>
                 <div className="sd-suggestions">
@@ -201,15 +183,10 @@ export default function SearchDropdown({ isOpen, onClose }: Props) {
                   ))}
                 </div>
               </>
-
             ) : (
-
-              /* Empty */
               <p className="sd-empty">No results for &ldquo;{searchInput}&rdquo;</p>
-
             )}
           </div>
-
         </div>
       </div>
     </div>

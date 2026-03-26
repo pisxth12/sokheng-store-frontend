@@ -205,6 +205,12 @@ export default function ProductForm({
     [deleteImage],
   );
 
+  useEffect(() => {
+    if (deleteImageIds.length > 0) {
+      setDeleteImageIds((prev) => prev.filter((id) => !deleteImageIds.includes(id)));
+    }
+  },[deleteImage])
+
   const isFormValid = useCallback(() => {
     if (!name || !price || !categoryId) return false;
     if (salePriceError) return false;

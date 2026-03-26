@@ -29,6 +29,8 @@ export async function addToCart(
     );
     
     revalidatePath("/cart");
+    revalidatePath("/products");
+    
     return updatedCart;
   } catch (error) {
     console.error("Error adding to cart:", error);

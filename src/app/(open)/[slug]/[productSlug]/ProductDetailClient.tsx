@@ -20,6 +20,8 @@ import ImageModal from "@/components/ui/productImageModal";
 import { ProductDetail } from "@/types/open/product.type";
 import "./ProductDetailClient.css";
 import { useRouter } from "next/navigation";
+import { addToCart } from "../../actions/cart.actions";
+import { CartResponse } from "@/types/open/cart.type";
 
 const PLACEHOLDER_IMAGE =
   "https://placehold.co/600x600/e2e8f0/1e293b?text=No+Image";
@@ -37,17 +39,24 @@ export default function ProductDetailClient({ product, children, initialIsInWish
   const [quantity, setQuantity] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImageIndex, setModalImageIndex] = useState(0);
-  const router = useRouter()
+  const [cart, setCart] = useState<CartResponse | null>(null);
 
-  const { addToCart, getItemQuantity } = useCart();
+  const getItemQuantity = useCallback(
+    (productId: number) => {
+      if (!cart) return 0;
+      const item = cart.items.find(i => i.productId === productId);
+      return item?.quantity ?? 0;
+    },
+    [cart]
+  );
+
 
   const handleAddToCart = useCallback(async (e: React.MouseEvent) => {
     e.preventDefault();
     if (!product) return;
     try {
-      await addToCart(product.id, quantity);
-      setQuantity(1);
-     
+      const updatedCart = await addToCart(product.id, quantity);
+      setCart(updatedCart);
     } catch {
       toast.error("Could not add to cart");
     }

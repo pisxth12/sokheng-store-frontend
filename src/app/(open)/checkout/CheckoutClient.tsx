@@ -5,12 +5,13 @@ import EmptyCart from "@/components/ui/EmptyCart";
 import Link from "next/link";
 import EditProfileModal from "@/components/open/accounts/EditProfile";
 import { UpdateProfileRequest } from "@/types/open/auth.type";
-import { Edit } from "lucide-react";
+import { Backpack, Edit } from "lucide-react";
 import { useCart } from "@/hooks/open/useCart";
 
 import { CartItemResponse, CartResponse } from "@/types/open/cart.type";
 import { User } from "@/types/open/user.type";
 import { useAuth } from "@/hooks/open/useAuth";
+import { EmptyItems } from "@/components/ui/EmptyItems";
 
 interface Props {
   initialUser: User;
@@ -42,7 +43,6 @@ export default function CheckoutClient({ initialUser, cart }: Props) {
         note: "",
         items: cart.items,
       });
-      // router.push(`/order-details?orderID=${result.order.orderNumber}`);
       router.push(`/order-details?orderID=${result.order.orderNumber}`);
 
       router.refresh(); 
@@ -69,7 +69,7 @@ export default function CheckoutClient({ initialUser, cart }: Props) {
 
   }, [updateProfile]);
 
-  if (cart?.items?.length === 0) return <EmptyCart />;
+  if (cart?.items?.length === 0) return <EmptyItems icon={Backpack} title="Opps your cart empty"  description="" buttonLink="/products"   />;
   if (!isAuthenticated) return null;
 
   const subtotal =

@@ -9,14 +9,11 @@ import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import WishlistProvider from "@/context/WishlistContext";
-import { cookies } from "next/headers";
 import { getUserProfile } from "@/lib/services/user.server";
 
 export async function  AppProvider({ children }: { children: React.ReactNode }) {
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-  const cookieStore = await cookies();
-  const sessionId = cookieStore.get('JSESSIONID')?.value;
-  const initialUser = await getUserProfile(sessionId);
+  const initialUser = await getUserProfile();
 
   const [queryClient] = useState(
     () =>

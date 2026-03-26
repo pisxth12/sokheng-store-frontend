@@ -1,8 +1,6 @@
 import React from "react";
 import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
-import { cookies } from "next/headers";
-import { getUserProfile } from "@/lib/services/user.server";
 import ServerProviders from "@/providers/ServerProviders";
 
 type Props = {

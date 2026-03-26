@@ -6,6 +6,7 @@ import { PageResponse, Product, ProductDetail, ProductsWithPriceRangeResponse } 
 
 
 
+// lib/services/product.server.ts
 export interface GetProductsFilters {
   sortBy?: string;
   sortOrder?: string;
@@ -32,47 +33,27 @@ export async function getProductsWithFilter(
     if (filters?.categoryId) params.set("categoryId", filters.categoryId.toString());
     if (filters?.brandId) params.set("brandId", filters.brandId.toString());
 
-    const data = await apiServerService.get<{
-      products: PageResponse<Product>;
-      minPrice: number;
-      maxPrice: number;
-      hasMore: boolean;
-    }>(`/products/all?${params.toString()}`, {
-      cacheTime: 300,
-    });
+    const data = await apiServerService.get<ProductsWithPriceRangeResponse>(
+      `/products/all?${params.toString()}`,
+      { cacheTime: 300 }
+    );
     
-    return {
-      products: data.products,
-      minPrice: data.minPrice,
-      maxPrice: data.maxPrice,
-      hasMore: data.hasMore,
-    };
+    return data;
   } catch (error) {
     console.error("Error fetching products:", error);
     return {
-      products: {
-        content: [],
-        pageable: {
-          pageNumber: 0,
-          pageSize: size,
-          sort: { empty: true, sorted: false, unsorted: true },
-          offset: 0,
-          paged: true,
-          unpaged: false,
-        },
-        last: true,
+      items: [],
+      pagination: {
+        page: 0,
+        pageSize: size,
+        total: 0,
         totalPages: 0,
-        totalElements: 0,
-        first: true,
-        size: size,
-        number: 0,
-        sort: { empty: true, sorted: false, unsorted: true },
-        numberOfElements: 0,
-        empty: true,
+        hasMore: false,
       },
-      minPrice: 0,
-      maxPrice: 1000,
-      hasMore: false,
+      filters: {
+        minPrice: 0,
+        maxPrice: 1000,
+      },
     };
   }
 }
@@ -190,7 +171,6 @@ export async function getCategoryProducts(
 }
 
 
-// Search Products
 export async function searchProducts(
   query: string,
   page: number = 0,
@@ -199,8 +179,9 @@ export async function searchProducts(
   sortOrder: string = "desc",
   minPrice?: number,
   maxPrice?: number,
-  categoryId?: number
-) {
+  categoryId?: number,
+  brandId?: number
+): Promise<ProductsWithPriceRangeResponse> {  
   try {
     const params = new URLSearchParams();
     if (query) params.set("q", query);
@@ -208,26 +189,34 @@ export async function searchProducts(
     params.set("size", size.toString());
     if (sortBy) params.set("sortBy", sortBy);
     if (sortOrder) params.set("sortOrder", sortOrder);
-    if (minPrice) params.set("minPrice", minPrice.toString());
-    if (maxPrice) params.set("maxPrice", maxPrice.toString());
+    if (minPrice !== undefined) params.set("minPrice", minPrice.toString());
+    if (maxPrice !== undefined) params.set("maxPrice", maxPrice.toString());
     if (categoryId) params.set("categoryId", categoryId.toString());
+    if (brandId) params.set("brandId", brandId.toString());
 
-    const data = await apiServerService.get<PageResponse<Product>>(
+    
+    const data = await apiServerService.get<ProductsWithPriceRangeResponse>(
       `/products/search?${params.toString()}`,
       { cacheTime: 60 }
     );
     
-    return {
-      products: data.content,
-      total: data.totalElements,
-      hasMore: !data.last,
-    };
+    return data;  
+    
   } catch (error) {
     console.error("Error searching products:", error);
     return {
-      products: [],
-      total: 0,
-      hasMore: false,
+      items: [],
+      pagination: {
+        page: 0,
+        pageSize: size,
+        total: 0,
+        totalPages: 0,
+        hasMore: false,
+      },
+      filters: {
+        minPrice: 0,
+        maxPrice: 1000,
+      },
     };
   }
 }

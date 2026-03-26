@@ -18,7 +18,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
    const wishlist = await getWishlist();
 
 
-   const isInWishlist = wishlist?.items?.some(item => item.productId === product?.id) || false;
+  const isInWishlist = wishlist?.items?.some(item => item.productId === product?.id) || false;
   
 
   if (!product) {

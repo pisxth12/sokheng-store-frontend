@@ -36,7 +36,7 @@ export const AuthProvider = ({ children, initialUser = null}: { children: React.
 
   // Memoized helper function
   const mapAuthResponseToUser = useCallback((res: AuthResponse): User => ({
-    id: res.userId.toString(),
+    id: res.userId,
     name: res.name,
     email: res.email,
     role: res.role as "ADMIN" | "USER",

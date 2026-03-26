@@ -89,7 +89,7 @@ export default function MyOrdersPage() {
                             return (
                                 <Link
                                     key={index}
-                                    href={`/orders/${order.orderNumber}`}
+                                    href={`/order-details?orderID=${order.orderNumber}`}
                                     className="order-card  fade-in block bg-white dark:bg-darkbg  rounded-xl border border-stone-200/70 dark:border-stone-800/80 overflow-hidden hover:border-stone-300 dark:hover:border-stone-700 shadow-sm hover:shadow-md dark:shadow-none"
                                 >
                                     {/* Top row: status + date | total + arrow */}

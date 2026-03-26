@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition, useCallback } from 'react';
-import { ShoppingCart, Trash2, ArrowRight } from 'lucide-react';
+import { ShoppingCart, Trash2, ArrowRight, Heart } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import EmptyWishlist from '@/components/open/wishlists/EmptyWishlist';
@@ -9,6 +9,7 @@ import './WishlistPage.css';
 import { WishlistResponse } from '@/types/open/wishlist.types';
 import { CartResponse } from '@/types/open/cart.type';
 import { moveToCartFromWishlist, removeFromWishlist } from '../actions/wishlist.actions';
+import { EmptyItems } from '@/components/ui/EmptyItems';
 
 interface WishlistClientProps {
   initialWishlist: WishlistResponse | null;
@@ -64,14 +65,15 @@ export default function WishlistClient({ initialWishlist, initialCart }: Wishlis
 
   // Empty state
   if (!wishlist || wishlist.items.length === 0) {
-    return (
-      <EmptyWishlist
-        message="Your wishlist is empty"
-        description="Save your favorite items here by tapping the heart icon on products"
-        buttonText="Browse Products"
-        buttonLink="/products"
-      />
-    );
+      return (
+        <EmptyItems
+          icon={Heart}
+          title="Your wishlist is empty"
+          description="Looks like you haven't added anything to your cart yet"
+          buttonText="Start shopping"
+          buttonLink="/products"
+        />
+      );
   }
 
   const items = wishlist.items;

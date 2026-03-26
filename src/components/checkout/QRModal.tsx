@@ -26,7 +26,9 @@ const QRModal = ({
   const router = useRouter();
   const [status, setStatus] = useState<"PENDING" | "PAID" | "EXPIRED" | "FAILED">("PENDING");
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [successModal, setSuccessModal] =  useState(false);
+  const [countdown, setCountdown] = useState(30);
+  const countdownRef = useRef<NodeJS.Timeout | null>(null);
+
 
   const stopPolling = () => {
     if (intervalRef.current) {
@@ -34,6 +36,38 @@ const QRModal = ({
       intervalRef.current = null;
     }
   };
+
+  const stopCountdown = () => {
+    if (countdownRef.current) {
+      clearInterval(countdownRef.current);
+      countdownRef.current = null;
+    }
+  };
+
+  
+
+   useEffect(() => {
+    if (!isOpen || status !== "PENDING") return;
+    
+    setCountdown(30);
+    
+    countdownRef.current = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) {
+          // Auto-expire when countdown reaches 0
+          if (status === "PENDING") {
+            setStatus("EXPIRED");
+            stopPolling();
+          }
+          stopCountdown();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    
+    return () => stopCountdown();
+  }, [isOpen, status]);
 
   useEffect(() => {
     if (!isOpen || !orderNumber) {
@@ -87,6 +121,7 @@ const QRModal = ({
           <div className="qr-info">
             <p className="qr-merchant">{merchantName}</p>
             <p className="qr-amount">{formattedAmount}</p>
+            <p className="bg-red-200">{countdown}</p>
           </div>
 
           {/* Tear divider */}

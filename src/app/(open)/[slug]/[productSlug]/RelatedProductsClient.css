@@ -59,6 +59,7 @@
   height: 2.5rem;
   background: #fff;
   border: 1px solid #e8e8e4;
+  margin: 0 16px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -128,7 +129,7 @@
   .rp-card-sloted { flex: 0 0 calc(33.333% - 1rem); }
 } */
 
-@media (max-width: 640px) {
+@media (max-width:1024px) {
   .rp-card-sloted { flex: 0 0 calc(50% - 0.625rem); }
 }
 

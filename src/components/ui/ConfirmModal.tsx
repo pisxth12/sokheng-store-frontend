@@ -15,6 +15,7 @@ interface ConfirmModalProps {
 }
 
 export default function ConfirmModal({
+  
   isOpen,
   onClose,
   onConfirm,

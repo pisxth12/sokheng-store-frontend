@@ -29,3 +29,27 @@ export async function getBrandBySlug(slug: string): Promise<Brand | null> {
         return null;
     }
 }
+
+export async function getBrandNames(): Promise<Brand[]> {
+  try {
+    return await apiServerService.get<Brand[]>("/brands/name", {
+      cacheTime: 3600,
+    });
+  } catch (error) {
+    console.error("Error fetching brands:", error);
+    return [];
+  }
+}
+
+export async function getBrandsByCategory(categoryId: number): Promise<Brand[]> {
+    try {
+    return await apiServerService.get<Brand[]>(
+      `/categories/${categoryId}/brands`,
+      { cacheTime: 3600 }
+    );
+  } catch (error) {
+    console.error("Error fetching brands by category:", error);
+    return [];
+  }
+
+}

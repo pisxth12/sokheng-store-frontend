@@ -21,7 +21,7 @@ export interface UserOrdersReturn {
 
   //Actions
   refreshOrders: () => Promise<void>;
-  cancelOrder: (orderId: number) => Promise<void>;
+  cancelOrder: (orderNumber: string) => Promise<void>;
 }
 
 export const useOrders = (initialPageSize: number = 10): UserOrdersReturn => {
@@ -87,11 +87,11 @@ export const useOrders = (initialPageSize: number = 10): UserOrdersReturn => {
   }, [fetchOrders]);
 
   const cancelOrder = useCallback(
-    async (orderId: number) => {
+    async (orderNumber: string) => {
       try {
         setLoading(true);
         setError(null);
-        await publicOrderApi.cancelOrder(orderId);
+        await publicOrderApi.cancelOrder(orderNumber);
         await refreshOrders();
       } catch (err) {
         setError(
