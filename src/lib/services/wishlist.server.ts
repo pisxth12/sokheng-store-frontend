@@ -8,7 +8,7 @@ export async function getWishlistCounts(): Promise<number> {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
-    const sessionId = cookieStore.get("JSESSIONID")?.value; 
+    const sessionId = cookieStore.get("cartSessionId")?.value; 
     
     if (!token && !sessionId) {
       return 0;

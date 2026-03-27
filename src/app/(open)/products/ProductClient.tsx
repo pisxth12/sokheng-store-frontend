@@ -212,7 +212,7 @@ export default function ProductsClient({
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-16 text-center">
+      <div className="mx-auto px-4 py-16 text-center">
         <h2 className="text-2xl font-semibold text-gray-900 mb-4">
           Something went wrong
         </h2>

@@ -4,12 +4,11 @@ import { useState, useTransition, useCallback } from 'react';
 import { ShoppingCart, Trash2, ArrowRight, Heart } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
-import EmptyWishlist from '@/components/open/wishlists/EmptyWishlist';
-import './WishlistPage.css';
 import { WishlistResponse } from '@/types/open/wishlist.types';
 import { CartResponse } from '@/types/open/cart.type';
 import { moveToCartFromWishlist, removeFromWishlist } from '../actions/wishlist.actions';
 import { EmptyItems } from '@/components/ui/EmptyItems';
+import './WishlistPage.css';
 
 interface WishlistClientProps {
   initialWishlist: WishlistResponse | null;

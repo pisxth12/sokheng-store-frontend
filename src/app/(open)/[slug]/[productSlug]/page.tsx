@@ -20,6 +20,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   const isInWishlist = wishlist?.items?.some(item => item.productId === product?.id) || false;
   
+  
 
   if (!product) {
     notFound();

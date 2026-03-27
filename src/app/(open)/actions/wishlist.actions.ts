@@ -9,7 +9,7 @@ export async function getWishlist(): Promise<WishlistResponse | null> {
     try{
         const cookieStore = await cookies();
         const token = cookieStore.get("token")?.value;
-        const sessionId = cookieStore.get("wishlistSessionId")?.value;
+        const sessionId = cookieStore.get("cartSessionId")?.value;
 
         const options = token ? { token } : { sessionId };
         return await apiServerService.get<WishlistResponse>("/wishlist", options);
@@ -23,10 +23,10 @@ export async function addToWishlist(productId: number): Promise<WishlistResponse
     try {
            const cookieStore = await cookies();
            const token = cookieStore.get("token")?.value;
-           const sessionId = cookieStore.get("JSESSIONID")?.value;
+           const sessionId = cookieStore.get("cartSessionId")?.value;
         
            const options = token ? { token } : { sessionId };
-
+           
             const updatedWishlist = await apiServerService.post<WishlistResponse>(
                 `/wishlist/add/${productId}`,
                 {},
@@ -44,7 +44,7 @@ export async function removeFromWishlist(productId: number): Promise<WishlistRes
     try{
         const cookieStore = await cookies();
         const token = cookieStore.get("token")?.value;
-        const sessionId = cookieStore.get("JSESSIONID")?.value;
+        const sessionId = cookieStore.get("cartSessionId")?.value;
      
         const options = token ? { token } : { sessionId };
     
@@ -69,7 +69,7 @@ export async function moveToCartFromWishlist(
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
-    const sessionId = cookieStore.get("JSESSIONID")?.value;
+    const sessionId = cookieStore.get("cartSessionId")?.value;
     
     const options = token ? { token } : { sessionId };
     
@@ -95,7 +95,7 @@ export async function isInWishlist(productId: number): Promise<boolean> {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
-    const sessionId = cookieStore.get("JSESSIONID")?.value;
+    const sessionId = cookieStore.get("cartSessionId")?.value;
     
     const options = token ? { token } : { sessionId };
     
@@ -113,7 +113,7 @@ export async function getWishlistCount(): Promise<number> {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
-    const sessionId = cookieStore.get("token")?.value;
+    const sessionId = cookieStore.get("cartSessionId")?.value;
     
     const options = token ? { token } : { sessionId };
     
@@ -129,7 +129,7 @@ export async function clearWishlist(): Promise<void> {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
-    const sessionId = cookieStore.get("JSESSIONID")?.value;
+    const sessionId = cookieStore.get("cartSessionId")?.value;
     
     const options = token ? { token } : { sessionId };
     

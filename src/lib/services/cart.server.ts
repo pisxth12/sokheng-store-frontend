@@ -8,6 +8,7 @@ export async function getCartCountForUser(): Promise<number> {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
+    
 
     const response = await apiServerService.get<number>("/cart/count", { token });
     return response ?? 0;
@@ -23,11 +24,14 @@ export async function getCartCountForGuest(): Promise<number> {
     const sessionId = cookieStore.get("cartSessionId")?.value;
     const response = await apiServerService.get<number>("/cart/count", { sessionId });
     return response ?? 0;
+
+
   } catch (error) {
     console.error("Error fetching cart count for guest:", error);
     return 0;
   }
 }
+
 
 
 export async function getCart(): Promise<CartResponse | null> {
@@ -40,10 +44,8 @@ export async function getCart(): Promise<CartResponse | null> {
     if (!isAuthenticated && !sessionId) {
       return null;
     }
-
     const options = token ? { token } : { sessionId }
    
-    
     return await apiServerService.get<CartResponse>("/cart", options);
   } catch (error) {
     console.error("Error fetching cart:", error);

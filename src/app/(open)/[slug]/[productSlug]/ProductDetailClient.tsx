@@ -12,14 +12,12 @@ import {
   Layers,
 } from "lucide-react";
 import Link from "next/link";
-import { useCart } from "@/hooks/open/useCart";
 import { useTranslations } from "next-intl";
 import WishlistButton from "@/components/open/wishlists/WishlistButton";
 import toast from "react-hot-toast";
 import ImageModal from "@/components/ui/productImageModal";
 import { ProductDetail } from "@/types/open/product.type";
 import "./ProductDetailClient.css";
-import { useRouter } from "next/navigation";
 import { addToCart } from "../../actions/cart.actions";
 import { CartResponse } from "@/types/open/cart.type";
 

@@ -102,7 +102,9 @@ export default function OrderPage() {
     setIsVerifying(false);
     setPaymentCompleted(true);
     setVerificationStatus("Payment successful!");
-    setShowQRModal(false);
+    setTimeout( () => {
+       setShowQRModal(false);
+    },3000)
     await fetchOrder();
   };
 

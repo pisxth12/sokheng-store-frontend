@@ -173,7 +173,7 @@ export default function GuestCheckoutPage() {
             });
             
             toast.success("Order placed successfully!");
-            router.push(`/orders-details/${result.order.orderNumber}`);
+            router.push(`/order-details?orderID=${result.order.orderNumber}`);
             
         } catch (error: any) {
             const errorMessage = error?.response?.data?.message || "Checkout failed";

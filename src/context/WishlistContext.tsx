@@ -62,7 +62,6 @@ export default function WishlistProvider({
     setError(null);
     try {
        await publicWishlistApi.add(productId);
-        
        route.refresh();
        return true;
     } catch (err) {

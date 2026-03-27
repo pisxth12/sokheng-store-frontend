@@ -1,37 +1,44 @@
 "use client";
 import React, { useState } from 'react';
 import { Heart } from 'lucide-react';
-import { useWishlist } from '@/hooks/open/useWishlist';
+import { addToWishlist, removeFromWishlist } from '@/app/(open)/actions/wishlist.actions';
 
 interface WishlistButtonProps {
     productId: number;
-    initialIsInWishlist?: boolean;  // ✅ Receive initial state from server
+    initialIsInWishlist?: boolean;
     className?: string;
     onToggle?: (inWishlist: boolean) => void;
 }
 
 const WishlistButton: React.FC<WishlistButtonProps> = ({ 
     productId, 
-    initialIsInWishlist = false,  // ✅ Initial state from server
+    initialIsInWishlist = false,
     className = '',
     onToggle 
 }) => {
-    const [isInWishlist, setIsInWishlist] = useState(initialIsInWishlist);  // ✅ No API call needed
+    const [isInWishlist, setIsInWishlist] = useState(initialIsInWishlist);
     const [loading, setLoading] = useState(false);
-    const { toggleItem } = useWishlist();  // ✅ Only need toggle, not check
 
     const handleClick = async () => {
         if (loading) return;
-        
         setLoading(true);
-        const success = await toggleItem(productId, isInWishlist);
-        if (success) {
-            const newStatus = !isInWishlist;
-            setIsInWishlist(newStatus);
-            onToggle?.(newStatus);
-        }
+       try{
+          if(isInWishlist){
+              await removeFromWishlist(productId);
+            setIsInWishlist(false);
+            onToggle?.(true)
+          }else{
+            await addToWishlist(productId);
+            setIsInWishlist(true);
+            onToggle?.(false)
+          }
+       }catch(error:any){
+        console.log(error);
+       }finally{
         setLoading(false);
+       }
     };
+
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === 'Enter' || e.key === ' ') {

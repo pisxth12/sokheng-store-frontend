@@ -83,7 +83,7 @@ const QRModal = ({
           stopPolling();
           setTimeout(() => {
             onClose();
-            router.push(`/orders/${orderNumber}`);
+            router.push(`/order-details?orderID=${orderNumber}`);
           }, 1000);
         }
         if (res.status === "EXPIRED" || res.status === "FAILED") {
