@@ -76,7 +76,6 @@ export default function CartClient({ initialCart }: CartClientProps) {
             <ArrowLeft className="w-3 h-3" strokeWidth={1.5} />
             Back
           </button>
-          <span className="co-topbar-title">CART</span>
           <div className="co-steps hidden sm:flex">
             <div className="co-step active"><span className="co-step-num">✓</span>Cart</div>
             <div className="co-step-divider" />
@@ -84,6 +83,7 @@ export default function CartClient({ initialCart }: CartClientProps) {
             <div className="co-step-divider" />
             <div className="co-step"><span className="co-step-num">3</span>Confirm</div>
           </div>
+          <span className="co-topbar-title">CART</span>
         </div>
         
         {/* Two Column Layout */}
@@ -126,7 +126,7 @@ export default function CartClient({ initialCart }: CartClientProps) {
                           {item.productName}
                         </Link>
                         <p className="text-sm text-gray-400 dark:text-gray-500 mt-1.5">
-                          ${item.price.toFixed(2)}
+                          ${item.price.toFixed(2)} x {item.quantity}
                         </p>
                       </div>
                       <p className="text-sm font-medium text-gray-900 dark:text-white shrink-0">
@@ -142,13 +142,14 @@ export default function CartClient({ initialCart }: CartClientProps) {
                           onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
                           disabled={item.quantity <= 1 || updatingId === item.id || isPending}
                         >
-                          {updatingId === item.id && isPending ? (
-                            <span className="cp-spinner" />
-                          ) : (
+                         
                             <Minus className="w-3 h-3" strokeWidth={1.5} />
-                          )}
                         </button>
-                        <span className="cp-qty-val">{item.quantity}</span>
+                         {updatingId === item.id && isPending ? (
+                            <span className=" cp-spinner" />
+                          ) : (
+                            <span className="cp-qty-val">{item.quantity}</span>
+                          )}
                         <button
                           className="cp-qty-btn"
                           onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}

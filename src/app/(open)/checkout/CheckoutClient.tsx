@@ -78,10 +78,9 @@ export default function CheckoutClient({ initialUser, cart }: Props) {
 
         {/* Top bar */}
         <div className="co-topbar">
-          <button onClick={() => router.back()} className="co-back-btn">
+          <button onClick={() => router.push("/cart")} className="co-back-btn">
             <ArrowLeft className="w-3 h-3" strokeWidth={1.5} />
             Back
-          <span className="co-topbar-title">Checkout</span>
           </button>
           <div className="co-steps">  
             <div className="co-step done"><span className="co-step-num">✓</span>Cart</div>
@@ -90,6 +89,7 @@ export default function CheckoutClient({ initialUser, cart }: Props) {
             <div className="co-step-divider" />
             <div className="co-step"><span className="co-step-num">3</span>Confirm</div>
           </div>
+          <span className="co-topbar-title">Checkout</span>
         </div>
 
         {/* Grid: left = items+note, right = user+summary */}
@@ -104,7 +104,7 @@ export default function CheckoutClient({ initialUser, cart }: Props) {
                 <span className="co-label">
                   Order · {cart?.items?.length} {cart?.items?.length === 1 ? "item" : "items"}
                 </span>
-                <Link href="/cart" className="co-edit-link">Edit cart</Link>
+                <Link href="/cart" className="co-edit-link text-gray-300/30">Edit cart</Link>
               </div>
 
               {cart?.items?.map((item: CartItemResponse, idx: number) => (
@@ -114,7 +114,7 @@ export default function CheckoutClient({ initialUser, cart }: Props) {
                   style={{ animationDelay: `${0.08 + idx * 0.05}s` }}
                 >
                   {item.productImage ? (
-                    <Link href={`/${item.categorySlug}/${item.slug}`} className="co-item-img w-14 h-14 shrink-0">
+                    <Link href={`/${item.categorySlug}/${item.slug}`} className="co-item-img w-34 h-34 shrink-0">
                       <img src={item.productImage} alt={item.productName} />
                     </Link>
                   ) : (
@@ -149,10 +149,10 @@ export default function CheckoutClient({ initialUser, cart }: Props) {
           </div>
 
           {/* ── RIGHT: Deliver to + Summary + CTA ── */}
-          <div className="space-y-4 co-section-enter" style={{ animationDelay: "0.1s" }}>
+          <div className="space-y-4 co-section-enter sticky top-24 " style={{ animationDelay: "0.1s" }}>
 
             {/* Deliver to */}
-            <div className="co-panel rounded-checkout p-5">
+            <div className="co-panel rounded-checkout p-5 ">
               <div className="flex items-center justify-between mb-4">
                 <span className="co-label">Deliver to</span>
                 <button onClick={() => setIsEditModalOpen(true)} className="co-deliver-edit">
@@ -215,7 +215,7 @@ export default function CheckoutClient({ initialUser, cart }: Props) {
 
               <div className="mt-4 space-y-2">
                 <div className="flex items-center justify-center gap-1.5">
-                  {["Visa", "MC", "Amex", "PayPal"].map((c) => (
+                  {["Visa", "ABA", "ACELIDA", "Wing"].map((c) => (
                     <span key={c} className="co-badge">{c}</span>
                   ))}
                 </div>

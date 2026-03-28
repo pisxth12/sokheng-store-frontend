@@ -41,10 +41,10 @@ export async function updateCartItem(
   quantity: number
 ): Promise<CartResponse> {
   try {
-
-    
     const { data: updatedCart , cookie} = await apiServerService.put<CartResponse>(
-      `/cart/update/${itemId}`,
+      `/cart/update/${itemId}`,{
+        quantity
+      }
     );
     
     await forwardSessionCookie(cookie ?? null);

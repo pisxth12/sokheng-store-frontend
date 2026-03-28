@@ -14,7 +14,7 @@ export async function loadMoreRelatedProducts(
   total: number;
 }> {
   try {
-    const data = await apiServerService.get<{
+    const { data } = await apiServerService.get<{
       content: Product[];
       totalElements: number;
       last: boolean;

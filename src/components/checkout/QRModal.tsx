@@ -121,7 +121,7 @@ const QRModal = ({
           <div className="qr-info">
             <p className="qr-merchant">{merchantName}</p>
             <p className="qr-amount">{formattedAmount}</p>
-            <p className="bg-red-200">{countdown}</p>
+            {/* <p className="bg-red-200">{countdown}</p> */}
           </div>
 
           {/* Tear divider */}

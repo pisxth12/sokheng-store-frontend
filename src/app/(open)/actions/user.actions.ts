@@ -5,15 +5,9 @@ import { cookies } from "next/headers";
 import { apiServerService } from "@/lib/api/server";
 import { revalidatePath } from "next/cache";
 
-export async function updateUserProfile(data: any) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-  
-  if (!token) {
-    throw new Error("Not authenticated");
-  }
-  
-  const updatedUser = await apiServerService.put("/users/me", { token });
+export async function updateUserProfile() {
+
+  const updatedUser = await apiServerService.put("/users/me");
   revalidatePath("/profile");
   return updatedUser;
 }

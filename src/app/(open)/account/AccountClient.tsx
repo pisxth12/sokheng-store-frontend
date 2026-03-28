@@ -11,7 +11,7 @@ import EditProfileModal from "@/components/open/accounts/EditProfile";
 import { useAuth } from "@/hooks/open/useAuth";
 import { UpdateProfileRequest } from "@/types/open/auth.type";
 import toast from "react-hot-toast";
-import "./account.css";
+
 
 interface AccountClientProps {
   initialUser: {

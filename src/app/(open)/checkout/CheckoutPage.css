@@ -16,6 +16,8 @@
   animation: co-fade-up 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
+
+
 /* ─── Top bar ─────────────────────────────────────────────────── */
 .co-topbar {
   border-bottom: 1px solid #f0f0ee;
@@ -203,7 +205,7 @@
 
 .co-item-img {
   overflow: hidden;
-  border-radius: 0.625rem;
+  border-radius: 1px;
   background: #f7f7f5;
   flex-shrink: 0;
 }
