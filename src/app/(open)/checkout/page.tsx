@@ -1,4 +1,6 @@
+
 // app/(open)/checkout/page.tsx (Server Component)
+import "./CheckoutPage.css";
 import { getUserProfile } from "@/lib/services/user.server";
 import { redirect } from "next/navigation";
 import CheckoutClient from "./CheckoutClient";

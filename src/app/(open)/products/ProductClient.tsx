@@ -237,7 +237,7 @@ export default function ProductsClient({
 
   return (
     <>
-      <div className="pp-page">
+      <div className="pp-page ">
         {/* Sticky Header with Filters */}
         <div className={`pp-header ${showHeader ? "" : "pp-header--hidden"}`}>
           {/* Filter + Sort row */}

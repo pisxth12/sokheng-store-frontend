@@ -13,9 +13,7 @@ export async function getUserProfile(): Promise<User | null> {
     return null;
   }
   try {
-      const user = await apiServerService.get<User>("/users/me", {
-        token,  
-      });
+      const { data: user } = await apiServerService.get<User>("/users/me");
 
       return user ?? null;
 

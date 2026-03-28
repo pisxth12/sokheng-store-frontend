@@ -4,11 +4,12 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
-import { Plus, Minus, ShoppingBag, ChevronRight, Trash2, Lock } from 'lucide-react';
+import { Plus, Minus, ShoppingBag, ChevronRight, Trash2, Lock, ArrowLeft } from 'lucide-react';
 import type { CartResponse } from '@/types/open/cart.type';
-import './CartPage.css';
 import { removeCartItem, updateCartItem } from '../actions/cart.actions';
 import { EmptyItems } from '@/components/ui/EmptyItems';
+import './CartPage.css';
+
 
 interface CartClientProps {
   initialCart: CartResponse | null;
@@ -40,8 +41,8 @@ export default function CartClient({ initialCart }: CartClientProps) {
     
     startTransition(async () => {
       try {
-        const updatedCart = await removeCartItem(itemId);
-        setCart(updatedCart);
+        removeCartItem(itemId);
+        
       } catch (error) {
         console.error('Failed to remove item:', error);
       } finally {
@@ -67,16 +68,24 @@ export default function CartClient({ initialCart }: CartClientProps) {
   const itemCount = cart.totalItems;
 
   return (
-    <div className="min-h-screen py-8 bg-white dark:bg-[#0f0f0e] cp-page-enter">
+    <div className="min-h-screen  bg-white dark:bg-[#0f0f0e] cp-page-enter">
       <div className="max-w-primary mx-auto px-4">
-        {/* Header */}
-        <div className="mb-10 border-b border-gray-100 dark:border-[#2a2a27] pb-5">
-          <h1 className="text-xl font-normal text-gray-900 dark:text-white">Shopping cart</h1>
-          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 tracking-wider uppercase">
-            {itemCount} {itemCount === 1 ? 'item' : 'items'}
-          </p>
+         {/* Top bar */}
+         <div className="co-topbar mb-10">
+          <button onClick={() => router.back()} className="co-back-btn">
+            <ArrowLeft className="w-3 h-3" strokeWidth={1.5} />
+            Back
+          </button>
+          <span className="co-topbar-title">CART</span>
+          <div className="co-steps hidden sm:flex">
+            <div className="co-step active"><span className="co-step-num">✓</span>Cart</div>
+            <div className="co-step-divider" />
+            <div className="co-step "><span className="co-step-num">2</span>Review</div>
+            <div className="co-step-divider" />
+            <div className="co-step"><span className="co-step-num">3</span>Confirm</div>
+          </div>
         </div>
-
+        
         {/* Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-8 gap-12">
           {/* Left: Items */}
@@ -101,7 +110,7 @@ export default function CartClient({ initialCart }: CartClientProps) {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <ShoppingBag className="w-6 h-6 text-gray-300 dark:text-[#3a3a37]" />
+                        <ShoppingBag className="w-6 h-6 text-gray-400 dark:text-[#3a3a37]" />
                       </div>
                     )}
                   </Link>
@@ -189,11 +198,11 @@ export default function CartClient({ initialCart }: CartClientProps) {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500 dark:text-gray-400">Shipping</span>
-                  <span className="text-gray-300 dark:text-gray-600">At checkout</span>
+                  <span className="text-gray-400 dark:text-gray-600">At checkout</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500 dark:text-gray-400">Tax</span>
-                  <span className="text-gray-300 dark:text-gray-600">At checkout</span>
+                  <span className="text-gray-400 dark:text-gray-600">At checkout</span>
                 </div>
               </div>
 
@@ -202,7 +211,7 @@ export default function CartClient({ initialCart }: CartClientProps) {
                   <span className="font-normal text-gray-900 dark:text-white">Total</span>
                   <span className="font-normal text-gray-900 dark:text-white">${subtotal.toFixed(2)}</span>
                 </div>
-                <p className="text-xs text-gray-300 dark:text-gray-600 mt-1.5 text-right">
+                <p className="text-xs text-gray-400 dark:text-gray-600 mt-1.5 text-right">
                   Taxes and shipping calculated at checkout
                 </p>
               </div>
@@ -217,7 +226,7 @@ export default function CartClient({ initialCart }: CartClientProps) {
               </button>
 
               <div className="flex items-center justify-center gap-3 mt-5">
-                <span className="text-[10px] text-gray-300 dark:text-gray-600 uppercase tracking-wider">Secure</span>
+                <span className="text-[10px] text-gray-400 dark:text-gray-600 uppercase tracking-wider">Secure</span>
                 <div className="flex gap-1.5">
                   {['Visa', 'MC', 'Amex', 'PayPal'].map(c => (
                     <span key={c} className="cp-card-badge">{c}</span>

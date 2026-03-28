@@ -4,11 +4,10 @@ import { Banner } from "@/types/open/banner.type";
 
 export async function getBanners(): Promise<Banner[]>{
   try {
-    return (
-      (await apiServerService.get<Banner[]>("/banners", {
-        cacheTime: 3600,
-      })) ?? []
-    );
+    const { data: banners } = await apiServerService.get<Banner[]>("/banners", {
+      cacheTime: 3600,
+    });
+    return banners;
   } catch {
     return [];
   }

@@ -1,6 +1,5 @@
 "use client";
 import { AuthProvider } from "@/context/AuthContext";
-import { CartProvider } from "@/context/CartContext";
 import { SearchProvider } from "@/context/SearchContext";
 import { ThemeProvider } from "@/context/ThemeProvider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -39,20 +38,16 @@ export async function  AppProvider({ children }: { children: React.ReactNode }) 
             <GoogleOAuthProvider clientId={googleClientId}>
               <AuthProvider initialUser={initialUser}>
                 <WishlistProvider>  
-                  <CartProvider>
                     {children}
                     <Toaster position="top-right" />
-                  </CartProvider>
                 </WishlistProvider>
               </AuthProvider>
             </GoogleOAuthProvider>
           ) : (
             <AuthProvider>
               <WishlistProvider>    
-                <CartProvider>
                   {children}
                   <Toaster position="top-right" />
-                </CartProvider>
               </WishlistProvider>
             </AuthProvider>
           )}

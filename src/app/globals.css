@@ -44,6 +44,9 @@ body {
 
 html {
   scroll-behavior: smooth;
+  overflow-y: scroll;
+
+  
 }
 
 /* ======================================
@@ -64,8 +67,8 @@ html {
 @layer utilities {
    @media (max-width: 639px) {
     .px-primary {
-      padding-left: 0;
-      padding-right: 0;
+      padding-left: 4px;
+      padding-right: 4px;
     }
   }
 

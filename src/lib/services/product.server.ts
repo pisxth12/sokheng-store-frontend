@@ -3,10 +3,6 @@ import "server-only";
 import { apiServerService } from "../api/server";
 import { PageResponse, Product, ProductDetail, ProductsWithPriceRangeResponse } from "@/types/open/product.type";
 
-
-
-
-// lib/services/product.server.ts
 export interface GetProductsFilters {
   sortBy?: string;
   sortOrder?: string;
@@ -33,7 +29,7 @@ export async function getProductsWithFilter(
     if (filters?.categoryId) params.set("categoryId", filters.categoryId.toString());
     if (filters?.brandId) params.set("brandId", filters.brandId.toString());
 
-    const data = await apiServerService.get<ProductsWithPriceRangeResponse>(
+    const { data } = await apiServerService.get<ProductsWithPriceRangeResponse>(
       `/products/all?${params.toString()}`,
       { cacheTime: 300 }
     );
@@ -58,11 +54,9 @@ export async function getProductsWithFilter(
   }
 }
 
-
-
 export async function getProducts(page: number = 0, size: number = 32) {
   try {
-    const data = await apiServerService.get<PageResponse<Product>>(
+    const { data } = await apiServerService.get<PageResponse<Product>>(
       `/products?page=${page}&size=${size}`,
       { cacheTime: 300 }
     );
@@ -82,18 +76,16 @@ export async function getProducts(page: number = 0, size: number = 32) {
   }
 }
 
-export async function getFeaturedProducts(): Promise<Product[]>{
+export async function getFeaturedProducts(): Promise<Product[]> {
   try {
-    return (
-      (await apiServerService.get<Product[]>("/products/featured", {
-        cacheTime: 300, // 5 minite
-      })) ?? []
-    );
+    const { data } = await apiServerService.get<Product[]>("/products/featured", {
+      cacheTime: 300,
+    });
+    return data ?? [];
   } catch {
     return [];
   }
 }
-
 
 export async function getRelatedProducts(
   productId: number,
@@ -101,7 +93,7 @@ export async function getRelatedProducts(
   size: number = 8
 ) {
   try {
-    const data = await apiServerService.get<PageResponse<Product>>(
+    const { data } = await apiServerService.get<PageResponse<Product>>(
       `/products/${productId}/related?page=${page}&size=${size}`,
       { cacheTime: 3600 }
     );
@@ -123,9 +115,10 @@ export async function getRelatedProducts(
 // Product by ID
 export async function getProductById(id: number): Promise<Product | null> {
   try {
-    return await apiServerService.get<Product>(`/products/${id}`, {
+    const { data } = await apiServerService.get<Product>(`/products/${id}`, {
       cacheTime: 300,
     });
+    return data ?? null;
   } catch (error) {
     console.error("Error fetching product:", error);
     return null;
@@ -135,9 +128,10 @@ export async function getProductById(id: number): Promise<Product | null> {
 // Product by Slug
 export async function getProductBySlug(slug: string): Promise<ProductDetail | null> {
   try {
-    return await apiServerService.get<ProductDetail>(`/products/slug/${slug}`, {
+    const { data } = await apiServerService.get<ProductDetail>(`/products/slug/${slug}`, {
       cacheTime: 300,
     });
+    return data ?? null;
   } catch (error) {
     console.error("Error fetching product by slug:", error);
     return null;
@@ -151,7 +145,7 @@ export async function getCategoryProducts(
   size: number = 12
 ) {
   try {
-    const data = await apiServerService.get<PageResponse<Product>>(
+    const { data } = await apiServerService.get<PageResponse<Product>>(
       `/categories/${categorySlug}/products?page=${page}&size=${size}`,
       { cacheTime: 300 }
     );
@@ -169,7 +163,6 @@ export async function getCategoryProducts(
     };
   }
 }
-
 
 export async function searchProducts(
   query: string,
@@ -194,14 +187,12 @@ export async function searchProducts(
     if (categoryId) params.set("categoryId", categoryId.toString());
     if (brandId) params.set("brandId", brandId.toString());
 
-    
-    const data = await apiServerService.get<ProductsWithPriceRangeResponse>(
+    const { data } = await apiServerService.get<ProductsWithPriceRangeResponse>(
       `/products/search?${params.toString()}`,
       { cacheTime: 60 }
     );
     
     return data;  
-    
   } catch (error) {
     console.error("Error searching products:", error);
     return {

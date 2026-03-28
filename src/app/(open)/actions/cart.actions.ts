@@ -2,11 +2,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
 import { apiServerService } from "@/lib/api/server";
 import { CartResponse, UpdateCartItemRequest, AddToCartRequest, CheckoutRequest } from "@/types/open/cart.type";
 import { CheckoutResponse } from "@/types/open/checkout";
 import { getCart } from "@/lib/services/cart.server";
+import { forwardSessionCookie } from "@/hooks/utils/cookie";
 
 
 
@@ -17,24 +17,19 @@ export async function addToCart(
   quantity: number
 ): Promise<CartResponse> {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-    const sessionId = cookieStore.get("cartSessionId")?.value;
-    
+ 
     const data: AddToCartRequest = { productId, quantity };
-    const options = token ? { token, ...data } : { sessionId, ...data };
-    
-    
-    const updatedCart = await apiServerService.post<CartResponse>(
+ 
+    const  { data: response, cookie } = await apiServerService.post<CartResponse>(
       "/cart/add",
-      data,
-      options
+      data
     );
     
     revalidatePath("/cart");
     revalidatePath("/products");
-    
-    return updatedCart;
+
+    await forwardSessionCookie(cookie ?? null);
+    return response;
   } catch (error) {
     console.error("Error adding to cart:", error);
     throw new Error("Failed to add to cart");
@@ -46,22 +41,13 @@ export async function updateCartItem(
   quantity: number
 ): Promise<CartResponse> {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-    const sessionId = cookieStore.get("cartSessionId")?.value;
-    
-    const data: UpdateCartItemRequest = { quantity };
-    
 
-    const options = token 
-      ? { token, ...data } 
-      : { sessionId, ...data };
     
-    const updatedCart = await apiServerService.put<CartResponse>(
+    const { data: updatedCart , cookie} = await apiServerService.put<CartResponse>(
       `/cart/update/${itemId}`,
-      options
     );
     
+    await forwardSessionCookie(cookie ?? null);
     revalidatePath("/cart");
     return updatedCart;
   } catch (error) {
@@ -72,24 +58,14 @@ export async function updateCartItem(
 
 export async function removeCartItem(itemId: number): Promise<CartResponse> {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-    const sessionId = cookieStore.get("cartSessionId")?.value;
-    
-    const data: UpdateCartItemRequest = { quantity: 0 };
-    
-    
-    const options = token 
-      ? { token, ...data } 
-      : { sessionId, ...data };
-    
-    const updatedCart = await apiServerService.put<CartResponse>(
-      `/cart/update/${itemId}`,
-      options
+
+     const { data: resp, cookie } = await apiServerService.delete<CartResponse>(
+      `/cart/${itemId}`  
     );
     
+    await forwardSessionCookie(cookie ?? null);
     revalidatePath("/cart");
-    return updatedCart;
+    return resp;
   } catch (error) {
     console.error("Error removing cart item:", error);
     throw new Error("Failed to remove item");
@@ -99,19 +75,13 @@ export async function removeCartItem(itemId: number): Promise<CartResponse> {
 export async function checkout(
   data: CheckoutRequest
 ): Promise<CheckoutResponse> {
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-    const sessionId = cookieStore.get("cartSessionId")?.value;
-    
-    const options = token ? { token } : { sessionId };
-    
-    
-    const response = await apiServerService.post<CheckoutResponse>(
+  try {  
+    const { data: response , cookie} = await apiServerService.post<CheckoutResponse>(
       "/cart/checkout",
-      data,
-      options
-    );
+      data);
+      
+    await forwardSessionCookie(cookie ?? null)
+
     
     revalidatePath("/cart");
     revalidatePath("/checkout");

@@ -1,86 +1,65 @@
-"use server"
+"use server";
+
 import { apiServerService } from "@/lib/api/server";
 import { CartResponse } from "@/types/open/cart.type";
 import { WishlistResponse } from "@/types/open/wishlist.types";
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
+import { forwardSessionCookie } from "@/hooks/utils/cookie";
 
 export async function getWishlist(): Promise<WishlistResponse | null> {
-    try{
-        const cookieStore = await cookies();
-        const token = cookieStore.get("token")?.value;
-        const sessionId = cookieStore.get("cartSessionId")?.value;
-
-        const options = token ? { token } : { sessionId };
-        return await apiServerService.get<WishlistResponse>("/wishlist", options);
-    } catch (error) {
-        console.error("Error fetching wishlist:", error);
-        return null;
-    }
+  try {
+    const { data } = await apiServerService.get<WishlistResponse>("/wishlist");
+    return data;
+  } catch (error) {
+    console.error("Error fetching wishlist:", error);
+    return null;
+  }
 }
 
 export async function addToWishlist(productId: number): Promise<WishlistResponse> {
-    try {
-           const cookieStore = await cookies();
-           const token = cookieStore.get("token")?.value;
-           const sessionId = cookieStore.get("cartSessionId")?.value;
-        
-           const options = token ? { token } : { sessionId };
-           
-            const updatedWishlist = await apiServerService.post<WishlistResponse>(
-                `/wishlist/add/${productId}`,
-                {},
-                options
-                );
-                revalidatePath("/wishlist");
-            return updatedWishlist;
-    }catch (error) {
-        console.error("Error adding to wishlist:", error);
-        throw new Error("Failed to add to wishlist");
-    }
+  try {
+    const { data, cookie } = await apiServerService.post<WishlistResponse>(
+      `/wishlist/add/${productId}`,
+      {}
+    );
+    await forwardSessionCookie(cookie ?? null);
+    revalidatePath("/wishlist");
+    return data;
+  } catch (error) {
+    console.error("Error adding to wishlist:", error);
+    throw new Error("Failed to add to wishlist");
+  }
 }
 
 export async function removeFromWishlist(productId: number): Promise<WishlistResponse> {
-    try{
-        const cookieStore = await cookies();
-        const token = cookieStore.get("token")?.value;
-        const sessionId = cookieStore.get("cartSessionId")?.value;
-     
-        const options = token ? { token } : { sessionId };
-    
-            const updatedWishlist = await apiServerService.delete<WishlistResponse>(
-            `/wishlist/remove/${productId}`,
-            options
-            );
-            
-            revalidatePath("/wishlist");
- 
-            return updatedWishlist;
-    }catch (error) {
-        console.error("Error removing from wishlist:", error);
-        throw new Error("Failed to remove from wishlist");
-    }
+  try {
+    const { data, cookie } = await apiServerService.delete<WishlistResponse>(
+      `/wishlist/remove/${productId}`
+    );
+    await forwardSessionCookie(cookie ?? null);
+    revalidatePath("/wishlist");
+    return data;
+  } catch (error) {
+    console.error("Error removing from wishlist:", error);
+    throw new Error("Failed to remove from wishlist");
+  }
 }
 
 export async function moveToCartFromWishlist(
-  productId: number, 
+  productId: number,
   quantity: number = 1
 ): Promise<{ wishlist: WishlistResponse; cart: CartResponse }> {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-    const sessionId = cookieStore.get("cartSessionId")?.value;
-    
-    const options = token ? { token } : { sessionId };
-    
-    const wishlist = await apiServerService.post<WishlistResponse>(
+    const { data: wishlist, cookie: wishlistCookie } = await apiServerService.post<WishlistResponse>(
       `/wishlist/move-to-cart/${productId}?quantity=${quantity}`,
-      {},
-      options
+      {}
     );
     
-    const cart = await apiServerService.get<CartResponse>("/cart", options);
+    const { data: cart, cookie: cartCookie } = await apiServerService.get<CartResponse>("/cart");
     
+    await forwardSessionCookie(wishlistCookie ?? null);
+    await forwardSessionCookie(cartCookie ?? null);
+
     revalidatePath("/wishlist");
     revalidatePath("/cart");
     
@@ -93,16 +72,8 @@ export async function moveToCartFromWishlist(
 
 export async function isInWishlist(productId: number): Promise<boolean> {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-    const sessionId = cookieStore.get("cartSessionId")?.value;
-    
-    const options = token ? { token } : { sessionId };
-    
-    return await apiServerService.get<boolean>(
-      `/wishlist/check/${productId}`,
-      options
-    );
+    const { data } = await apiServerService.get<boolean>(`/wishlist/check/${productId}`);
+    return data ?? false;
   } catch (error) {
     console.error("Error checking wishlist:", error);
     return false;
@@ -111,14 +82,8 @@ export async function isInWishlist(productId: number): Promise<boolean> {
 
 export async function getWishlistCount(): Promise<number> {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-    const sessionId = cookieStore.get("cartSessionId")?.value;
-    
-    const options = token ? { token } : { sessionId };
-    
-    const count = await apiServerService.get<number>("/wishlist/count", options);
-    return count ?? 0;
+    const { data } = await apiServerService.get<number>("/wishlist/count");
+    return data ?? 0;
   } catch (error) {
     console.error("Error fetching wishlist count:", error);
     return 0;
@@ -127,18 +92,11 @@ export async function getWishlistCount(): Promise<number> {
 
 export async function clearWishlist(): Promise<void> {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-    const sessionId = cookieStore.get("cartSessionId")?.value;
-    
-    const options = token ? { token } : { sessionId };
-    
-    await apiServerService.delete("/wishlist/clear", options);
-    
+    const { cookie } = await apiServerService.delete("/wishlist/clear");
+    await forwardSessionCookie(cookie ?? null);
     revalidatePath("/wishlist");
   } catch (error) {
     console.error("Error clearing wishlist:", error);
     throw new Error("Failed to clear wishlist");
   }
 }
-

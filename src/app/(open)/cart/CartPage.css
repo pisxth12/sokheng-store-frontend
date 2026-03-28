@@ -1,6 +1,122 @@
-.cart-sumury-body{
-    background-color: rgb(250, 250, 250);
-}/* ─── Cart Page ──────────────────────────────────────────────── */
+/* ─── Top Bar ─────────────────────────────────────────────────── */
+.co-topbar {
+  border-bottom: 1px solid #f0f0ee;
+  padding: 1.1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+}
+
+.dark .co-topbar {
+  border-bottom-color: #232320;
+  background: #0f0f0e;
+}
+
+.co-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: #494949;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s, gap 0.25s;
+  text-transform: uppercase;
+}
+
+.dark .co-back-btn { color: #5a5a57; }
+
+.co-back-btn:hover {
+  color: #111110;
+  gap: 0.65rem;
+}
+
+.dark .co-back-btn:hover { color: #f5f5f3; }
+
+.co-topbar-title {
+  font-size: 0.67rem;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6b6b67;
+}
+
+.dark .co-topbar-title { color: #9a9a96; }
+
+.co-steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 0 auto;
+}
+
+.co-step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.63rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c8c8c4;
+}
+
+.dark .co-step { color: #3a3a37; }
+
+.co-step.active {
+  color: #111110;
+}
+
+.dark .co-step.active { color: #f5f5f3; }
+
+.co-step.done {
+  color: #494949;
+}
+
+.dark .co-step.done { color: #acacac; }
+
+.co-step-num {
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  font-family: 'JetBrains Mono', monospace;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.co-step.active .co-step-num {
+  background: #111110;
+  border-color: #111110;
+  color: #fff;
+}
+
+.dark .co-step.active .co-step-num {
+  background: #f5f5f3;
+  border-color: #f5f5f3;
+  color: #0f0f0e;
+}
+
+.co-step.done .co-step-num {
+  background: transparent;
+}
+
+.co-step-divider {
+  width: 2rem;
+  height: 1px;
+  background: #e8e8e4;
+  margin: 0 0.35rem;
+}
+
+.dark .co-step-divider { background: #2a2a27; }
+
+/* ─── Cart Page ──────────────────────────────────────────────── */
 
 /* Page fade in */
 .cp-page-enter {
@@ -114,7 +230,7 @@
   font-size: 0.72rem;
   font-weight: 400;
   letter-spacing: 0.04em;
-  color: #e4e4e4;
+  color: #777777;
   display: flex;
   align-items: center;
   gap: 0.375rem;
@@ -146,6 +262,7 @@
 
 /* ─── Checkout button ────────────────────────────────────────── */
 .cp-checkout-btn {
+  border-radius: 2px;
   position: relative;
   overflow: hidden;
   transition: opacity 0.2s;

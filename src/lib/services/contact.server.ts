@@ -3,7 +3,7 @@ import { apiServerService } from "../api/server";
 
 export async function getContactInfo(): Promise<ContactInfo | null> {
   try {
-    const contact = await apiServerService.get<ContactInfo>("/contacts", {
+    const { data: contact } = await apiServerService.get<ContactInfo>("/contacts", {
       cacheTime: 3600, // Cache 1 hours
     });
     return contact;

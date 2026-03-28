@@ -1,6 +1,6 @@
-import { OrderPageResponse } from "@/types/open/order.type";
+import { Order, OrderPageResponse, TrackOrderResponse } from "@/types/open/order.type";
 import apiClient from "../api/client";
-import { Order, TrackOrderResponse } from "@/types/admin/order.type";
+
 
 export const publicOrderApi = {
   getMyOrders: async (page = 0, size = 10): Promise<OrderPageResponse> => {

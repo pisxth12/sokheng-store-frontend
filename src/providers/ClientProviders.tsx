@@ -9,7 +9,6 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // Your custom providers
 import { AuthProvider } from '@/context/AuthContext';
-import { CartProvider } from '@/context/CartContext';
 import { ThemeProvider } from '@/context/ThemeProvider';
 import { SearchProvider } from '@/context/SearchContext';
 import WishlistProvider from '@/context/WishlistContext';
@@ -48,10 +47,8 @@ export default function ClientProviders({
           <QueryClientProvider client={queryClient}>
           <AuthProvider initialUser={initialUser}>
             <WishlistProvider>
-              <CartProvider initialCount={initialCount} >
                 {children}
                 <Toaster position="top-right" />
-              </CartProvider>
             </WishlistProvider>
           </AuthProvider>
         </QueryClientProvider>
