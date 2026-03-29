@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { X, Smartphone, Key, RotateCw, CheckCircle, ArrowRight } from 'lucide-react';
+import { createPortal } from 'react-dom';
 
 interface OtpModalProps {
   isOpen: boolean;
@@ -114,8 +115,8 @@ const OtpModal = ({ isOpen, onClose, phone, onVerify, onResend }: OtpModalProps)
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
+  const modalContent = (
+     <div className="fixed inset-0 z-1000000000000  flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
       {/* Modal Container */}
       <div className="w-full max-w-md bg-white dark:bg-[#212121] shadow-2xl animate-slideUp">
         
@@ -254,7 +255,10 @@ const OtpModal = ({ isOpen, onClose, phone, onVerify, onResend }: OtpModalProps)
         </div>
       </div>
     </div>
-  );
+  )
+
+
+  return createPortal(modalContent, document.body);
 };
 
 export default OtpModal;

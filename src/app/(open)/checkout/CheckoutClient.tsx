@@ -141,6 +141,7 @@ export default function CheckoutClient({ initialUser, cart }: Props) {
               <textarea
                 className="co-note"
                 rows={3}
+                maxLength={255}
                 placeholder="Any special instructions or delivery notes…"
                 value={note}
                 onChange={(e) => setNote(e.target.value)}

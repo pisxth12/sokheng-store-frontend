@@ -9,9 +9,6 @@ import { getCart } from "@/lib/services/cart.server";
 import { forwardSessionCookie } from "@/hooks/utils/cookie";
 
 
-
-
-
 export async function addToCart(
   productId: number, 
   quantity: number

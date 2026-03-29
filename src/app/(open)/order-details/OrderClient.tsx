@@ -8,8 +8,9 @@ import { QRData, PaymentStatusResponse } from "@/types/open/payment.type";
 import toast from "react-hot-toast";
 import ConfirmModal from "@/components/ui/ConfirmModal";
 import { Order } from "@/types/open/order.type";
-import { ArrowLeft, QrCode, X, CheckCircle2, ShieldCheck } from "lucide-react";
+import { ArrowLeft, QrCode, X, CheckCircle2, ShieldCheck, Download } from "lucide-react";
 import Link from "next/link";
+import { downloadInvoice } from "../actions/invoice.actions";
 
 interface OrderClientProps {
   initialOrder: Order | null;
@@ -103,6 +104,17 @@ export default function OrderClientPage({ initialOrder, orderNumber }: OrderClie
       console.error("Failed to cancel order:", error);
     }
   }, [selectedOrder]);
+
+const handleDownloadInvoice = async () => {
+    const  data  = await downloadInvoice(orderNumber);
+    const blob = new Blob([data], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `invoice_${orderNumber}.pdf`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+};
 
   const handlePayWithQR = async () => {
     try {
@@ -202,7 +214,7 @@ export default function OrderClientPage({ initialOrder, orderNumber }: OrderClie
                     style={{ animationDelay: `${0.15 + idx * 0.05}s` }}
                   >
                     {item.productImage && (
-                      <Link href={`/${item.categorySlug}/${item.productName}`} className="od-item-img-wrap">
+                      <Link href={`/${item.categorySlug}/${item.productSlug}`} className="od-item-img-wrap">
                         <img src={item.productImage} alt={item.productName} />
                       </Link>
                     )}
@@ -226,6 +238,12 @@ export default function OrderClientPage({ initialOrder, orderNumber }: OrderClie
                   {order?.status}
                 </span>
                 <span className="od-order-tag">#{orderNumber}</span>
+                {isCompleted && (
+                  <div onClick={handleDownloadInvoice} className="od-order-tag animate-bounce hover:animate-none  flex items-center gap-1 cursor-pointer hover:opacity-80 transition">
+                    <Download className="w-3 h-3" strokeWidth={1.5} />
+                    <span>Invoice</span>
+                </div>
+                )} 
               </div>
               <p className="od-placed-date">
                 Placed {new Date(order?.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}

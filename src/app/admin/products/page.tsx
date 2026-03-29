@@ -237,6 +237,7 @@ export default function ProductsPage() {
       {showForm && (
         <ProductForm
           product={editingProduct}
+          clearDiscount={clearDicountPrice}
           onClose={() => {
             setShowForm(false);
             setEditingProduct(null);

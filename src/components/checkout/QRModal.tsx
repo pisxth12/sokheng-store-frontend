@@ -26,7 +26,7 @@ const QRModal = ({
   const router = useRouter();
   const [status, setStatus] = useState<"PENDING" | "PAID" | "EXPIRED" | "FAILED">("PENDING");
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const [countdown, setCountdown] = useState(30);
+  const [countdown, setCountdown] = useState(60);
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
 
 
@@ -49,7 +49,7 @@ const QRModal = ({
    useEffect(() => {
     if (!isOpen || status !== "PENDING") return;
     
-    setCountdown(30);
+    setCountdown(60);
     
     countdownRef.current = setInterval(() => {
       setCountdown(prev => {
@@ -92,7 +92,7 @@ const QRModal = ({
       } catch (err) {
         console.error("Polling error:", err);
       }
-    }, 3000);
+    }, 6000);
     return () => stopPolling();
   }, [isOpen, orderNumber, onClose, router]);
 

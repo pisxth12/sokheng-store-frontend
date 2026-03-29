@@ -12,12 +12,14 @@ interface ProductFormProps {
   product?: Product | null;
   onClose: () => void;
   onSuccess: () => void;
+  clearDiscount: (productId: number) => Promise<void>; 
 }
 
 export default function ProductForm({
   product,
   onClose,
   onSuccess,
+  clearDiscount,
 }: ProductFormProps) {
   const { createProduct, updateProduct, saving, toggleMainImage, deleteImage } =
     useProducts();
@@ -153,6 +155,8 @@ export default function ProductForm({
     }
   }, [product]);
 
+
+
   // Load existing images
   useEffect(() => {
     if (product?.images) {
@@ -160,6 +164,21 @@ export default function ProductForm({
       setAltTexts(product.images.map((img) => img.altText || ""));
     }
   }, [product]);
+
+  // ProductForm line ~154
+const handleClearSaleEndDate = async (productId: number) => {
+  try {
+    if (clearDiscount) {
+      await clearDiscount(productId);  // ← Pass productId
+    }
+    setSaleEndDateError(null);
+    setSalePriceError(null);
+    setSalePrice("");
+    setSaleEndDate("");
+  } catch (error) {
+    console.error("Failed to clear discount:", error);
+  }
+};
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -357,7 +376,7 @@ export default function ProductForm({
               <input
                 type="number"
                 step="0.01"
-                min="0"
+                // min="0"
                 value={price}
                 onChange={(e) => setPrice(parseFloat(e.target.value))}
                 className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -393,7 +412,8 @@ export default function ProductForm({
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Sale End Date
               </label>
-              <input
+              <div className="flex gap-2">
+                <input
                 type="date"
                 value={saleEndDate}
                 min={new Date().toISOString().split("T")[0]}
@@ -405,6 +425,9 @@ export default function ProductForm({
                   }`}
                   required={!!salePrice}
                 />
+             
+                <button type="button" onClick={()=> handleClearSaleEndDate(product!.id)}  className="flex-1 px-4 py-2 border-gray-200 border hover:text-white hover:bg-black cursor-pointer  text-sm font-medium rounded-lg disabled:opacity-50 transition-colors flex items-center justify-center gap-2">Clear</button>
+              </div>
                 {saleEndDateError && (
                   <div className="flex items-center gap-1 mt-1 text-xs text-red-600">
                     <AlertCircle className="w-3 h-3" />
