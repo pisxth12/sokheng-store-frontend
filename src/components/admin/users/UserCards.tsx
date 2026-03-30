@@ -4,7 +4,6 @@ import Link from "next/link";
 
 interface Props {
   users: UserListResponse[];
-  onDelete: (id: number, name: string) => void;
   pagination: {
     currentPage: number;
     pageSize: number;
@@ -17,7 +16,6 @@ interface Props {
 
 export default function UserCards({
   users,
-  onDelete,
   pagination,
   onPageChange,
   onPageSizeChange,
@@ -77,13 +75,7 @@ export default function UserCards({
                 <Eye className="w-3 h-3" />
                 View
               </Link>
-              <button
-                onClick={() => onDelete(user.id, user.name)}
-                className="flex-1 flex items-center justify-center gap-1 py-1.5 text-xs text-red-600 hover:text-red-700 border border-gray-200 rounded hover:bg-red-50"
-              >
-                <Trash2 className="w-3 h-3" />
-                Delete
-              </button>
+              
             </div>
           </div>
         ))}

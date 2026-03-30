@@ -78,9 +78,9 @@ export default function CheckoutClient({ initialUser, cart }: Props) {
 
         {/* Top bar */}
         <div className="co-topbar">
-          <button onClick={() => router.push("/cart")} className="co-back-btn">
+          <button onClick={() => router.push("/cart")} className="co-back-btn hidden! sm:flex!">
             <ArrowLeft className="w-3 h-3" strokeWidth={1.5} />
-            Back
+            Back To Cart
           </button>
           <div className="co-steps">  
             <div className="co-step done"><span className="co-step-num">✓</span>Cart</div>
@@ -89,7 +89,7 @@ export default function CheckoutClient({ initialUser, cart }: Props) {
             <div className="co-step-divider" />
             <div className="co-step"><span className="co-step-num">3</span>Confirm</div>
           </div>
-          <span className="co-topbar-title">Checkout</span>
+          <span className="co-topbar-title hidden! sm:flex!">Checkout</span>
         </div>
 
         {/* Grid: left = items+note, right = user+summary */}

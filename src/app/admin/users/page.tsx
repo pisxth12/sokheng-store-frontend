@@ -4,6 +4,7 @@ import DeleteUserDialog from "@/components/admin/users/DeleteUserDialog";
 import UserCards from "@/components/admin/users/UserCards";
 import UserFilters from "@/components/admin/users/UserFilters";
 import UserTable from "@/components/admin/users/UserTable";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useUsers } from "@/hooks/admin/useUsers"
 import { Loader2, UserPlus, LayoutGrid, Table as TableIcon } from "lucide-react";
 import Link from "next/link";
@@ -30,12 +31,7 @@ export default function UsersPage() {
 
   if (error) {
     return (
-      <div className="p-8 text-center">
-        <p className="text-red-600 mb-4">{error}</p>
-        <button onClick={refresh} className="px-4 py-2 bg-black text-white hover:bg-gray-800">
-          Try Again
-        </button>
-      </div>
+     <LoadingSpinner/>
     );
   }  
 
@@ -103,10 +99,7 @@ export default function UsersPage() {
           {viewMode === 'table' ? (
             <UserTable
               users={users}
-              onDelete={(id, name) => {
-                setDeleteId(id);
-                setDeleteName(name);
-              }}
+          
               pagination={{
                 currentPage: pagination.currentPage,
                 pageSize: pagination.pageSize,
@@ -119,10 +112,6 @@ export default function UsersPage() {
           ) : (
             <UserCards
               users={users}
-              onDelete={(id, name) => {
-                setDeleteId(id);
-                setDeleteName(name);
-              }}
               pagination={{
                 currentPage: pagination.currentPage,
                 pageSize: pagination.pageSize,

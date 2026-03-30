@@ -4,7 +4,6 @@ import Link from "next/link";
 
 interface Props {
   users: UserListResponse[];
-  onDelete: (id: number, name: string) => void;
   pagination: {
     currentPage: number;
     pageSize: number;
@@ -17,7 +16,6 @@ interface Props {
 
 export default function UserTable({
   users,
-  onDelete,
   pagination,
   onPageChange,
   onPageSizeChange,
@@ -68,14 +66,10 @@ export default function UserTable({
                     href={`/admin/users/${user.id}`}
                     className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-black"
                   >
+                    <span>View</span>
                     <Eye className="w-4 h-4" />
                   </Link>
-                  <button
-                    onClick={() => onDelete(user.id, user.name)}
-                    className="inline-flex items-center gap-1 text-sm text-red-600 hover:text-red-800"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+              
                 </td>
               </tr>
             ))}

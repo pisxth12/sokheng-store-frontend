@@ -1,6 +1,6 @@
 import { create } from "domain";
 import apiClient from "../api/client";
-import { PageResponse, Product } from "@/types/admin/product.type";
+import { PageResponse, Product, ProductStats } from "@/types/admin/product.type";
 
 export const adminProductApi = {
   getAll: async (page = 0, size = 10) => {
@@ -9,6 +9,13 @@ export const adminProductApi = {
     );
     return res.data;
   },
+
+  getStats: async () => {
+    const res = await apiClient.get<ProductStats>("/admin/products/stats");
+    return res.data;
+  },
+
+
   getById: async (id: number) => {
     const res = await apiClient.get<Product>(`/admin/products/${id}`);
     return res.data;

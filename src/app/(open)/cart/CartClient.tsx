@@ -72,19 +72,22 @@ export default function CartClient({ initialCart }: CartClientProps) {
       <div className="max-w-primary mx-auto px-4">
          {/* Top bar */}
          <div className="co-topbar mb-10">
-          <button onClick={() => router.back()} className="co-back-btn">
+          <button onClick={() => router.back()} className="co-back-btn hidden! sm:flex!">
             <ArrowLeft className="w-3 h-3" strokeWidth={1.5} />
             Back
           </button>
-          <div className="co-steps hidden sm:flex">
+          <div className="co-steps ">
             <div className="co-step active"><span className="co-step-num">✓</span>Cart</div>
             <div className="co-step-divider" />
             <div className="co-step "><span className="co-step-num">2</span>Review</div>
             <div className="co-step-divider" />
             <div className="co-step"><span className="co-step-num">3</span>Confirm</div>
           </div>
-          <span className="co-topbar-title">CART</span>
+          <span className="co-topbar-title hidden sm:flex!">CART</span>
         </div>
+
+       
+
         
         {/* Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-8 gap-12">

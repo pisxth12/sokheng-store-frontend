@@ -1,6 +1,6 @@
 import { PageResponse } from "@/types/admin/order.type";
 import apiClient from "../api/client";
-import { Brand } from "@/types/admin/brand.type";
+import { Brand, BrandStats, } from "@/types/admin/brand.type";
 
 export const adminBrandApi = {
   getAll: async (
@@ -14,6 +14,11 @@ export const adminBrandApi = {
     );
     return res.data;
   },
+  getStats: async (): Promise<BrandStats> => {
+    const res = await apiClient.get<BrandStats>("/admin/brands/stats");
+    return res.data;
+  },
+
 
   search: async (
     q: string,

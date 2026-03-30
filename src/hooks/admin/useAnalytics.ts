@@ -2,7 +2,15 @@ import { adminAnalyticsApi } from "@/lib/admin/analytics";
 import { AnalyticsData } from "@/types/admin/analytics.type";
 import { useEffect, useState } from "react";
 
-export const useAnalytics = () => {
+interface AnalyticsState {
+  data: AnalyticsData | null;
+  loading: boolean;
+  refresh: () => void;
+  error: string | null;
+}
+
+
+export const useAnalytics = (): AnalyticsState => {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

@@ -1,14 +1,14 @@
 "use client";
 
-import DeleteOrderDialog from "@/components/admin/orders/DeleteOrderDialog";
+import { StatsCardsOrder } from "@/components/admin/orders/StatsCards";
 import { useOrders } from "@/hooks/admin/useOrders";
 import { OrderStatus } from "@/types/admin/order.type";
 import { Eye, Trash2, Calendar, User, DollarSign, Tag } from "lucide-react";
-import { useState } from "react";
 
-export default function OrdersPage() {
+export default function AdminOrdersPage() {
   const {
     orders,
+    stats,
     loading,
     error,
     pagination,
@@ -16,12 +16,10 @@ export default function OrdersPage() {
     updateFilters,
     changePage,
     refresh,
-    deleteOrder,
+
     goToDetails,
   } = useOrders();
 
-  const [deleteId, setDeleteId] = useState<number | null>(null);
-  const [deleteNumber, setDeleteNumber] = useState("");
 
   const handleStatusChange = (value: string) => {
     const validStatuses: OrderStatus[] = [
@@ -37,15 +35,6 @@ export default function OrdersPage() {
     }
   };
 
-  const handleDelete = async () => {
-    if (!deleteId) return;
-    try {
-      await deleteOrder(deleteId);
-      setDeleteId(null);
-    } catch (error) {
-      alert("Failed to delete order");
-    }
-  };
 
   const getStatusColor = (status: string) => {
     switch(status) {
@@ -72,11 +61,11 @@ export default function OrdersPage() {
 
   return (
     <div className="p-4 sm:p-8">
-      {/* Header */}
-      <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl font-light text-gray-900">Orders</h1>
-        <p className="text-sm sm:text-base text-gray-500 mt-1">Manage customer orders</p>
-      </div>
+
+
+
+          {/* Stats Cards - Add this! */}
+      {!loading && stats && <StatsCardsOrder stats={stats} />}
 
       {/* Filters Bar */}
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
@@ -85,13 +74,12 @@ export default function OrdersPage() {
           placeholder="Search orders..."
           value={filters.search || ""}
           onChange={(e) => updateFilters({ search: e.target.value })}
-          className="w-full sm:w-80 px-4 py-2 border border-gray-300 focus:border-black focus:outline-none transition-colors rounded-lg"
+          className="w-full sm:w-80 px-4 py-2 border border-gray-300 rounded-lg"
         />
-
         <select
           value={filters.status || ""}
           onChange={(e) => handleStatusChange(e.target.value)}
-          className="w-full sm:w-auto px-4 py-2 border border-gray-300 focus:border-black focus:outline-none transition-colors rounded-lg"
+          className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg"
         >
           <option value="">All Status</option>
           <option value="PENDING">Pending</option>
@@ -100,6 +88,8 @@ export default function OrdersPage() {
           <option value="CANCELLED">Cancelled</option>
         </select>
       </div>
+
+
 
       {/* Loading State */}
       {loading && (
@@ -167,17 +157,7 @@ export default function OrdersPage() {
                         <span>View</span>
                       </button>
                     
-                      <button
-                        onClick={() => {
-                          setDeleteId(order.orderId);
-                          setDeleteNumber(order.orderNumber);
-                        }}
-                        className="inline-flex items-center gap-1 text-sm text-red-600 hover:text-red-800 transition-colors"
-                        title="Delete Order"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                        <span>Delete</span>
-                      </button>
+                     
                     </td>
                   </tr>
                 ))}
@@ -244,16 +224,7 @@ export default function OrdersPage() {
                       View Details
                     </button>
                     
-                    <button
-                      onClick={() => {
-                        setDeleteId(order.orderId);
-                        setDeleteNumber(order.orderNumber);
-                      }}
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition-colors text-sm font-medium"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      Delete
-                    </button>
+                 
                   </div>
                 </div>
               </div>
@@ -294,13 +265,6 @@ export default function OrdersPage() {
         </div>
       )}
 
-      {/* Delete Dialog */}
-      <DeleteOrderDialog
-        isOpen={deleteId !== null}
-        onClose={() => setDeleteId(null)}
-        onConfirm={handleDelete}
-        orderNumber={deleteNumber}
-      />
     </div>
   );
 }

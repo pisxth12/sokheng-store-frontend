@@ -82,14 +82,16 @@ export const useUsers = (initialFilters?: UserFilters) => {
   }, []);
 
   //Change page
-  const changePage = useCallback((size: number) => {
-    setFilters((prev) => ({ ...prev, size, page: 0 }));
-  }, []);
+
+  const changePage = useCallback((page: number) => {
+  setFilters((prev) => ({ ...prev, page }));
+}, []);
+
 
   //Change page size
-  const changePageSize = useCallback((size: number) => {
-    setFilters((prev) => ({ ...prev, size, page: 0 }));
-  }, []);
+ const changePageSize = useCallback((size: number) => {
+  setFilters((prev) => ({ ...prev, size, page: 0 }));
+}, []);
 
   //Clear filters
   const clearFilters = useCallback(() => {
@@ -113,7 +115,7 @@ export const useUsers = (initialFilters?: UserFilters) => {
     if (window.location.pathname === "/admin/users") {
       fetchUsers();
     }
-  }, [fetchUsers, filters]);
+  }, [fetchUsers]);
 
   return {
     users,

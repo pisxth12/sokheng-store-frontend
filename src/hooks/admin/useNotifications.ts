@@ -2,7 +2,21 @@ import { adminNotificationApi } from "@/lib/admin/notifications";
 import { NotificationResponse } from "@/types/admin/notification.type";
 import { useCallback, useEffect, useState, useRef } from "react";
 
-export const useNotifications = () => {
+interface NotificationsState {
+  notifications: NotificationResponse[];
+  unreadCount: number;
+  loading: boolean;
+  error: string | null;
+  fetchNotifications: () => Promise<void>;
+  markAsRead: (id: number) => Promise<void>;
+  markAllAsRead: () => Promise<void>;
+  deleteNotification: (id: number) => Promise<void>;
+  deleteAllNoti: () => Promise<void>;
+  refresh: () => void;
+}
+
+
+export const useNotifications = (): NotificationsState=> {
   const [notifications, setNotifications] = useState<NotificationResponse[]>(
     [],
   );
@@ -77,6 +91,20 @@ export const useNotifications = () => {
     },
     [fetchNotifications],
   );
+  const deleteAllNoti = useCallback(async () => {
+    try {
+      await adminNotificationApi.deleteAll();
+      await fetchNotifications();
+      setUnreadCount(0);
+    }catch (err: any) {
+        const errorMessage =
+          err?.response?.data?.message ||
+          err?.message?.data ||
+          "Failed to fetch notifications";
+        setError(errorMessage);
+        console.error("Fetch error:", err);
+    }
+  }, [fetchNotifications]);
 
   useEffect(() => {
     fetchNotifications();
@@ -91,6 +119,7 @@ export const useNotifications = () => {
     markAsRead,
     markAllAsRead,
     deleteNotification,
+    deleteAllNoti,
     refresh: fetchNotifications,
   };
 };

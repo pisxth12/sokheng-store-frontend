@@ -35,4 +35,7 @@ export const adminNotificationApi = {
   deleteNotification: async (id: number) => {
     await apiClient.delete(`/admin/notifications/${id}`);
   },
+  deleteAll: async () => {
+    await apiClient.delete("/admin/notifications/delete-all");
+  },
 };

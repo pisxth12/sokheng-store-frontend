@@ -79,3 +79,13 @@ export interface PageResponse<T> {
   first: boolean;
   last: boolean;
 }
+
+
+export interface ProductStats {
+  totalProducts: number;
+  activeProducts: number;
+  inactiveProducts: number;
+  lowStock: number;
+  outOfStock: number;
+  featuredProducts: number;
+}

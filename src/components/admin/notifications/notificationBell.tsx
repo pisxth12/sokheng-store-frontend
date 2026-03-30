@@ -7,7 +7,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 export default function NotificationBell() {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const { notifications, fetchNotifications , deleteNotification, markAsRead, markAllAsRead,error , loading , refresh , unreadCount} = useNotifications();
+    const { notifications , deleteNotification, markAsRead, markAllAsRead,deleteAllNoti , unreadCount} = useNotifications();
 
    
 

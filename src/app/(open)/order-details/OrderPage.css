@@ -543,7 +543,7 @@
 }
 
 /* ─── Mobile Responsive ───────────────────────────────────────── */
-@media (max-width: 640px) {
+/* @media (max-width: 640px) {
   .co-topbar {
     flex-direction: column;
     gap: 0.75rem;
@@ -598,4 +598,4 @@
   .od-item-price {
     font-size: 0.6rem;
   }
-}
+} */

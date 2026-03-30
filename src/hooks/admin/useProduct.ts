@@ -1,10 +1,12 @@
 import { adminProductApi } from "@/lib/admin/product";
-import { Product } from "@/types/admin/product.type";
+import { Product, ProductStats } from "@/types/admin/product.type";
 import { useCallback, useEffect, useState } from "react";
 import { adminProductImage } from "./useProductImage";
 
 export const useProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [stats, setStats] = useState<ProductStats | null>(null);
+  const [statsLoading, setStatsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -19,6 +21,29 @@ export const useProducts = () => {
   // Search
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+
+
+  const fetchStats = useCallback(async () => {
+    setStatsLoading(true);
+    setError(null);
+    try {
+      const data = await adminProductApi.getStats();
+      setStats(data);
+    } catch (err: any) {
+      const errorMessage =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Failed to fetch product statistics";
+      setError(errorMessage);
+      console.error("Stats fetch error:", err);
+    } finally {
+      setStatsLoading(false);
+    }
+  },[]);
+
+  useEffect(() => {
+    fetchStats();
+  }, [fetchStats]);
 
   const fetchProducts = useCallback(
     async (page: number) => {
@@ -272,9 +297,9 @@ export const useProducts = () => {
       try {
         await adminProductImage.updateAltText(productId, imageId, altText);
         if (isSearching && searchQuery) {
-          await searchProducts(searchQuery, currentPage); // ✅ Added await
+          await searchProducts(searchQuery, currentPage); 
         } else {
-          await fetchProducts(currentPage); // ✅ Added await
+          await fetchProducts(currentPage); 
         }
       } catch (err: any) {
         setError(
@@ -284,7 +309,7 @@ export const useProducts = () => {
         setSaving(false);
       }
     },
-    [isSearching, searchQuery, currentPage, searchProducts, fetchProducts], // ✅ Added deps
+    [isSearching, searchQuery, currentPage, searchProducts, fetchProducts], 
   );
 
   const goToPage = useCallback(
@@ -334,6 +359,8 @@ export const useProducts = () => {
   return {
     // Data
     products,
+    stats,
+    statsLoading,
     loading,
     error,
     saving,

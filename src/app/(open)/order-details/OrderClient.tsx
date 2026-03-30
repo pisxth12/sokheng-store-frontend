@@ -182,9 +182,9 @@ const handleDownloadInvoice = async () => {
 
         {/* Top bar */}
         <div className="co-topbar">
-          <button onClick={() => router.back()} className="co-back-btn">
+          <button onClick={() => router.back()} className="co-back-btn hidden! sm:flex!">
             <ArrowLeft className="w-3 h-3" strokeWidth={1.5} />
-            Back
+            Back To Checkout
           </button>
           <div className="co-steps hidden sm:flex">
             <div className="co-step done"><span className="co-step-num">✓</span>Cart</div>
@@ -193,7 +193,7 @@ const handleDownloadInvoice = async () => {
             <div className="co-step-divider" />
             <div className="co-step active"><span className="co-step-num">3</span>Confirm</div>
           </div>
-          <span className="co-topbar-title">Order Details</span>
+          <span className="co-topbar-title hidden! sm:flex!">Order Details</span>
         </div>
 
         {/* Two-column layout - Items LEFT, Summary RIGHT */}

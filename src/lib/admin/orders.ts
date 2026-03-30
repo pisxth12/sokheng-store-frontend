@@ -2,6 +2,7 @@ import {
   Order,
   OrderFilters,
   OrderListResponse,
+  OrderStats,
   PageResponse,
 } from "@/types/admin/order.type";
 import apiClient from "../api/client";
@@ -15,6 +16,12 @@ export const adminOrderApi = {
     );
     return response.data;
   },
+  // Get order stats
+  getOrderStats: async () => {
+    const response = await apiClient.get<OrderStats>("/admin/orders/stats");
+    return response.data;
+  },
+
 
   // Get orders by status
   getOrdersByStatus: async (status: string, params?: OrderFilters) => {

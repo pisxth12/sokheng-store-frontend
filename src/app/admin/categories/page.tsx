@@ -14,11 +14,14 @@ import {
   AlertCircle,
 } from "lucide-react";
 import AdminLoadingSpinner from "@/components/ui/AdminLoadingSpinner";
+import { CategoryStatsCards } from "@/components/admin/categories/CategoryStatsCards";
 
-export default function CategoriesPage() {
+export default function AdminCategoriesPage() {
   const {
     categories,
     saving,
+    stats,
+    statsLoading,
     deleteCategory,
     loading,
     error,
@@ -125,6 +128,8 @@ export default function CategoriesPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+       <CategoryStatsCards stats={stats} loading={statsLoading} />
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>

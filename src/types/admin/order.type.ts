@@ -84,3 +84,17 @@ export interface OrderDetails {
     productImage?: string;
   }>;
 }
+
+export interface OrderStats {
+  totalOrders: number;
+  totalRevenue: number;
+  completedOrders: number;
+  pendingOrders: number;
+  processingOrders: number;
+  cancelledOrders: number;
+  avgOrderValue: number;
+  totalOrdersGrowth: number;
+  totalRevenueGrowth: number;
+  pendingOrdersGrowth: number;
+  avgOrderValueGrowth: number;
+}

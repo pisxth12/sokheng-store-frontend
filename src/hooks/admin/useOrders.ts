@@ -6,11 +6,13 @@ import {
   OrderListResponse,
   PageResponse,
   Order,
+  OrderStats,
 } from "@/types/admin/order.type";
 
 export const useOrders = (initialFilters?: OrderFilters) => {
   const [orders, setOrders] = useState<OrderListResponse[]>([]);
   const [order, setOrder] = useState<Order | null>(null);
+  const [stats, setStats] = useState<OrderStats | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState({
@@ -43,27 +45,24 @@ export const useOrders = (initialFilters?: OrderFilters) => {
     setLoading(true);
     setError(null);
     try {
-      let response: PageResponse<OrderListResponse>;
+       const [ordersResponse, statsData] = await Promise.all([
+        filters.search 
+          ? adminOrderApi.searchOrders(filters.search, filters)
+          : filters.status 
+            ? adminOrderApi.getOrdersByStatus(filters.status, filters)
+            : adminOrderApi.getAllOrders(filters),
+        adminOrderApi.getOrderStats()
+      ]);
 
-      if (filters.search) {
-        response = await adminOrderApi.searchOrders(filters.search, filters);
-      } else if (filters.status) {
-        response = await adminOrderApi.getOrdersByStatus(
-          filters.status,
-          filters,
-        );
-      } else {
-        response = await adminOrderApi.getAllOrders(filters);
-      }
-
-      setOrders(response.content);
+      setOrders(ordersResponse.content);
       setPagination({
-        totalPages: response.totalPages,
-        totalElements: response.totalElements,
-        currentPage: response.number,
-        pageSize: response.size,
+        totalPages: ordersResponse.totalPages,
+        totalElements: ordersResponse.totalElements,
+        currentPage: ordersResponse.number,
+        pageSize: ordersResponse.size,
       });
-    } catch (err: any) {
+      setStats(statsData);
+    } catch (err: unknown) {
       setError(extractErrorMessage(err));
     } finally {
       setLoading(false);
@@ -174,12 +173,12 @@ export const useOrders = (initialFilters?: OrderFilters) => {
     error,
     pagination,
     filters,
+    stats,
 
     // Actions
     fetchOrders,
     fetchOrderById,
     updateOrderStatus,
-    deleteOrder,
     updateFilters,
     changePage,
     changePageSize,

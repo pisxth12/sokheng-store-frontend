@@ -15,7 +15,6 @@ export interface Product{
     mainImage: string;
     images: ProductImage[];
 }
-
 export interface ProductDetail extends Product {
     description: string;
     sku: string;          
@@ -25,6 +24,8 @@ export interface ProductDetail extends Product {
     brandSlug?: string;                          
     images: ProductDetailImage[];
 }
+
+
 
 export interface ProductImage {
   id: number;
@@ -119,4 +120,19 @@ export interface ProductsWithPriceRangeResponse {
     minPrice: number;                 
     maxPrice: number;                 
   };
+}
+
+
+
+// ======new =========
+export interface ProductCard {
+  id: number;
+  name: string;
+  slug: string;
+  price: number;
+  salePrice?: number;
+  discountPercent: number;
+  isOnSale: boolean;
+  categorySlug: string;
+  mainImage: string;
 }

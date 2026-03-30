@@ -8,7 +8,6 @@ interface Props{
 }
 
 export default function UserFilters({filters,onFilterChange,onClear}:Props){
-    const roles: UserRole[] = ['USER', 'ADMIN'];
 
      return (
     <div className="mb-6 flex items-center justify-between">
@@ -24,18 +23,6 @@ export default function UserFilters({filters,onFilterChange,onClear}:Props){
             className="w-80 pl-10 pr-4 py-2 border border-gray-300 focus:border-black focus:outline-none"
           />
         </div>
-
-        {/* Role Filter */}
-        <select
-          value={filters.role || ''}
-          onChange={(e) => onFilterChange({ role: e.target.value as UserRole || undefined })}
-          className="px-4 py-2 border border-gray-300 focus:border-black focus:outline-none"
-        >
-          <option value="">All Roles</option>
-          {roles.map(role => (
-            <option key={role} value={role}>{role}</option>
-          ))}
-        </select>
       </div>
 
       {/* Clear Filters */}

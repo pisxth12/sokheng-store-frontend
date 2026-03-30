@@ -19,7 +19,7 @@ export default function CategoryCard({
   onDelete,
   onToggle,
 }: CategoryCardProps) {
-  const { id, title, imageUrl, isActive } = category;
+  const { id, title,description , imageUrl, isActive } = category;
 
   //delete modal
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -69,6 +69,10 @@ export default function CategoryCard({
         <h3 className="font-medium text-gray-900 text-sm mb-2 line-clamp-1">
           {title}
         </h3>
+
+        <p>
+          {description}
+        </p>
 
         {/* Actions */}
         <div className="flex items-center justify-end gap-1">

@@ -1,9 +1,11 @@
 import { adminCategoryApi } from "@/lib/admin/category";
-import { Category } from "@/types/admin/category.type";
+import { Category, CategoryStats } from "@/types/admin/category.type";
 import { useEffect, useState } from "react";
 
 export const useCategory = () => {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [stats, setStats] = useState<CategoryStats | null>(null);
+  const [statsLoading, setStatsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -18,6 +20,28 @@ export const useCategory = () => {
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+
+  const fetchStats = async () => {
+    setStatsLoading(true);
+    setError(null);
+    try {
+      const data = await adminCategoryApi.getStats();
+      setStats(data);
+    } catch (err: any) {
+      const errorMessage =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Failed to fetch category statistics";
+      setError(errorMessage);
+      console.error("Fetch stats error:", err);
+    } finally {
+      setStatsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
 
   const fetchCategories = async (page = currentPage) => {
     setLoading(true);
@@ -187,6 +211,8 @@ export const useCategory = () => {
 
   return {
     categories,
+    stats,
+    statsLoading,
     loading,
     saving,
     error,

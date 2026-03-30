@@ -5,7 +5,9 @@ export interface User{
     name: string;
     email: string;
     phone?: string;
+    address?: string;
     role: UserRole;
+    phoneVerified: boolean;
     emailVerified: boolean;
     createdAt: string;
     updatedAt: string;
@@ -18,6 +20,7 @@ export interface UserListResponse {
     role: UserRole;
     phone?: string;
     emailVerified: boolean;
+    phoneVerified: boolean;
     createdAt: string;
 }
 

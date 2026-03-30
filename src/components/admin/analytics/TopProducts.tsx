@@ -1,4 +1,5 @@
 import { Package } from "lucide-react";
+import Link from "next/link";
 
 interface Props {
   products: Array<{
@@ -25,8 +26,9 @@ export default function TopProducts({ products }: Props) {
       
       <div className="space-y-2">
         {products.map((product, index) => (
-          <div 
+          <Link 
             key={product.id} 
+            href={`/admin/products/${product.id}`}
             className="flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-all duration-200 group"
           >
             {/* Rank Badge */}
@@ -73,7 +75,7 @@ export default function TopProducts({ products }: Props) {
               </p>
               <p className="text-xs text-gray-400 mt-0.5">revenue</p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

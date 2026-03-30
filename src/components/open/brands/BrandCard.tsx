@@ -1,4 +1,3 @@
-// components/brands/BrandCard.tsx
 'use client';
 
 import { memo, useState } from 'react';
@@ -9,9 +8,10 @@ import './BrandCard.css';
 
 interface BrandCardProps {
   brand: Brand;
+  wasDragging?: React.RefObject<boolean>;  // ← add this
 }
 
-export const BrandCard = memo(function BrandCard({ brand }: BrandCardProps) {
+export const BrandCard = memo(function BrandCard({ brand, wasDragging }: BrandCardProps) {
   const [imgError, setImgError]   = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
 
@@ -23,14 +23,19 @@ export const BrandCard = memo(function BrandCard({ brand }: BrandCardProps) {
     <Link
       href={`/${brand.slug}`}
       prefetch={false}
-      className="brand-card"
+      className="brand-card "
+      draggable={false}
+      onClick={(e) => {
+        // Block navigation only if the carousel dragged — clean tap always works
+        if (wasDragging?.current) {
+          e.preventDefault();
+        }
+      }}
     >
-      {/* Skeleton shimmer — removed once image loads */}
       {!imgLoaded && (
         <div className="brand-card__skeleton" aria-hidden="true" />
       )}
 
-      {/* Full-bleed image */}
       <Image
         src={src}
         alt={brand.name}
@@ -40,21 +45,14 @@ export const BrandCard = memo(function BrandCard({ brand }: BrandCardProps) {
         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 17vw"
         onLoad={() => setImgLoaded(true)}
         onError={() => { setImgError(true); setImgLoaded(true); }}
+        draggable={false}
       />
 
-      {/* Dark gradient scrim */}
       <div className="brand-card__overlay" aria-hidden="true" />
 
-      {/* Hover badge */}
       <span className="brand-card__badge" aria-hidden="true">
         {brand.slug}
       </span>
-
-      {/* Name + sub over the image */}
-      <div className="brand-card__body">
-        <span className="brand-card__name">{brand.name}</span>
-        <span className="brand-card__sub">Browse collection</span>
-      </div>
     </Link>
   );
 });

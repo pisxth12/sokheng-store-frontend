@@ -1,0 +1,166 @@
+/* ═══════════════════════════════════════════════
+   BrandSection — CSS Transform Slider
+   ═══════════════════════════════════════════════ */
+
+.bs-section {
+  padding: 2.5rem 0;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.bs-section--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Header ───────────────────────────────────── */
+.bs-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.bs-header__label {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin-bottom: 0.75rem;
+  position: relative;
+}
+
+.bs-header__label::before,
+.bs-header__label::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 2rem;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.bs-header__label::before { right: calc(100% + 0.75rem); }
+.bs-header__label::after  { left:  calc(100% + 0.75rem); }
+
+.bs-header__title {
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+
+.bs-header__sub {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* ── Carousel ─────────────────────────────────── */
+.bs-carousel {
+  position: relative;
+}
+
+.bs-fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 64px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* ── Viewport ─────────────────────────────────── */
+.bs-viewport {
+  overflow: hidden;
+  cursor: default;
+  /* remove touch-action here */
+  -webkit-user-select: none;
+  user-select: none;
+  border-radius: 0.5rem;
+}
+
+.bs-track {
+  display: flex;
+  will-change: transform;
+  touch-action: pan-y;  /* ← move here so native vertical scroll still works */
+}
+
+.bs-viewport--dragging {
+  cursor: grabbing;         /* ← only show grabbing cursor during actual drag */
+}
+
+/* ── Track ────────────────────────────────────── */
+
+
+/* ── Slides ───────────────────────────────────── */
+.bs-slide {
+  flex-shrink: 0;
+  padding: 0 0.5rem;
+  /* No opacity/transform default — slides are always visible */
+}
+
+/* Entrance animation — only fires when section enters viewport */
+.bs-section--visible .bs-slide {
+  animation: bs-slideUp 0.05s ease both;
+}
+
+@keyframes bs-slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Arrows ───────────────────────────────────── */
+.bs-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  margin: 0 1.25rem;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 50%;
+  color: #374151;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  transition:
+    opacity    0.25s ease,
+    transform  0.2s  cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 0.2s  ease,
+    box-shadow 0.2s  ease;
+}
+
+.bs-carousel:hover .bs-arrow { opacity: 1; }
+
+.bs-arrow:hover {
+
+  border-color: #111827;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.bs-arrow:active { transform: translateY(-50%) scale(0.95); }
+
+.bs-arrow--prev { left:  -1.25rem; }
+.bs-arrow--next { right: -1.25rem; }
+
+@media (max-width: 768px) {
+  .bs-arrow { opacity: 0.75; width: 2rem; height: 2rem; }
+  .bs-arrow--prev { left:  -0.75rem; }
+  .bs-arrow--next { right: -0.75rem; }
+}
+

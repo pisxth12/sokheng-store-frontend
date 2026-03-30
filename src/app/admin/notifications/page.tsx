@@ -25,6 +25,7 @@ export default function NotificationsPage() {
     markAsRead,
     markAllAsRead,
     deleteNotification,
+    deleteAllNoti,
     refresh,
   } = useNotifications();
 
@@ -151,6 +152,12 @@ export default function NotificationsPage() {
                 Mark all read
               </button>
             )}
+            <button 
+              onClick={deleteAllNoti}
+              className="flex items-center gap-1.5 px-3.5 py-2 bg-red-500 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors">
+              <Trash2 size={14} />
+              Delete all
+            </button>
             <button
               onClick={refresh}
               title="Refresh"

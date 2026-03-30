@@ -18,11 +18,14 @@ import { Product } from "@/types/admin/product.type";
 import toast from "react-hot-toast";
 import { adminProductApi } from "@/lib/admin/product";
 import ProductForm from "@/components/admin/products/ProductForm";
+import { useProducts } from "@/hooks/admin/useProduct";
 
 export default function AdminProductDetail() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+
+  const { clearDicountPrice} = useProducts();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -471,6 +474,7 @@ export default function AdminProductDetail() {
             setOpenEditModal(false);
           }}
           onClose={() => setOpenEditModal(false)}
+          clearDiscount={clearDicountPrice}
         />
       )}
     </div>

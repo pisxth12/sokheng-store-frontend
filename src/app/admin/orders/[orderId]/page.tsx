@@ -10,11 +10,10 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 
 export default function OrderDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const orderId  = parseInt(params.orderId as string);
   
   
-  const { order, loading, error, fetchOrderById, deleteOrder, updateOrderStatus , goToDetails} = useOrders();
+  const { order, loading, error, fetchOrderById,  updateOrderStatus , goToDetails} = useOrders();
 
   useEffect(() => {
     if (orderId) fetchOrderById(orderId);
@@ -33,15 +32,7 @@ export default function OrderDetailPage() {
     }
   };
 
-  const handleDelete = async () => {
-    if (!confirm('Delete this order?')) return;
-    try {
-      await deleteOrder(orderId );
-      router.push('/admin/orders');
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
+
 
   if (!order) {
     return (
@@ -103,12 +94,7 @@ export default function OrderDetailPage() {
             <option value="COMPLETED">Completed</option>
             <option value="CANCELLED">Cancelled</option>
           </select>
-          <button
-            onClick={handleDelete}
-            className="flex-1 sm:flex-none px-4 py-2 border border-red-300 text-red-600 hover:bg-red-50 text-sm rounded-lg transition-colors"
-          >
-            Delete
-          </button>
+         
         </div>
       </div>
 
@@ -118,7 +104,7 @@ export default function OrderDetailPage() {
         <div className="border border-gray-200 p-4 rounded-lg bg-white">
           <p className="text-xs text-gray-500 mb-2 uppercase tracking-wider">Customer</p>
           <p className="font-medium text-gray-900">{order.customerName}</p>
-          <p className="text-sm text-gray-600 mt-2 break-words">{order.email}</p>
+          <p className="text-sm text-gray-600 mt-2 wrap-break-word">{order.email}</p>
           <p className="text-sm text-gray-600">{order.phone}</p>
         </div>
 
@@ -213,15 +199,6 @@ export default function OrderDetailPage() {
           </table>
         </div>
 
-        {/* Mobile Items List Alternative (if you prefer cards instead of table) */}
-        <div className="block md:hidden p-4 bg-gray-50 border-t border-gray-200">
-          <button
-            onClick={() => goToDetails(order.orderId)}
-            className="w-full py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
-          >
-            Manage Order Items
-          </button>
-        </div>
       </div>
 
       {/* Back to Orders Link - Mobile friendly */}

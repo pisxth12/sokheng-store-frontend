@@ -46,3 +46,13 @@ export interface UpdateBrandRequest {
   isActive?: boolean;
   categoryIds?: number[];
 }
+
+export interface BrandStats {
+  totalBrands: number;
+  activeBrands: number;
+  inactiveBrands: number;
+  brandsWithProducts: number;
+  emptyBrands: number;
+
+
+}

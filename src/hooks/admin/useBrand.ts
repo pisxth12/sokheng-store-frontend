@@ -1,10 +1,12 @@
 import { adminBrandApi } from "@/lib/admin/brand";
-import { Brand } from "@/types/admin/brand.type";
+import { Brand, BrandStats } from "@/types/admin/brand.type";
 import { useCallback, useEffect, useState } from "react";
 
 interface BrandState {
   // Data
   brands: Brand[];
+  stats: BrandStats | null;
+  statsLoading: boolean;
   loading: boolean;
   saving: boolean;
   error: string | null;
@@ -46,6 +48,8 @@ interface BrandState {
 
 export const useBrand = (): BrandState => {
   const [brands, setBrands] = useState<Brand[]>([]);
+  const [stats, setStats] = useState<BrandStats | null>(null);
+  const [statsLoading, setStatsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -64,6 +68,25 @@ export const useBrand = (): BrandState => {
   // Sorting
   const [sortBy, setSortBy] = useState("name");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+
+  const fetchStats = useCallback(async () => {
+    setError(null);
+    try {
+      const response = await adminBrandApi.getStats();
+      setStats(response);
+    } catch (err: any) {
+      const errorMessage =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Failed to fetch brand statistics";
+      setError(errorMessage);
+      console.error("Stats fetch error:", err);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchStats();
+  }, [fetchStats]);
 
   const fetchBrands = useCallback(
     async (page = currentPage) => {
@@ -326,6 +349,8 @@ export const useBrand = (): BrandState => {
   return {
     // Data
     brands,
+    stats,
+    statsLoading,
     loading,
     saving,
     error,

@@ -1,3 +1,4 @@
+import { CategoryStats } from "@/types/admin/category.type";
 import apiClient from "../api/client";
 
 export const adminCategoryApi = {
@@ -5,6 +6,11 @@ export const adminCategoryApi = {
     const res = await apiClient.get(
       "/admin/categories?page=" + page + "&size=" + size,
     );
+    return res.data;
+  },
+
+  getStats: async () => {
+    const res = await apiClient.get<CategoryStats>("/admin/categories/stats");
     return res.data;
   },
 

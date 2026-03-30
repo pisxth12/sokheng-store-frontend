@@ -2,7 +2,6 @@
 
 import React, { useState, useCallback, useEffect } from "react";
 import { Brand } from "@/types/admin/brand.type";
-import { Category } from "@/types/admin/category.type";
 import { useCategory } from "@/hooks/admin/useCategory";
 import { X, Upload, Loader2 } from "lucide-react";
 import Image from "next/image";
@@ -32,6 +31,7 @@ export default function BrandForm({
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(brand?.logoUrl || null);
   const [slugEdited, setSlugEdited] = useState(false);
+  const [isActive, setIsActive] = useState(brand?.isActive || false);
 
   // ============= HOOKS =============
   const { categories, loading: loadingCategories } = useCategory();
@@ -64,6 +64,7 @@ export default function BrandForm({
     }
   }, []);
 
+  
   const handleRemoveLogo = useCallback(() => {
     setLogoFile(null);
     setLogoPreview(null);
@@ -83,6 +84,8 @@ export default function BrandForm({
     const formData = new FormData();
     formData.append("name", name);
     formData.append("slug", slug);
+    formData.append("isActive", JSON.stringify(isActive));
+    
     if (description) formData.append("description", description);
     if (logoFile) formData.append("logo", logoFile);
     
@@ -90,9 +93,10 @@ export default function BrandForm({
     selectedCategories.forEach(id => {
       formData.append("categoryIds", id.toString());
     });
+    
 
     await onSubmit(formData);
-  }, [name, slug, description, logoFile, selectedCategories, onSubmit]);
+  }, [name, slug, isActive, description, logoFile, selectedCategories, onSubmit]);
 
   // ============= RENDER =============
   return (
@@ -214,6 +218,23 @@ export default function BrandForm({
               placeholder="Brief description of the brand..."
             />
           </div>
+
+          <div>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="isActive"
+                checked={isActive}
+                onChange={(e) => setIsActive(e.target.checked)}
+                className="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
+              />
+              <label htmlFor="isActive" className="text-sm text-gray-700">
+                Active
+              </label>
+            </div>
+          </div>
+
+
 
           {/* Categories */}
           <div>

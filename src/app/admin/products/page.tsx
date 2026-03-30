@@ -13,10 +13,13 @@ import {
   Loader2,
 } from "lucide-react";
 import { useProducts } from "@/hooks/admin/useProduct";
+import { ProductStatsCards } from "@/components/admin/products/ProductStatsCards";
 
-export default function ProductsPage() {
+export default function AdminProductsPage() {
   const {
     products,
+    stats,
+    statsLoading,
     loading,
     error,
     success,
@@ -77,6 +80,8 @@ export default function ProductsPage() {
 
   return (
     <div className="p-6">
+
+        {stats && <ProductStatsCards stats={stats} loading={statsLoading} />}
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>

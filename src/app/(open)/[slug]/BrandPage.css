@@ -1,11 +1,9 @@
 /* ─── Brand Page ────────────────────────────────────────────── */
 
 .bp-page {
-  min-height: 100vh;
   background: #ffffff;
   font-family: 'DM Sans', sans-serif;
   margin: 0 auto;
-  padding: 0 1.5rem;
 }
 
 .dark .bp-page {

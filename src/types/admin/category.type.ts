@@ -19,3 +19,11 @@ export interface CategoryRequest {
 export interface CategoryResponse extends Category {
   message: string;
 }
+
+export interface CategoryStats {
+  totalCategories: number;
+  activeCategories: number;
+  inactiveCategories: number;
+  categoriesWithProducts: number;
+  emptyCategories: number;
+}

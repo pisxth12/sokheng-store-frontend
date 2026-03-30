@@ -1,7 +1,7 @@
 "use client"
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useUsers } from "@/hooks/admin/useUsers";
-import { AlertCircle, ArrowLeft, Calendar, Link, Mail, Phone, Shield } from "lucide-react";
+import { AlertCircle, ArrowLeft, Calendar, Home, Link, Mail, Phone, Shield } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -39,11 +39,7 @@ export default function UserDetailPage(){
   };
 
 
- if (loading) {
-    return (
-      <LoadingSpinner />
-    );
-  }
+
 
   if (error || !user) {
     return (
@@ -61,6 +57,13 @@ export default function UserDetailPage(){
     );
   }
 
+   if (loading) {
+    return (
+      <LoadingSpinner />
+    );
+  }
+
+
     return (
     <div className="p-8 max-w-4xl mx-auto">
       {/* Header */}
@@ -71,20 +74,7 @@ export default function UserDetailPage(){
           </Link>
           <h1 className="text-2xl font-light">User Details</h1>
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => router.push(`/admin/users/${user.id}/edit`)}
-            className="px-4 py-2 border border-gray-300 hover:border-black"
-          >
-            Edit
-          </button>
-          <button
-            onClick={() => setDeleteDialog(true)}
-            className="px-4 py-2 border border-red-300 text-red-600 hover:bg-red-50"
-          >
-            Delete
-          </button>
-        </div>
+   
       </div>
 
       {/* User Info Grid */}
@@ -125,6 +115,13 @@ export default function UserDetailPage(){
               </div>
             )}
 
+            {user.address && (
+              <div className="flex items-center gap-3 text-gray-600">
+                <Home className="w-4 h-4" />
+                <span>{user.address}</span>
+              </div>
+            )}
+
             <div className="flex items-center gap-3 text-gray-600">
               <Calendar className="w-4 h-4" />
               <span>Joined {formatDate(user.createdAt)}</span>
@@ -148,6 +145,12 @@ export default function UserDetailPage(){
             <div>
               <p className="text-sm text-gray-500">Account Status</p>
               <p className="text-green-600">Active</p>
+            </div>
+            <div onClick={()=> alert(user.phoneVerified)}>
+              <p className="text-sm text-gray-500">Phone Verification</p>
+              <p className={user.phoneVerified ? 'text-green-600' : 'text-yellow-600'}>
+                {user.phoneVerified ? 'Verified' : 'Pending'}
+              </p>
             </div>
             <div>
               <p className="text-sm text-gray-500">Email Verification</p>
