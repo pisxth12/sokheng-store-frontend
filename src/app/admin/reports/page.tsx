@@ -1,12 +1,14 @@
-'use client';
+"use client";
 
-import { useReports } from '@/hooks/admin/useReports';
-import ReportHeader from '@/components/admin/reports/ReportHeader';
-import ReportFilters from '@/components/admin/reports/ReportFilters';
-import ReportSummary from '@/components/admin/reports/ReportSummary';
-import ReportCharts from '@/components/admin/reports/ReportCharts';
-import ReportTable from '@/components/admin/reports/ReportTable';
-import { Loader2 } from 'lucide-react';
+import { useReports } from "@/hooks/admin/useReports";
+import ReportFilters from "@/components/admin/reports/ReportFilters";
+import ReportSummary from "@/components/admin/reports/ReportSummary";
+import ReportCharts from "@/components/admin/reports/ReportCharts";
+import ProductReportTable from "@/components/admin/reports/ProoductReportTable";
+import { Loader2 } from "lucide-react";
+import BrandReportTable from "@/components/admin/reports/BrandReportTable";
+import CategoryReportTable from "@/components/admin/reports/CategoryReportTable";
+import TopSpendersTable from "@/components/admin/reports/TopSpendersTable";
 
 export default function ReportsPage() {
   const {
@@ -17,14 +19,14 @@ export default function ReportsPage() {
     selectedRange,
     handleRangeChange,
     handleDownloadPdf,
-    refresh
+    refresh,
   } = useReports();
 
   if (error) {
     return (
       <div className="p-6 text-center">
         <p className="text-red-600 mb-4">{error}</p>
-        <button 
+        <button
           onClick={refresh}
           className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
         >
@@ -36,10 +38,7 @@ export default function ReportsPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <ReportHeader 
-        title="Reports" 
-        subtitle="Generate and download PDF reports" 
-      />
+      
 
       {options && (
         <ReportFilters
@@ -68,8 +67,13 @@ export default function ReportsPage() {
             monthlyData={data.monthlyData}
             statusData={data.statusData}
           />
+           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <ProductReportTable products={data.topProducts} />
+            <BrandReportTable brands={data.topBrands || []} />
+            <CategoryReportTable categories={data.topCategories || []} />
+            <TopSpendersTable spenders={data.topSpenders || []} />
+          </div>
 
-          <ReportTable products={data.topProducts} />
         </div>
       ) : null}
     </div>

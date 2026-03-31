@@ -3,25 +3,25 @@
 import DeleteUserDialog from "@/components/admin/users/DeleteUserDialog";
 import UserCards from "@/components/admin/users/UserCards";
 import UserFilters from "@/components/admin/users/UserFilters";
+import UserStatsCard from "@/components/admin/users/UserStatsCard";
 import UserTable from "@/components/admin/users/UserTable";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useUsers } from "@/hooks/admin/useUsers"
-import { Loader2, UserPlus, LayoutGrid, Table as TableIcon } from "lucide-react";
+import { Loader2, UserPlus, LayoutGrid, Table as TableIcon, BadgeCheck, Mail, Users, Phone, User, ShoppingBag, TrendingUp } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function UsersPage() {
   const {
     users,
-    loading,
-    error,
+    stats,
+    statsLoading, 
     pagination,
     filters,
     updateFilters,
     changePage,
     changePageSize,
     deleteUser,
-    refresh,
     clearFilters
   } = useUsers();
 
@@ -29,11 +29,18 @@ export default function UsersPage() {
   const [deleteName, setDeleteName] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'table' | 'card'>('table');
 
-  if (error) {
-    return (
-     <LoadingSpinner/>
-    );
-  }  
+
+ useEffect(() => {
+  const handleResize = () => {
+    if (window.innerWidth < 1200) setViewMode('card'); // md+ => card
+    else setViewMode('table'); // mobile => table
+  }
+
+  handleResize(); // initial check
+  window.addEventListener('resize', handleResize);
+  return () => window.removeEventListener('resize', handleResize);
+}, []);
+
 
   const handleDelete = async () => {
     if (deleteId) {
@@ -46,15 +53,23 @@ export default function UsersPage() {
     }
   }
 
+
+
   return (
-    <div className="p-8">
+    <div className="p-8"  
+    >
+     <UserStatsCard stats={stats} loading={statsLoading} />
       {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-light text-gray-900">Users</h1>
-          <p className="text-gray-500 mt-1">Manage customer accounts</p>
-        </div>
-        <div className="flex items-center gap-3">
+      <div className="flex justify-between md:justify-start items-center mb-8 flex-col">
+     
+        <div className="flex items-center gap-3  justify-end w-full mt-4 md:mt-0">
+          <div>
+            <UserFilters
+              filters={filters}
+              onFilterChange={updateFilters}
+              onClear={clearFilters}
+            />
+          </div>
           {/* View Toggle */}
           <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
             <button
@@ -82,19 +97,9 @@ export default function UsersPage() {
         </div>
       </div>
 
-      {/* Filters */}
-      <UserFilters
-        filters={filters}
-        onFilterChange={updateFilters}
-        onClear={clearFilters}
-      />
 
-      {/* Users Table/Cards */}
-      {loading ? (
-        <div className="flex justify-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
-        </div>
-      ) : (
+
+
         <>
           {viewMode === 'table' ? (
             <UserTable
@@ -123,7 +128,7 @@ export default function UsersPage() {
             />
           )}
         </>
-      )}
+      
 
       {/* Delete Dialog */}
       <DeleteUserDialog

@@ -1,5 +1,6 @@
 "use client";
 
+import { AnalyticsStatsCard } from "@/components/admin/analytics/AnalyticsStatsCard";
 import CategorySales from "@/components/admin/analytics/CategorySale";
 import RevenueChart from "@/components/admin/analytics/charts/RevenueChart";
 import StatusChart from "@/components/admin/analytics/charts/StatusChart";
@@ -41,57 +42,21 @@ export default function AnalyticsPage() {
     );
   }
 
-  const stats = [
-  {
-    label: "Total Revenue",
-    value: data?.overview?.totalRevenue ? `$${data.overview.totalRevenue.toLocaleString()}` : "$0",
-    icon: DollarSign,
-    color: "bg-green-500"
-  },
-  {
-    label: "Total Orders",
-    value: data?.overview?.totalOrders?.toLocaleString() || "0",
-    icon: ShoppingBag,
-    color: "bg-blue-500"
-  },
-  {
-    label: "Total Users",
-    value: data?.overview?.totalUsers?.toLocaleString() || "0",
-    icon: Users,
-    color: "bg-purple-500"
-  },
-  {
-    label: "Total Products",
-    value: data?.overview?.totalProducts?.toLocaleString() || "0",
-    icon: Package,
-    color: "bg-orange-500"
-  }
-];
+  const stats = {
+    totalRevenue: data?.overview?.totalRevenue || 0,
+    totalOrders: data?.overview?.totalOrders || 0,
+    totalUsers: data?.overview?.totalUsers || 0,
+    totalProducts: data?.overview?.totalProducts || 0,
+  };
+
 
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
-        <p className="text-gray-500 mt-1">Track your store performance</p>
-      </div>
+      
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-        {stats.map((stat) => (
-          <div key={stat.label} className="bg-white p-5 rounded-xl border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500">{stat.label}</p>
-                <p className="text-xl font-bold text-gray-900 mt-1">{stat.value}</p>
-              </div>
-              <div className={`${stat.color} w-10 h-10 rounded-lg flex items-center justify-center text-white`}>
-                <stat.icon className="w-5 h-5" />
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+     <AnalyticsStatsCard stats={stats} />
 
       {/* Comparison Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3  gap-4">

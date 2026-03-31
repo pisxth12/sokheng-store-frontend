@@ -21,9 +21,9 @@ interface Props {
 
 export default function ReportCharts({ monthlyData, statusData }: Props) {
   return (
-    <div className="space-y-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {/* Bar Chart */}
-      <div>
+      <div className="border rounded-2xl p-2 border-slate-300">
         <h3 className="text-lg font-medium text-gray-900 mb-4">
           Monthly Performance
         </h3>
@@ -55,7 +55,7 @@ export default function ReportCharts({ monthlyData, statusData }: Props) {
 
       {/* Pie Chart */}
       {statusData.length > 0 && (
-        <div>
+        <div className="border rounded-2xl p-2 border-slate-300">
           <h3 className="text-lg font-medium text-gray-900 mb-4">
             Order Status
           </h3>

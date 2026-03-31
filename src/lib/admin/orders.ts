@@ -6,6 +6,7 @@ import {
   PageResponse,
 } from "@/types/admin/order.type";
 import apiClient from "../api/client";
+import { downloadInvoice } from "@/app/(open)/actions/invoice.actions";
 
 export const adminOrderApi = {
   // Get all orders with pagination
@@ -61,5 +62,12 @@ export const adminOrderApi = {
   // Delete order
   deleteOrder: async (id: number) => {
     await apiClient.delete(`/admin/orders/${id}`);
+  },
+
+  downloadInvoice: async (orderNumber: string) => {
+     const response = await apiClient.get(`/admin/orders/${orderNumber}/invoice`, {
+      responseType: "blob",
+    });
+    return response.data;
   },
 };

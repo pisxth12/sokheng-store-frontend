@@ -3,6 +3,7 @@ import {
   User,
   UserFilters,
   UserListResponse,
+  UserStats,
 } from "@/types/admin/user.type";
 import apiClient from "../api/client";
 
@@ -15,6 +16,13 @@ export const adminUserApi = {
     );
     return response.data;
   },
+
+  //Get user stats
+  getStats: async () => {
+    const response = await apiClient.get<UserStats>("/admin/users/stats");
+    return response.data;
+  },
+
 
   //Get user by id
   getUserById: async (id: number) => {

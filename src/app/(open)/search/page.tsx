@@ -65,6 +65,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   return (
     <SearchClient
+
       initialQuery={query}
       initialProducts={initialProducts}
       initialTotal={initialTotal}

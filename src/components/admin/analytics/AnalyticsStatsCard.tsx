@@ -1,66 +1,64 @@
-// components/admin/brands/BrandStatsCards.tsx
-import { BrandStats } from "@/types/admin/brand.type";
-import { Tag, CheckCircle, XCircle, Package, AlertCircle } from "lucide-react";
+"use client";
 
-interface BrandStatsCardsProps {
-  stats: BrandStats | null;
+import { DollarSign, ShoppingBag, Users, Package } from "lucide-react";
+
+interface AnalyticsStatsCardProps {
+  stats: {
+    totalRevenue: number;
+    totalOrders: number;
+    totalUsers: number;
+    totalProducts: number;
+  };
   loading?: boolean;
 }
 
 const colorMap: Record<string, { bar: string; dot: string; border: string; value: string; iconBg: string; iconColor: string }> = {
-  total: { 
-    bar: 'bg-blue-500', dot: 'bg-blue-500', border: 'border-blue-100', value: 'text-blue-800',
-    iconBg: 'bg-blue-100', iconColor: 'text-blue-600'
-  },
-  active: { 
+  revenue: { 
     bar: 'bg-green-500', dot: 'bg-green-500', border: 'border-green-100', value: 'text-green-800',
     iconBg: 'bg-green-100', iconColor: 'text-green-700'
   },
-  inactive: { 
-    bar: 'bg-gray-400', dot: 'bg-gray-400', border: 'border-gray-100', value: 'text-gray-500',
-    iconBg: 'bg-gray-100', iconColor: 'text-gray-500'
+  orders: { 
+    bar: 'bg-blue-500', dot: 'bg-blue-500', border: 'border-blue-100', value: 'text-blue-800',
+    iconBg: 'bg-blue-100', iconColor: 'text-blue-700'
   },
-  withProducts: { 
-    bar: 'bg-indigo-500', dot: 'bg-indigo-500', border: 'border-indigo-100', value: 'text-indigo-800',
-    iconBg: 'bg-indigo-100', iconColor: 'text-indigo-700'
+  users: { 
+    bar: 'bg-purple-500', dot: 'bg-purple-500', border: 'border-purple-100', value: 'text-purple-800',
+    iconBg: 'bg-purple-100', iconColor: 'text-purple-700'
   },
-  empty: { 
-    bar: 'bg-amber-500', dot: 'bg-amber-500', border: 'border-amber-100', value: 'text-amber-800',
-    iconBg: 'bg-amber-100', iconColor: 'text-amber-700'
+  products: { 
+    bar: 'bg-orange-500', dot: 'bg-orange-500', border: 'border-orange-100', value: 'text-orange-800',
+    iconBg: 'bg-orange-100', iconColor: 'text-orange-700'
   },
 };
 
 const cardsConfig = [
-  { id: 'total', label: 'Total Brands', key: 'totalBrands', icon: Tag, chip: 'brands', colorKey: 'total' },
-  { id: 'active', label: 'Active', key: 'activeBrands', icon: CheckCircle, chip: 'active', colorKey: 'active' },
-  { id: 'inactive', label: 'Inactive', key: 'inactiveBrands', icon: XCircle, chip: 'inactive', colorKey: 'inactive' },
-  { id: 'withProducts', label: 'With Products', key: 'brandsWithProducts', icon: Package, chip: 'stocked', colorKey: 'withProducts' },
-  { id: 'empty', label: 'Empty', key: 'emptyBrands', icon: AlertCircle, chip: 'empty', colorKey: 'empty' },
+  { id: 'revenue', label: 'Total Revenue', key: 'totalRevenue', icon: DollarSign, chip: 'USD', prefix: '$', colorKey: 'revenue' },
+  { id: 'orders', label: 'Total Orders', key: 'totalOrders', icon: ShoppingBag, chip: 'orders', prefix: '', colorKey: 'orders' },
+  { id: 'users', label: 'Total Users', key: 'totalUsers', icon: Users, chip: 'accounts', prefix: '', colorKey: 'users' },
+  { id: 'products', label: 'Total Products', key: 'totalProducts', icon: Package, chip: 'items', prefix: '', colorKey: 'products' },
 ];
 
-export function BrandStatsCards({ stats, loading }: BrandStatsCardsProps) {
+export function AnalyticsStatsCard({ stats, loading }: AnalyticsStatsCardProps) {
   if (loading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-        {[...Array(5)].map((_, i) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        {[...Array(4)].map((_, i) => (
           <div key={i} className="relative bg-white rounded-2xl pt-7 pb-6 px-6 border-[1.5px] border-gray-100 animate-pulse">
             <div className="absolute top-0 left-0 right-0 h-0.75 bg-gray-200" />
             <div className="w-2 h-2 rounded-full bg-gray-200 mb-3" />
             <div className="h-3 bg-gray-200 rounded w-20 mb-2" />
-            <div className="h-8 bg-gray-200 rounded w-12" />
-            <div className="absolute bottom-4 right-5 w-10 h-2 bg-gray-200 rounded" />
+            <div className="h-8 bg-gray-200 rounded w-24" />
+            <div className="absolute bottom-4 right-5 w-12 h-2 bg-gray-200 rounded" />
           </div>
         ))}
       </div>
     );
   }
 
-  if (!stats) return null;
-
   return (
-    <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-      {cardsConfig.map(({ id, label, key, icon: Icon, chip, colorKey }) => {
-        const value = stats[key as keyof BrandStats];
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      {cardsConfig.map(({ id, label, key, icon: Icon, chip, prefix, colorKey }) => {
+        const value = stats[key as keyof typeof stats];
         const c = colorMap[colorKey];
         
         return (
@@ -86,7 +84,7 @@ export function BrandStatsCards({ stats, loading }: BrandStatsCardsProps) {
             
             {/* Value */}
             <span className={`block text-4xl font-extrabold tracking-tight leading-none ${c.value}`}>
-              {value.toLocaleString()}
+              {prefix}{value}
             </span>
             
             {/* Chip */}

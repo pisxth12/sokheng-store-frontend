@@ -9,7 +9,7 @@ export default function UserDetailPage(){
     const params = useParams();
     const router = useRouter();
     const id = parseInt(params.id as string);
-    const { fetchUserById , loading , error , deleteUser, user} = useUsers();
+    const { fetchUserById , loading , error , deleteUser, user , } = useUsers();
     const [deleteDialog, setDeleteDialog] = useState(false);
     console.log(id)
 
@@ -38,31 +38,11 @@ export default function UserDetailPage(){
     });
   };
 
-
-
-
-  if (error || !user) {
+ if(loading || !user) {
     return (
-      <div className="p-8 text-center">
-        <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-        <p className="text-red-600 mb-4">{error || 'User not found'}</p>
-        <Link 
-          href="/admin/users"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-black text-white hover:bg-gray-800"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Users
-        </Link>
-      </div>
+      <></>
     );
   }
-
-   if (loading) {
-    return (
-      <LoadingSpinner />
-    );
-  }
-
 
     return (
     <div className="p-8 max-w-4xl mx-auto">
@@ -146,7 +126,7 @@ export default function UserDetailPage(){
               <p className="text-sm text-gray-500">Account Status</p>
               <p className="text-green-600">Active</p>
             </div>
-            <div onClick={()=> alert(user.phoneVerified)}>
+            <div>
               <p className="text-sm text-gray-500">Phone Verification</p>
               <p className={user.phoneVerified ? 'text-green-600' : 'text-yellow-600'}>
                 {user.phoneVerified ? 'Verified' : 'Pending'}

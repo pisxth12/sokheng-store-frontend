@@ -1,6 +1,6 @@
 "use client";
 
-import { StatsCardsOrder } from "@/components/admin/orders/StatsCards";
+import StatsCardsOrder from "@/components/admin/orders/StatsCards";
 import { useOrders } from "@/hooks/admin/useOrders";
 import { OrderStatus } from "@/types/admin/order.type";
 import { Eye, Trash2, Calendar, User, DollarSign, Tag } from "lucide-react";
@@ -65,7 +65,9 @@ export default function AdminOrdersPage() {
 
 
           {/* Stats Cards - Add this! */}
-      {!loading && stats && <StatsCardsOrder stats={stats} />}
+      <div className="mb-10">
+        {stats && <StatsCardsOrder stats={stats} />}
+      </div>
 
       {/* Filters Bar */}
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
@@ -91,12 +93,6 @@ export default function AdminOrdersPage() {
 
 
 
-      {/* Loading State */}
-      {loading && (
-        <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-2 border-gray-300 border-t-black animate-spin rounded-full" />
-        </div>
-      )}
 
       {/* Desktop Table View - Hidden on mobile */}
       {!loading && (

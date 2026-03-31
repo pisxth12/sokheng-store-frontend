@@ -56,13 +56,36 @@ export default function OffcanvasFilter({
   const [isDragging, setIsDragging] = useState<"min" | "max" | null>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
 
+  //for close offcanvas when clicking outside
+  const panelRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if(!isOpen) return;
+    const handleEscKey = (event: KeyboardEvent) => {
+      if(event.key === "Escape"){
+         handleClose();
+      }
+    }
+    document.addEventListener("keydown", handleEscKey);
+    return () => document.removeEventListener("keydown", handleEscKey);
+  },[isOpen,onClose])
+
+  useEffect(() => {
+    if(!isOpen) return;
+    const handleClickOutside = (event: MouseEvent) => {
+      if(panelRef.current && !panelRef.current.contains(event.target as Node)){
+         handleClose();
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  },[isOpen,onClose])
+
+
+
   useEffect(() => {
     setMounted(true);
     return () => setMounted(false);
   }, []);
-
-  
-  
 
   useEffect(() => {
     if (isOpen) {
@@ -88,7 +111,6 @@ export default function OffcanvasFilter({
           const max = priceRange.max;
           // If no valid range, return center position (50%)
           if (max <= min) return 50;
-          // Calculate percentage
           let percent = ((value - min) / (max - min)) * 100;
           return Math.min(100, Math.max(0, percent));
         };
@@ -183,8 +205,8 @@ export default function OffcanvasFilter({
 
   const modal = (
     <>
-      <div className={`fm-overlay ${closing ? "fm-overlay--closing" : ""}`} onClick={handleClose} />
-      <div className={`fm-panel ${closing ? "fm-panel--closing" : ""}`}>
+      <div  className={`fm-overlay ${closing ? "fm-overlay--closing" : ""}`} onClick={handleClose} />
+      <div ref={panelRef} className={`fm-panel ${closing ? "fm-panel--closing" : ""}`}>
         {/* Header */}
         <div className="fm-header">
           <h2 className="fm-title">Filters</h2>

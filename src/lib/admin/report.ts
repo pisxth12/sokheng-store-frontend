@@ -5,6 +5,8 @@ export const reportService = {
     const response = await apiClient.get("/admin/reports/data", {
       params: { range },
     });
+
+    console.log("Response URL:", response.config.url);
     return response.data;
   },
 
@@ -14,7 +16,7 @@ export const reportService = {
   },
 
   downloadPdf: (range: string = "30days") => {
-    // Use full backend URL, not through Next.js API route
+     console.log("Downloading PDF for range:", range); 
     window.open(`/api/v1/admin/reports/pdf?range=${range}`, "_blank");
   },
 };

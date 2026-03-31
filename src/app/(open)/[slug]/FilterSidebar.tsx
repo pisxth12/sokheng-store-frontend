@@ -3,6 +3,7 @@
 
 import { Category, Brand } from "@/types/open/product.type";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { useEffect, useRef } from "react";
 
 interface FilterSidebarProps {
   // For brand pages
@@ -11,6 +12,7 @@ interface FilterSidebarProps {
   selectedCategoryId?: string;
   onCategoryChange?: (categoryId: string) => void;
   
+
   // For category pages
   brands?: Brand[];
   loadingBrands?: boolean;
@@ -39,6 +41,13 @@ export function FilterSidebar({
   onClearFilters,
 }: FilterSidebarProps) {
   
+  //For closing the offcanvas on mobile after applying filters
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    
+  },[])
+
   const handlePriceSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onPriceChange?.(minPrice, maxPrice);

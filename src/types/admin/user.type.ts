@@ -42,3 +42,19 @@ export interface PageResponse<T>{
     first: boolean;
     last: boolean;
 }
+
+
+export interface UserStats {
+    totalUsers: number;
+    totalUsersGrowth: number;
+    newThisWeek: number;
+    newThisMonth: number;
+    newUsersThisMonth: number;
+    usersWithOrders: number;
+    avgOrderValue: number;
+    oneTimeBuyers: number;
+    repeatCustomers: number;
+    fullyVerified: number;
+    emailVerified: number;
+    phoneVerified: number;
+  }

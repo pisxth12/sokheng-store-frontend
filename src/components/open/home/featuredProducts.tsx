@@ -1,4 +1,4 @@
-"use client"
+// "use client"
 import { ProductGrid } from "@/components/open/products/ProductGrid";
 import { Product } from "@/types/open/product.type";
 import { useTranslations } from 'next-intl'; 
@@ -16,9 +16,6 @@ const FeaturedProducts = memo(function FeaturedPage({ products }: FeaturedProduc
     const containerClass = useMemo(() => 
         "mx-auto max-w-primary px-primary py-8 ", 
     []);
-
-   
-
     if (!products.length) {
         return (
             <div className="text-center py-10">
@@ -29,8 +26,8 @@ const FeaturedProducts = memo(function FeaturedPage({ products }: FeaturedProduc
 
     return (
         <section className={containerClass}>
-            <div className="text-center mb-8">
-                <h1 className="text-3xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <div className="text-start mb-8">
+                <h1 className="max-w-primary px-primary text-3xl font-bold bg-linear-to-r   bg-clip-text ">
                     {t('title')}
                 </h1>
              

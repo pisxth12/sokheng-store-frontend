@@ -132,22 +132,7 @@ export default function AdminCategoriesPage() {
        <CategoryStatsCards stats={stats} loading={statsLoading} />
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Categories</h1>
-        </div>
-
-        <button
-          onClick={handleAdd}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-all duration-200 active:scale-95"
-        >
-          <Plus className="w-4 h-4" />
-          Add Category
-        </button>
-      </div>
-
-      {/* Search Bar */}
-      <div className="mb-6">
-        <div className="relative max-w-md">
+         <div className="relative max-w-md">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input
             onChange={handleSearch}
@@ -165,6 +150,18 @@ export default function AdminCategoriesPage() {
             </button>
           )}
         </div>
+        <button
+          onClick={handleAdd}
+          className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-all duration-200 active:scale-95"
+        >
+          <Plus className="w-4 h-4" />
+          Add Category
+        </button>
+      </div>
+
+      {/* Search Bar */}
+      <div className="mb-6">
+       
 
         {/* Search Results Info */}
         {searchInput && (

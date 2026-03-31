@@ -376,7 +376,6 @@ const handleClearSaleEndDate = async (productId: number) => {
               <input
                 type="number"
                 step="0.01"
-                // min="0"
                 value={price}
                 onChange={(e) => setPrice(parseFloat(e.target.value))}
                 className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -391,7 +390,6 @@ const handleClearSaleEndDate = async (productId: number) => {
               <input
                 type="number"
                 step="0.01"
-                min="0"
                 value={salePrice}
                 onChange={(e) => setSalePrice(e.target.value)}
                 className={`w-full px-3 text-gray-600 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 ${
@@ -443,7 +441,6 @@ const handleClearSaleEndDate = async (productId: number) => {
               <input
                 type="number"
                 value={stock}
-                min="0"
                 onChange={(e) => setStock(parseInt(e.target.value))}
                 className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required

@@ -10,6 +10,8 @@ interface Props {
   loading?: boolean;
 }
 
+
+
 export default function ReportFilters({
   ranges,
   selectedRange,
@@ -34,7 +36,7 @@ export default function ReportFilters({
       <button
         onClick={onDownload}
         disabled={loading}
-        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+        className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 disabled:opacity-50 flex items-center gap-2"
       >
         {loading ? "Loading..." : "Download PDF"}
       </button>

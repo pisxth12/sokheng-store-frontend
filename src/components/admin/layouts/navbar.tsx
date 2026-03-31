@@ -98,7 +98,6 @@ useEffect(() => {
           >
             <Search className="w-5 h-5" />
           </button>
-
           {/* Notification buttons */}
           <div className="flex items-center gap-1 ">
             <div className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">

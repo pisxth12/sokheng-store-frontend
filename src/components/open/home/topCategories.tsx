@@ -24,7 +24,6 @@ export const TopCategories = memo(function TopCategories({ categories }: TopCate
 
     return (
         <section className="max-w-primary px-primary mx-auto  py-12">
-            {/* Categories Grid */}
             <div className={gridClass}>
                 {categories.map((category) => (
                     <CategoryCard key={category.id} category={category} />

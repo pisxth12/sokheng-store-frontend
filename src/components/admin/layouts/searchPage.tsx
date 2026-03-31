@@ -14,7 +14,8 @@ import {
   Users,
   Settings,
   Image,
-  ArrowRight
+  ArrowRight,
+  Bell
 } from "lucide-react";
 
 interface PageResult {
@@ -79,6 +80,12 @@ const pages: PageResult[] = [
     icon: <Settings className="w-4 h-4" />,
     keywords: ["preferences", "configuration", "profile", "setting"]
   },
+  {
+    "title": "Notifications",
+    "href": "/admin/notifications",
+    "icon": <Bell className="w-4 h-4" />,
+    "keywords": ["alerts", "messages", "updates", "notification"]
+  }
 ];
 
 interface PageSearchProps {

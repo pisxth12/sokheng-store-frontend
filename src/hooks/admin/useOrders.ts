@@ -106,22 +106,30 @@ export const useOrders = (initialFilters?: OrderFilters) => {
   );
 
   // Delete order
-  const deleteOrder = useCallback(
-    async (id: number) => {
-      setLoading(true);
-      setError(null);
-      try {
-        await adminOrderApi.deleteOrder(id);
-        // Refresh list
-        fetchOrders();
-      } catch (err: any) {
-        setError(extractErrorMessage(err));
-      } finally {
-        setLoading(false);
-      }
-    },
-    [fetchOrders],
-  );
+ 
+
+  const downloadInvoice = useCallback( async (orderNumber: string) => {
+     setError(null);
+     setLoading(true);
+     try{
+      const response = await adminOrderApi.downloadInvoice(orderNumber);
+        // Create blob from response
+    const blob = new Blob([response], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `invoice_${orderNumber}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+    
+  } catch (err: any) {
+    setError(extractErrorMessage(err));
+  } finally {
+    setLoading(false);
+  }     
+  }, []);
 
   // Update filters
   const updateFilters = useCallback((newFilters: Partial<OrderFilters>) => {
@@ -142,6 +150,8 @@ export const useOrders = (initialFilters?: OrderFilters) => {
   const clearFilters = useCallback(() => {
     setFilters({});
   }, []);
+
+
 
   // Refresh data
   const refresh = useCallback(() => {
@@ -174,6 +184,7 @@ export const useOrders = (initialFilters?: OrderFilters) => {
     pagination,
     filters,
     stats,
+    downloadInvoice,
 
     // Actions
     fetchOrders,

@@ -13,7 +13,7 @@ export default function OrderDetailPage() {
   const orderId  = parseInt(params.orderId as string);
   
   
-  const { order, loading, error, fetchOrderById,  updateOrderStatus , goToDetails} = useOrders();
+  const { order, loading, error, fetchOrderById,  updateOrderStatus , downloadInvoice } = useOrders();
 
   useEffect(() => {
     if (orderId) fetchOrderById(orderId);
@@ -84,6 +84,13 @@ export default function OrderDetailPage() {
         
         {/* Actions - Full width on mobile */}
         <div className="flex gap-2 w-full sm:w-auto">
+          <button 
+            onClick={() => downloadInvoice(order.orderNumber)}
+            disabled={loading}
+             className="px-4 py-2 bg-black text-white hover:bg-gray-800 transition-colors disabled:opacity-50 rounded-lg"
+>
+            {loading ? 'Downloading...' : 'Download Invoice'}
+          </button>
           <select
             value={order.status}
             onChange={(e) => handleStatusUpdate(e.target.value)}

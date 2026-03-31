@@ -1,23 +1,39 @@
-export interface MonthlyData{
-    month: string;
-    revenue: number;
-    orders: number;
+export interface MonthlyData {
+  month: string;
+  revenue: number;
+  orders: number;
 }
 
 export interface StatusData {
-    name: string;
-    value: number;
-    color: string;
+  name: string;
+  value: number;
+  color: string;
 }
 
-
-export interface TopProduct{
-    name: string;
-    sold: number;
-    revenue: number;
+export interface TopProduct {
+  name: string;
+  sold: number;
+  revenue: number;
 }
 
+export interface TopBrand {
+  name: string;
+  sold: number;
+  revenue: number;
+}
 
+export interface TopCategory {
+  name: string;
+  sold: number;
+  revenue: number;
+}
+
+export interface TopSpender {
+  fullName: string;
+  email: string;
+  totalSpent: number;
+  orders: number;
+}
 
 export interface ReportData {
   generatedAt: string;
@@ -29,6 +45,9 @@ export interface ReportData {
   monthlyData: MonthlyData[];
   statusData: StatusData[];
   topProducts: TopProduct[];
+  topBrands: TopBrand[];
+  topCategories: TopCategory[];
+  topSpenders: TopSpender[];
 }
 
 export interface RangeOption {
@@ -47,4 +66,3 @@ export interface ReportOptions {
     averageOrderValue: number;
   };
 }
-

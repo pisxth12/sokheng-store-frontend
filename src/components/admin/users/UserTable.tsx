@@ -31,7 +31,7 @@ export default function UserTable({
   return (
     <div>
       {/* Table */}
-      <div className="border border-gray-200 rounded-lg overflow-hidden">
+      <div className="border border-gray-200 rounded-lg  overflow-x-scroll .scrollbar-hide">
         <table className="w-full">
           <thead className="bg-gray-50">
             <tr>

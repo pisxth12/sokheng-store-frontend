@@ -4,12 +4,15 @@ import {
   User,
   UserFilters,
   UserListResponse,
+  UserStats,
 } from "@/types/admin/user.type";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 export const useUsers = (initialFilters?: UserFilters) => {
   const [users, setUsers] = useState<UserListResponse[]>([]);
+  const [stats, setStats] = useState<UserStats | null>(null);
+  const [statsLoading, setStatsLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,6 +25,19 @@ export const useUsers = (initialFilters?: UserFilters) => {
   });
   const [filters, setFilters] = useState<UserFilters>(initialFilters || {});
   const router = useRouter();
+
+  const fetchStats = useCallback( async() => {
+    setStatsLoading(true);
+    setError(null);
+    try {
+      const data = await adminUserApi.getStats();
+      setStats(data);
+    } catch (err: any) {
+      setError(err.message || "Failed to fetch user stats");
+    } finally {
+      setStatsLoading(false);
+    }
+  },[])
 
   // Fetch all users
   const fetchUsers = useCallback(async () => {
@@ -113,13 +129,15 @@ export const useUsers = (initialFilters?: UserFilters) => {
 
   useEffect(() => {
     if (window.location.pathname === "/admin/users") {
-      fetchUsers();
+      Promise.all([fetchUsers(), fetchStats()]);
     }
   }, [fetchUsers]);
 
   return {
     users,
     user,
+    stats,
+    statsLoading,
     loading,
     error,
     pagination,

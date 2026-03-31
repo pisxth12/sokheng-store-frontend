@@ -12,6 +12,7 @@ import { publicProductApi } from "@/lib/open/products";
 import { Product } from "@/types/open/product.type";
 import "./SearchPage.css";
 import FfcanvasFilter from "../products/OffcanvasFilter";
+import OffcanvasFilter from "../products/OffcanvasFilter";
 
 interface SearchClientProps {
   initialQuery: string;
@@ -326,7 +327,7 @@ export default function SearchClient({
         </div>
       </div>
 
-      <FfcanvasFilter
+      <OffcanvasFilter
         isOpen={openFilterModal}
         onClose={() => setOpenFilterModal(false)}
         onApply={handleApplyFilters}
