@@ -54,7 +54,11 @@ export default function AdminDashboardPage() {
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <RevenueChart data={data.salesLast30Days} />
+           <RevenueChart 
+            salesLast7Days={data.salesLast7Days || []}
+            salesLast30Days={data.salesLast30Days || []}
+            salesLast90Days={data.salesLast90Days || []}
+          />
         </div>
         <OrderStatusChart data={data.ordersByStatus} />
       </div>

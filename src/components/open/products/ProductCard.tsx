@@ -2,18 +2,43 @@
 
 import { Product } from "@/types/open/product.type";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./ProductCard.css";
 
 interface Props {
   product: Product;
+  index?: number;
 }
 
 const PLACEHOLDER_IMAGE =
   "https://placehold.co/600x600/e2e8f0/1e293b?text=No+Image";
 
-export default function ProductCard({ product }: Props) {
+export default function ProductCard({ product, index = 0 }: Props) {
   const [imageError, setImageError] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() =>{
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if(entry.isIntersecting){
+          setTimeout(() => {
+            setIsVisible(true);
+          }, index * 5); 
+          observer.disconnect();
+        }
+      },{
+        threshold: 0.15, //15% of card at first
+        rootMargin: "300px" 
+      }
+    );
+    if(cardRef.current){
+      observer.observe(cardRef.current);
+    }
+    return () => observer.disconnect();
+  },[]);
+
+
 
   const hasSecondImage = product.images && product.images.length > 1;
   const secondImage = hasSecondImage
@@ -29,12 +54,14 @@ export default function ProductCard({ product }: Props) {
       ? `−${product.discountPercent}%`
       : null;
 
+
+
   return (
     <Link
       href={`/${product.categorySlug}/${product.slug}`}
       className="pc-link"
     >
-      <div className={`pc-wrap ${hasSecondImage ? "" : "pc-wrap--single"}`}>
+      <div className={`pc-wrap ${hasSecondImage ? "" : "pc-wrap--single"} ${isVisible ? "pc-visible" : "pc-hidden"}`} ref={cardRef}>
 
         {/* ── Image ── */}
         <div className="pc-image-wrap">
@@ -43,6 +70,7 @@ export default function ProductCard({ product }: Props) {
           <img
             src={mainImageSrc}
             alt={product.name}
+            loading="lazy"
             className="pc-img pc-img--main"
             onError={() => setImageError(true)}
           />
@@ -102,8 +130,8 @@ export default function ProductCard({ product }: Props) {
             <p className="pc-low-stock">Only {product.stock} left</p>
           )}
         </div>
-
       </div>
     </Link>
   );
 }
+

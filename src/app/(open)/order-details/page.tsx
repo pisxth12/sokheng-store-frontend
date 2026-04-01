@@ -1,7 +1,6 @@
 import './OrderPage.css'; 
 import { getOrderByNumber } from "@/lib/services/order.server";
 import OrderClientPage from "./OrderClient";
-import { downloadInvoice } from '../actions/invoice.actions';
 interface OrderPageProps{
   searchParams: Promise<{orderID: string}>;
 }

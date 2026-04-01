@@ -1,3 +1,5 @@
+export type OrderStatus = 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'CANCELLED';
+
 export interface OrderItem {
     id: number;
     productId: number;
@@ -35,7 +37,28 @@ export interface TrackOrderResponse {
   email: string;
   phone: string;
   address: string;
-  status: string;
+  status: OrderStatus;
+  totalAmount: number;
+  createdAt: string;
+  items: Array<{
+    id: number;
+    productId: number;
+    slug: string;
+    productName: string;
+    quantity: number;
+    subtotal: number;
+    unitPrice: number;
+    productImage?: string;
+  }>;
+}
+
+export interface OrderDetails {
+  orderNumber: string;
+  customerName: string;
+  email: string;
+  phone: string;
+  address: string;
+  status: OrderStatus;
   totalAmount: number;
   createdAt: string;
   items: Array<{

@@ -64,26 +64,6 @@ export interface OrderFilters {
   direction?: 'asc' | 'desc';
 }
 
-export interface OrderDetails {
-  orderNumber: string;
-  customerName: string;
-  email: string;
-  phone: string;
-  address: string;
-  status: string;
-  totalAmount: number;
-  createdAt: string;
-  items: Array<{
-    id: number;
-    productId: number;
-    slug: string;
-    productName: string;
-    quantity: number;
-    subtotal: number;
-    unitPrice: number;
-    productImage?: string;
-  }>;
-}
 
 export interface OrderStats {
   totalOrders: number;

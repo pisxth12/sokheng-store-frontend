@@ -108,13 +108,6 @@ export default function TopBrands({ brands }: TopBrandsProps) {
                 ))}
             </div>
 
-            {/* Footer Stats */}
-            <div className="mt-6 pt-4 border-t border-gray-100">
-                <div className="flex items-center justify-between text-xs">
-                    <span className="text-gray-500">Total brands</span>
-                    <span className="font-semibold text-gray-900">{brands.length}</span>
-                </div>
-            </div>
         </div>
     );
 }

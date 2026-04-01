@@ -237,7 +237,7 @@ export default function ProductsClient({
 
   return (
     <>
-      <div className="pp-page ">
+      <div className="pp-page max-w-primary px-primary">
         {/* Sticky Header with Filters */}
         <div className={`pp-header ${showHeader ? "" : "pp-header--hidden"}`}>
           {/* Filter + Sort row */}
@@ -269,7 +269,7 @@ export default function ProductsClient({
         </div>
 
         {/* Header with count */}
-        <div className="pp-header-count">
+        <div className="pp-header-count px-primary max-w-primary">
           <h1 className="pp-title">All Products</h1>
           <p className="pp-count">
             Showing <span>{products.length}</span> of <span>{total}</span>{" "}

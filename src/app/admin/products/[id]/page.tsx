@@ -174,7 +174,7 @@ export default function AdminProductDetail() {
             {product.isFeatured && (
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 ring-1 ring-amber-200">
                 <Star className="w-3 h-3 fill-amber-400 stroke-amber-400" />
-                Featured
+                Featured 
               </span>
             )}
             {product.isOnSale && (
@@ -191,7 +191,7 @@ export default function AdminProductDetail() {
             onClick={handleToggleFeatured}
             className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
-            <Star className="w-3.5 h-3.5" />
+            {product.isFeatured ? <Star className="w-3.5 h-3.5 text-yellow-400 stroke-amber-400" /> : <Star className="w-3.5 h-3.5" />}
             {product.isFeatured ? "Unfeature" : "Feature"}
           </button>
 

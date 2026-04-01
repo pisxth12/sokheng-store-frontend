@@ -10,8 +10,7 @@ import { useTranslations } from "next-intl";
 import { ScrollToTop } from "@/components/ui/ScrollToTop";
 import { publicProductApi } from "@/lib/open/products";
 import { Product } from "@/types/open/product.type";
-import "./SearchPage.css";
-import FfcanvasFilter from "../products/OffcanvasFilter";
+
 import OffcanvasFilter from "../products/OffcanvasFilter";
 
 interface SearchClientProps {
@@ -216,7 +215,7 @@ export default function SearchClient({
         {/* ── Sticky Header ── */}
         <div className={`sp-header ${showHeader ? "" : "sp-header--hidden"}`}>
           {/* Search bar */}
-          <div className="sp-search-row">
+          <div className="sp-search-row ">
             <form onSubmit={handleSearch} className="sp-search-form">
               <Search size={16} className="sp-search-icon" />
               <input

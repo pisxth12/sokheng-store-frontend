@@ -17,7 +17,6 @@
 
 .wl-container {
   margin: 0 auto;
-  padding: 0 1.5rem;
 }
 
 /* ─── Header ─────────────────────────────────────────────────── */
@@ -84,7 +83,7 @@
 .wl-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem 1.25rem;
+  gap: 1.5rem 0.25rem;
 }
 
 @media (min-width: 768px)  { .wl-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -170,7 +169,7 @@
 
 /* ─── Card Body ──────────────────────────────────────────────── */
 .wl-body {
-  padding: 0.875rem 0 0;
+  padding: 0.675rem 0 0;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -275,7 +274,7 @@
   color: #ffffff;
   border: none;
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.6rem;
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;

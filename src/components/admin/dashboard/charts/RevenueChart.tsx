@@ -17,11 +17,14 @@ import {
   ChevronDown,
   DollarSign,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  ChartNoAxesColumn
 } from 'lucide-react';
 
 interface Props {
-  data: Array<{ date: string; value: number; count?: number }>;
+  salesLast7Days: Array<{ date: string; value: number; count?: number }>;
+   salesLast30Days: Array<{ date: string; value: number; count?: number }>;
+   salesLast90Days: Array<{ date: string; value: number; count?: number }>;
 }
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -52,9 +55,24 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-export const RevenueChart = ({ data }: Props) => {
+export const RevenueChart = ({ salesLast7Days, salesLast30Days , salesLast90Days }: Props) => {
   const [timeframe, setTimeframe] = useState<'7d' | '30d' | '90d'>('30d');
   const [showDropdown, setShowDropdown] = useState(false);
+
+ const getData = () => {
+    switch(timeframe) {
+      case '7d':
+        return salesLast7Days;
+      case '30d':
+        return salesLast30Days;
+      case '90d':
+        return salesLast90Days;
+      default:
+        return salesLast30Days;
+    }
+ };
+
+ const data = getData();
   
   // Calculate metrics
   const total = data.reduce((sum, item) => sum + item.value, 0);
@@ -79,7 +97,7 @@ export const RevenueChart = ({ data }: Props) => {
       {/* Header with metrics */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+          <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
             <TrendingUp className="w-6 h-6 text-white" />
           </div>
           <div>
@@ -95,7 +113,8 @@ export const RevenueChart = ({ data }: Props) => {
             onClick={() => setShowDropdown(!showDropdown)}
             className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl border border-gray-200 hover:bg-gray-100 transition-colors"
           >
-            <Calendar className="w-4 h-4 text-gray-500" />
+            {/* <Calendar className="w-4 h-4 text-gray-500" /> */}
+             <ChartNoAxesColumn />
             <span className="text-sm font-medium text-gray-700">
               {timeframes.find(t => t.value === timeframe)?.label}
             </span>
@@ -127,7 +146,7 @@ export const RevenueChart = ({ data }: Props) => {
       <div className="grid grid-cols-3 gap-3 mb-6">
         <div className="bg-gray-50 p-3 rounded-xl">
           <p className="text-xs text-gray-500 mb-1">Average</p>
-          <p className="text-sm font-bold text-gray-900">${average.toFixed(0)}</p>
+          <p className="text-sm font-bold text-gray-900">${average.toFixed(2)}</p>
           <p className="text-[10px] text-gray-400">per day</p>
         </div>
         <div className="bg-gray-50 p-3 rounded-xl">

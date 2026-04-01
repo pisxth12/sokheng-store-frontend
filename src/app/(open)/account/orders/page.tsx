@@ -69,7 +69,7 @@ export default function MyOrdersPage() {
 
     return (
         <div className="font-body min-h-screen transition-colors duration-300">
-            <div className="max-w-2xl mx-auto px-4 py-10">
+            <div className="max-w-7xl mx-auto px-4 py-10">
 
                 {/* Header */}
                 <div className="mb-8">
@@ -90,7 +90,7 @@ export default function MyOrdersPage() {
                                 <Link
                                     key={index}
                                     href={`/order-details?orderID=${order.orderNumber}`}
-                                    className="order-card  fade-in block bg-white dark:bg-darkbg  rounded-xl border border-stone-200/70 dark:border-stone-800/80 overflow-hidden hover:border-stone-300 dark:hover:border-stone-700 shadow-sm hover:shadow-md dark:shadow-none"
+                                    className="order-card  fade-in block bg-white dark:bg-zinc-950/50  rounded-md border border-stone-200/70 dark:border-stone-800/80 overflow-hidden hover:border-stone-300 dark:hover:border-stone-700 shadow-sm hover:shadow-md dark:shadow-none"
                                 >
                                     {/* Top row: status + date | total + arrow */}
                                     <div className="flex items-center justify-between px-5 pt-4 pb-3">
@@ -125,21 +125,25 @@ export default function MyOrdersPage() {
                                     <div className="px-5 py-3 space-y-2.5">
                                         {order.items.map((item) => (
                                             <div key={item.id} className="flex items-center justify-between gap-3">
-                                                <div className="flex items-center gap-3">
+                                                <div className="flex  gap-3">
                                                     {item.productImage ? (
                                                         <img
                                                             src={item.productImage}
                                                             alt={item.productName}
-                                                            className="w-9 h-9 rounded-lg object-cover bg-stone-100 dark:bg-stone-800 shrink-0"
+                                                            className="w-40 h-40 rounded-sm object-cover bg-stone-100 dark:bg-stone-800 shrink-0"
                                                         />
                                                     ) : (
                                                         <div className="w-9 h-9 rounded-lg bg-stone-100 dark:bg-stone-800 flex items-center justify-center shrink-0">
                                                             <Package className="w-4 h-4 text-stone-400 dark:text-stone-600" />
                                                         </div>
                                                     )}
+
+                            
+                                                    
                                                     <span className="text-sm text-stone-700 dark:text-stone-300 font-medium truncate max-w-45">
                                                         {item.productName}
                                                     </span>
+                                                    
                                                 </div>
                                                 <div className="flex items-center gap-4 shrink-0">
                                                     <span className="text-xs text-stone-400 dark:text-stone-600">

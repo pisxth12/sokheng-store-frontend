@@ -84,7 +84,11 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Revenue Chart */}
-      <RevenueChart data={data.monthlySales} />
+      <RevenueChart 
+       dailySales={data.dailySales}    // 7 days
+        weeklySales={data.weeklySales}  // 30 days
+        monthlySales={data.monthlySales} // 90 days
+      />
 
       {/* Two Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -80,7 +80,7 @@ export default function WishlistClient({ initialWishlist, initialCart }: Wishlis
 
   return (
     <div className="wl-page">
-      <div className="wl-container">
+      <div className="wl-container max-w-primary px-primary">
         <div className="wl-header">
           <div className="wl-header-left">
             <h1 className="wl-title">Wishlist</h1>

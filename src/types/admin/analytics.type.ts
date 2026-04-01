@@ -33,6 +33,8 @@ export interface AnalyticsData {
     value: number;
     count: number;
   }>;
+
+  
   ordersByStatus: Array<{
     status: string;
     count: number;

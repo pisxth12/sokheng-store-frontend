@@ -2,15 +2,16 @@
 
 import { useState } from "react";
 import { publicOrderApi } from "@/lib/open/order";
-import { Package, Mail, Phone, Search, Loader2, X, MapPin, Calendar, CreditCard, ShoppingBag, ChevronRight } from "lucide-react";
+import { Package, Mail, Phone, Search, Loader2, X, MapPin, Calendar, CreditCard, ShoppingBag, ChevronRight, Download } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { OrderDetails } from "@/types/admin/order.type";
+import { OrderDetails } from "@/types/open/order.type";
+import { downloadInvoice } from "@/app/(open)/actions/invoice.actions";
 
 export default function TrackOrder() {
-  const [orderNumber, setOrderNumber] = useState("ORD-20260320-00196");
-  const [email, setEmail] = useState("seth.dev.1100@gmail.com");
-  const [phone, setPhone] = useState("0969851100");
+  const [orderNumber, setOrderNumber] = useState("ORD-20260402-BE0XUKG7HT");
+  const [email, setEmail] = useState("admin@example.com");
+  const [phone, setPhone] = useState("+855963450011");
   const [loading, setLoading] = useState(false);
   const [order, setOrder] = useState<OrderDetails | null>(null);
   const [error, setError] = useState("");
@@ -39,6 +40,18 @@ export default function TrackOrder() {
     }
   };
 
+  const handleDownloadInvoice = async () => {
+      const  data  = await downloadInvoice(orderNumber);
+      const blob = new Blob([data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `invoice_${orderNumber}.pdf`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+  };
+  
+
   const getStatusColor = (status: string) => {
     switch(status) {
       case "DELIVERED": return "bg-green-500";
@@ -61,9 +74,12 @@ export default function TrackOrder() {
     }
   };
 
+
+  
+
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 py-12 px-4">
+      <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 py-12 px-4">
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
@@ -205,10 +221,15 @@ export default function TrackOrder() {
                       minute: '2-digit'
                     })}
                   </p>
+                  {order.status === "COMPLETED" && (
+                      <button onClick={handleDownloadInvoice} className="text-sm px-2 mt-4 border w-fi cursor-pointer rounded-full flex items-center gap-2">
+                        <Download size={12}/> <span>invoice</span>
+                      </button>
+                  )}
                 </div>
                 <div className="flex flex-col items-end">
                   <span className={`px-4 py-1.5 rounded-full text-xs font-semibold ${
-                    order.status === "DELIVERED" ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" :
+                    order.status === "COMPLETED" ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" :
                     order.status === "CANCELLED" ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400" :
                     "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
                   }`}>

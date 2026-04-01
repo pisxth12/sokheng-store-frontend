@@ -24,6 +24,20 @@ export default function UserStatsCard({ stats, loading }: UserStatsCardProps) {
   : 0;
 
 
+   const emailPercent = stats?.totalUsers
+        ? ((stats.emailVerified / stats.totalUsers) * 100).toFixed(0)
+        : 0;
+    
+    const phonePercent = stats?.totalUsers
+        ? ((stats.phoneVerified / stats.totalUsers) * 100).toFixed(0)
+        : 0;
+    
+    const fullyVerifiedPercent = stats?.totalUsers
+        ? ((stats.fullyVerified / stats.totalUsers) * 100).toFixed(0)
+        : 0;
+
+
+  
 
 
   if (!stats) return null;
@@ -100,13 +114,14 @@ export default function UserStatsCard({ stats, loading }: UserStatsCardProps) {
         <p className="text-sm text-gray-500">Fully Verified</p>
         <p className="text-2xl font-semibold">{stats?.fullyVerified || 0}</p>
         <p className="text-xs text-green-600">{percentOfUsers}% of total users</p>
+        <p className="text-xs text-green-600"> {fullyVerifiedPercent}% full verify of total users</p>
       </div>
       <BadgeCheck className="w-6 h-6 text-green-500" />
     </div>
     <div className="mt-3 pt-3 border-t">
       <div className="flex justify-between text-xs">
-        <span className="text-gray-500">Email: {stats?.emailVerified || 0} (80%)</span>
-        <span className="text-gray-500">Phone: {stats?.phoneVerified || 0} (62%)</span>
+        <span className="text-gray-500">Email: {stats?.emailVerified || 0} ({emailPercent}%)</span>
+        <span className="text-gray-500">Phone: {stats?.phoneVerified || 0} ({phonePercent}%)</span>
       </div>
     </div>
   </div>

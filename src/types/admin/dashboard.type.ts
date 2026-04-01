@@ -29,6 +29,13 @@ export interface DashboardSummary {
     value: number;
     count: number;
   }>;
+
+  salesLast90Days: Array<{
+    date: string;
+    value: number;
+    count: number;
+    }>;
+
   ordersByStatus: Record<string, number>;
   topCategories: Array<{
     category: string;

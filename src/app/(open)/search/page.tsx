@@ -4,6 +4,7 @@ import SearchClient from "./SearchClient";
 import { Product } from "@/types/open/product.type";
 import { getCategoryNames } from "@/lib/services/category.server";
 import { getBrandNames } from "@/lib/services/brand.server";
+import "./SearchPage.css";
 
 interface SearchPageProps {
   searchParams: Promise<{
@@ -65,7 +66,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   return (
     <SearchClient
-
       initialQuery={query}
       initialProducts={initialProducts}
       initialTotal={initialTotal}
