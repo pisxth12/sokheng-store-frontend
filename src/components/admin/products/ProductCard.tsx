@@ -219,6 +219,7 @@ export default function ProductCard({
               </span>
             )}
             <div
+            
               className={`
                             w-2 h-2 rounded-full flex-shrink-0 mt-1
                             ${isActive ? "bg-green-500" : "bg-gray-400"}
@@ -236,6 +237,17 @@ export default function ProductCard({
               <span className="text-xs font-bold ml-0.5">({stock})</span>
             </div>
           </div>
+          {product.colors  && (
+            <div className="mb-3 flex gap-1">
+              {product.colors.map((color, index) => (
+                <div
+                  key={index}
+                  className="inline-flex items-center h-5 w-5 gap-1.5 px-2 py-1 rounded-lg border-2 border-slate-300"
+                  style={{ backgroundColor: color.hex }}
+                />
+              ))}
+          </div>
+          )}
 
           {/* Clear Discount Button - Only shows when on sale */}
           {salePrice && (

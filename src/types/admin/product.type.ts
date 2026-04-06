@@ -7,6 +7,12 @@ export interface ProductImage {
   createdAt?: string;
 }
 
+export interface ProductColor{
+  id:number;
+   name: string;
+  hex: string;
+}
+
 export interface Product {
   id: number;
   name: string;
@@ -31,10 +37,18 @@ export interface Product {
   brandName?: string;
   brandSlug?: string;
 
+  colors?: ProductColor[];
+
   images: ProductImage[];
   mainImage?: string;
   createdAt?: string;
   updatedAt?: string;
+}
+
+
+export interface ColorRequest {
+  name: string;
+  hex: string;
 }
 
 export interface ProdductCreateRequest {
@@ -48,6 +62,7 @@ export interface ProdductCreateRequest {
   isFeatured: boolean;
   categoryId: number;
   brandId?: number;
+  colors?: ColorRequest[];
   images?: File[];
   altTexts?: string[];
 }
@@ -65,6 +80,7 @@ export interface ProductUpdateRequest {
   categoryId?: number;
   brandId?: number;
   newImages?: File[];
+  colors: ColorRequest[];
   newAltTexts?: string[];
   deleteImageIds?: number[];
   setMainImageId?: number;

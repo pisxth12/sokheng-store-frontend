@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 
-import { Product } from "@/types/admin/product.type";
+import { ColorRequest, Product } from "@/types/admin/product.type";
 import { X, Upload, Trash2, Star, Loader2, AlertCircle } from "lucide-react";
 import { useProducts } from "@/hooks/admin/useProduct";
 import { useCategory } from "@/hooks/admin/useCategory";
@@ -49,6 +49,8 @@ export default function ProductForm({
   const [altTexts, setAltTexts] = useState<string[]>([]);
   const [deleteImageIds, setDeleteImageIds] = useState<number[]>([]);
   const [setMainImageId, setSetMainImageId] = useState<number>();
+
+  const [colors, setColors] = useState<ColorRequest[]>([]);
 
   //Error message
   const [formMessage, setFormMessage] = useState<string | null>(null);
@@ -135,6 +137,11 @@ export default function ProductForm({
       setIsFeatured(product.isFeatured || false);
       setCategoryId(product.categoryId || 0);
       setBrandId(product.brandId || 0);
+      //Load color
+      if(product?.colors){
+        setColors(product.colors.map(c => ({ name: c.name, hex: c.hex })));
+      }
+
     } else {
       // Reset form for new product
       setName("");
@@ -150,6 +157,7 @@ export default function ProductForm({
       setImageFiles([]);
       setImagePreviews([]);
       setAltTexts([]);
+      setColors([]);
       setDeleteImageIds([]);
       setSetMainImageId(undefined);
     }
@@ -267,6 +275,17 @@ const handleClearSaleEndDate = async (productId: number) => {
           formData.append("brandId", brandId.toString());
         }
 
+        colors.forEach((color, index) => {
+          if(color.name && color.name.trim()){
+           formData.append(`colors[${index}].name`, color.name);
+           formData.append(`colors[${index}].hex`, color.hex );
+          }else{
+            formData.append(`colors[${index}].name`, "");
+            formData.append(`colors[${index}].hex`, "");
+          }
+
+        })
+
         if (product) {
           imageFiles.forEach((file) => formData.append("newImages", file));
           altTexts.forEach((text) => formData.append("newAltTexts", text));
@@ -307,6 +326,7 @@ const handleClearSaleEndDate = async (productId: number) => {
       isFeatured,
       categoryId,
       brandId,
+      colors,
       product,
       imageFiles,
       altTexts,
@@ -377,7 +397,7 @@ const handleClearSaleEndDate = async (productId: number) => {
                 type="number"
                 step="0.01"
                 value={price}
-                onChange={(e) => setPrice(parseFloat(e.target.value))}
+                onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
                 className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
@@ -496,6 +516,71 @@ const handleClearSaleEndDate = async (productId: number) => {
               </select>
             </div>
           </div>
+
+          {/* Colors Section */}
+<div className="border border-gray-200 rounded-lg p-4">
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Product Colors (Optional)
+  </label>
+  
+  {colors.length > 0 && (
+    <div className="space-y-2 mb-3">
+      {colors.map((color, index) => (
+        <div key={index} className="flex gap-2 items-center">
+          <input
+            type="text"
+            value={color.name}
+            onChange={(e) => {
+              const updated = [...colors];
+              updated[index].name = e.target.value;
+              setColors(updated);
+            }}
+            placeholder="Color name (e.g., Blue)"
+            className="flex-1 px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={color.hex || "#000000"}
+              onChange={(e) => {
+                const updated = [...colors];
+                updated[index].hex = e.target.value;
+                setColors(updated);
+              }}
+              className="w-10 h-10 border border-gray-200 rounded cursor-pointer"
+            />
+            <input
+              type="text"
+              value={color.hex || ""}
+              onChange={(e) => {
+                const updated = [...colors];
+                updated[index].hex = e.target.value;
+                setColors(updated);
+              }}
+              placeholder="#000000"
+              className="w-24 px-2 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => setColors(colors.filter((_, i) => i !== index))}
+            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
+      ))}
+    </div>
+  )}
+  
+  <button
+    type="button"
+    onClick={() => setColors([...colors, { name: "", hex: "#000000" }])}
+    className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+  >
+    + Add Color
+  </button>
+</div>
 
           {/* Featured Checkbox */}
           <div className="flex items-center gap-2">

@@ -25,12 +25,16 @@ const PLACEHOLDER_IMAGE =
   "https://placehold.co/600x600/e2e8f0/1e293b?text=No+Image";
 
 interface ProductDetailClientProps {
-  product: ProductDetail;  
+  product: ProductDetail;
   initialIsInWishlist: boolean;
   children?: React.ReactNode;
 }
 
-export default function ProductDetailClient({ product, children, initialIsInWishlist = false}: ProductDetailClientProps) {
+export default function ProductDetailClient({
+  product,
+  children,
+  initialIsInWishlist = false,
+}: ProductDetailClientProps) {
   const t = useTranslations("ProductDetail");
   const [selectedImage, setSelectedImage] = useState(0);
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
@@ -42,23 +46,25 @@ export default function ProductDetailClient({ product, children, initialIsInWish
   const getItemQuantity = useCallback(
     (productId: number) => {
       if (!cart) return 0;
-      const item = cart.items.find(i => i.productId === productId);
+      const item = cart.items.find((i) => i.productId === productId);
       return item?.quantity ?? 0;
     },
-    [cart]
+    [cart],
   );
 
-
-  const handleAddToCart = useCallback(async (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (!product) return;
-    try {
-      const updatedCart = await addToCart(product.id, quantity);
-      setCart(updatedCart);
-    } catch {
-      toast.error("Could not add to cart");
-    }
-  }, [addToCart, product?.id, quantity]);
+  const handleAddToCart = useCallback(
+    async (e: React.MouseEvent) => {
+      e.preventDefault();
+      if (!product) return;
+      try {
+        const updatedCart = await addToCart(product.id, quantity);
+        setCart(updatedCart);
+      } catch {
+        toast.error("Could not add to cart");
+      }
+    },
+    [addToCart, product?.id, quantity],
+  );
 
   const currentInCart = getItemQuantity(product.id);
   const availableStock = Math.max(0, product.stock - currentInCart);
@@ -69,10 +75,9 @@ export default function ProductDetailClient({ product, children, initialIsInWish
     allImages.unshift(product.mainImage);
   }
 
-  const mainImageSrc =
-    imageErrors["main"]
-      ? PLACEHOLDER_IMAGE
-      : allImages[selectedImage] || product.mainImage || PLACEHOLDER_IMAGE;
+  const mainImageSrc = imageErrors["main"]
+    ? PLACEHOLDER_IMAGE
+    : allImages[selectedImage] || product.mainImage || PLACEHOLDER_IMAGE;
 
   const discountPercent =
     product.isOnSale && product.salePrice
@@ -118,7 +123,7 @@ export default function ProductDetailClient({ product, children, initialIsInWish
                     className="pd-nav-btn pd-nav-btn--prev"
                     onClick={() =>
                       setSelectedImage((p) =>
-                        p === 0 ? allImages.length - 1 : p - 1
+                        p === 0 ? allImages.length - 1 : p - 1,
                       )
                     }
                     aria-label="Previous image"
@@ -129,7 +134,7 @@ export default function ProductDetailClient({ product, children, initialIsInWish
                     className="pd-nav-btn pd-nav-btn--next"
                     onClick={() =>
                       setSelectedImage((p) =>
-                        p === allImages.length - 1 ? 0 : p + 1
+                        p === allImages.length - 1 ? 0 : p + 1,
                       )
                     }
                     aria-label="Next image"
@@ -151,7 +156,9 @@ export default function ProductDetailClient({ product, children, initialIsInWish
                     aria-label={`View image ${idx + 1}`}
                   >
                     <img
-                      src={imageErrors[`thumb-${idx}`] ? PLACEHOLDER_IMAGE : img}
+                      src={
+                        imageErrors[`thumb-${idx}`] ? PLACEHOLDER_IMAGE : img
+                      }
                       alt={`${product.name} ${idx + 1}`}
                       onError={() =>
                         setImageErrors((prev) => ({
@@ -174,6 +181,19 @@ export default function ProductDetailClient({ product, children, initialIsInWish
             )}
 
             <h1 className="pd-title">{product.name}</h1>
+             
+             <div className="flex gap-2">
+              {product.hex && (
+                product.hex.map((color, index) => (
+                  <div
+                    key={index}
+                    className="inline-flex items-center h-5 w-5 gap-1.5 px-2 py-1 rounded-lg border-2 border-slate-300"
+                    style={{ backgroundColor: color }}
+                  />
+                ))
+              )}
+             </div>
+
             <div className="pd-divider" />
 
             <div className="pd-price-block">
@@ -210,6 +230,7 @@ export default function ProductDetailClient({ product, children, initialIsInWish
                   ? t("labels.inStock", { count: product.stock })
                   : t("labels.outOfStock")}
               </span>
+             
             </div>
 
             <div className="pd-divider" />
@@ -280,10 +301,10 @@ export default function ProductDetailClient({ product, children, initialIsInWish
               </button>
 
               <button className="pd-btn-wish" aria-label="Wishlist">
-                 <WishlistButton 
-                  productId={product.id} 
-                  initialIsInWishlist={initialIsInWishlist} 
-                   />
+                <WishlistButton
+                  productId={product.id}
+                  initialIsInWishlist={initialIsInWishlist}
+                />
               </button>
             </div>
 
@@ -302,12 +323,7 @@ export default function ProductDetailClient({ product, children, initialIsInWish
           </div>
         </div>
 
-         {product && (
-          <div className="pd-related-wrap">
-            {children}
-          </div>
-        )}
-                
+        {product && <div className="pd-related-wrap">{children}</div>}
       </div>
 
       <ImageModal

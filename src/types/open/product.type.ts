@@ -1,31 +1,30 @@
-export interface Product{
-    id: number;
-    name: string;
-    description: string;
-    price: number;
-    discountPercent: number;
-    salePrice?: number;
-    isOnSale: boolean;
-    stock: number;
-    soldCount: number;
-    slug: string;
-    brandName: string;
-    categoryName: string;
-    categorySlug: string;
-    mainImage: string;
-    images: ProductImage[];
+export interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  discountPercent: number;
+  salePrice?: number;
+  isOnSale: boolean;
+  stock: number;
+  soldCount: number;
+  slug: string;
+  brandName: string;
+  categoryName: string;
+  categorySlug: string;
+  mainImage: string;
+  images: ProductImage[];
 }
 export interface ProductDetail extends Product {
-    description: string;
-    sku: string;          
-    categoryId: number;           
-    categorySlug: string;         
-    brandId?: number;             
-    brandSlug?: string;                          
-    images: ProductDetailImage[];
+  description: string;
+  sku: string;
+  categoryId: number;
+  categorySlug: string;
+  brandId?: number;
+  brandSlug?: string;
+  hex?: string[];
+  images: ProductDetailImage[];
 }
-
-
 
 export interface ProductImage {
   id: number;
@@ -33,8 +32,8 @@ export interface ProductImage {
   isMain: boolean;
 }
 
-export interface ProductDetailImage extends ProductImage{
-   altText?: string;
+export interface ProductDetailImage extends ProductImage {
+  altText?: string;
 }
 
 export interface ProductSuggestion {
@@ -45,7 +44,6 @@ export interface ProductSuggestion {
   price: number;
   mainImage: string;
 }
-
 
 export interface PageResponse<T> {
   content: T[];
@@ -76,9 +74,6 @@ export interface PageResponse<T> {
   empty: boolean;
 }
 
-
-
-
 //  Add these for filters
 export interface Category {
   id: number;
@@ -106,23 +101,20 @@ export interface PriceRange {
   max: number;
 }
 
-
 export interface ProductsWithPriceRangeResponse {
-  items: Product[];                   
+  items: Product[];
   pagination: {
-    page: number;                     
-    pageSize: number;                 
-    total: number;                    
-    totalPages: number;               
-    hasMore: boolean;                 
+    page: number;
+    pageSize: number;
+    total: number;
+    totalPages: number;
+    hasMore: boolean;
   };
   filters: {
-    minPrice: number;                 
-    maxPrice: number;                 
+    minPrice: number;
+    maxPrice: number;
   };
 }
-
-
 
 // ======new =========
 export interface ProductCard {

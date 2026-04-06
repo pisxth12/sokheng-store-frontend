@@ -113,7 +113,6 @@ export const useOrders = (initialFilters?: OrderFilters) => {
      setLoading(true);
      try{
       const response = await adminOrderApi.downloadInvoice(orderNumber);
-        // Create blob from response
     const blob = new Blob([response], { type: 'application/pdf' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
