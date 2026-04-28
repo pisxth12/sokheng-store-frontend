@@ -1,0 +1,165 @@
+/* BrandCard.css */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&display=swap');
+
+/* ─── Card ──────────────────────────────────────────────────── */
+.brand-card {
+  font-family: 'Sora', sans-serif;
+  position: relative;
+  display: block;
+  width: 100%;
+  max-height: 150px ;
+  aspect-ratio: 3 / 4;
+  border-radius: 2px;
+  overflow: hidden;
+  text-decoration: none;
+  background: #ffffff;
+
+  /* lift on hover */
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.3s ease;
+}
+
+
+
+@media (max-width: 639px) {
+  .brand-card {
+    max-height: 100px;
+  }
+}
+
+
+/* ─── Image ─────────────────────────────────────────────────── */
+.brand-card__img {
+  width:100%;
+  object-fit: contain;
+  pointer-events: none; 
+  user-select: none;    
+}
+
+
+
+/* ─── Skeleton shimmer ──────────────────────────────────────── */
+.brand-card__skeleton {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    110deg,
+    #e8e8e8 25%,
+    #f5f5f5 50%,
+    #e8e8e8 75%
+  );
+  background-size: 200% 100%;
+  animation: bc-shimmer 1.5s infinite;
+}
+
+.dark .brand-card__skeleton {
+  background: linear-gradient(
+    110deg,
+    #1c1c1c 25%,
+    #282828 50%,
+    #1c1c1c 75%
+  );
+  background-size: 200% 100%;
+}
+
+@keyframes bc-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ─── Gradient overlay ──────────────────────────────────────── */
+.brand-card__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+   pointer-events: none; 
+
+  transition: opacity 0.3s ease;
+}
+
+.brand-card:hover .brand-card__overlay {
+  opacity: 0.9;
+}
+
+/* ─── Text block ─────────────────────────────────────────────── */
+.brand-card__body {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  padding: 1rem 0.9rem 1rem;
+  transform: translateY(2px);
+  transition: transform 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+   pointer-events: none;
+}
+
+.brand-card:hover .brand-card__body {
+  transform: translateY(0);
+}
+
+.brand-card__name {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+.brand-card__sub {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.03em;
+  margin-top: 0.2rem;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  transform: translateY(2px);
+  opacity: 0;
+  transition:
+    opacity 0.25s ease 0.05s,
+    transform 0.25s ease 0.05s;
+}
+
+.brand-card:hover .brand-card__sub {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Top badge (optional slug pill) ───────────────────────── */
+.brand-card__badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 3;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 0.5px solid rgba(255,255,255,0.22);
+  border-radius: 999px;
+  padding: 0.22rem 0.6rem;
+  opacity: 0;
+  transform: translateY(-3px);
+  pointer-events: none; 
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.brand-card:hover .brand-card__badge {
+  opacity: 1;
+  transform: translateY(0);
+}

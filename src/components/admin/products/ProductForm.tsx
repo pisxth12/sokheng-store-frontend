@@ -1,0 +1,755 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+
+import { ColorRequest, Product } from "@/types/admin/product.type";
+import { X, Upload, Trash2, Star, Loader2, AlertCircle } from "lucide-react";
+import { useProducts } from "@/hooks/admin/useProduct";
+import { useCategory } from "@/hooks/admin/useCategory";
+import { useBrandSelect } from "@/hooks/admin/useBrandSelect";
+import { useCategorySelect } from "@/hooks/admin/useCategorySelect";
+
+interface ProductFormProps {
+  product?: Product | null;
+  onClose: () => void;
+  onSuccess: () => void;
+  clearDiscount: (productId: number) => Promise<void>; 
+
+  onCreateProduct: (data: FormData) => Promise<void>;
+  onUpdateProduct: (id: number, data: FormData) => Promise<void>;
+  onToggleMainImage: (productId: number, imageId: number) => Promise<void>;
+  onDeleteImage: (productId: number, imageId: number) => Promise<void>;
+  isSaving: boolean;
+}
+
+export default function ProductForm({
+  product,
+  onClose,
+  onSuccess,
+  clearDiscount,
+  onCreateProduct,
+  onUpdateProduct,
+  onToggleMainImage,
+  onDeleteImage,
+  isSaving,
+  
+}: ProductFormProps) {
+ 
+  const { categories , loadCategories } = useCategorySelect();
+  const { brands , loadBrands } = useBrandSelect();
+
+
+  // Form state
+  const [name, setName] = useState(product?.name || "");
+  const [description, setDescription] = useState(product?.description || "");
+  const [price, setPrice] = useState<number | "">(product?.price ?? "");
+  const [salePrice, setSalePrice] = useState(
+    product?.salePrice?.toString() || "",
+  );
+  const [saleEndDate, setSaleEndDate] = useState(
+    product?.saleEndDate?.split("T")[0] || "",
+  );
+  const [stock, setStock] = useState(product?.stock || 0);
+  const [slug, setSlug] = useState(product?.slug || "");
+  const [isFeatured, setIsFeatured] = useState(product?.isFeatured || false);
+  const [categoryId, setCategoryId] = useState(product?.categoryId || 0);
+  const [brandId, setBrandId] = useState(product?.brandId || 0);
+
+  // Image state
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [altTexts, setAltTexts] = useState<string[]>([]);
+  const [deleteImageIds, setDeleteImageIds] = useState<number[]>([]);
+  const [setMainImageId, setSetMainImageId] = useState<number>();
+
+  const [colors, setColors] = useState<ColorRequest[]>([]);
+
+  //Error message
+  const [formMessage, setFormMessage] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
+
+  //Dicount error handler
+  const [salePriceError, setSalePriceError] = useState<string | null>(null);
+  const [saleEndDateError, setSaleEndDateError] = useState<string | null>(null);
+  
+  //Slug generate
+  const [slugEdited, setSlugEdited] = useState(false);
+
+  useEffect(() => {
+    loadBrands();
+    loadCategories();
+  },[])
+
+  useEffect(() => {
+  const priceNum = Number(price);
+  const salePriceNum = Number(salePrice);
+
+  if (!salePrice || !price || isNaN(priceNum) || isNaN(salePriceNum)) {
+    setSalePriceError(null);
+    return;
+  }
+
+  if (salePriceNum >= priceNum) {
+    setSalePriceError(
+      `Sale price ($${salePriceNum.toFixed(2)}) must be less than regular price ($${priceNum.toFixed(2)})`,
+    );
+  } else {
+    setSalePriceError(null);
+  }
+}, [price, salePrice]);
+
+  //error date if have sale no endDate
+  useEffect(() => {
+      if (salePrice && !saleEndDate) {
+        setSaleEndDateError("Sale end date is required when sale price is set");
+      } else if (saleEndDate && new Date(saleEndDate) < new Date()) {
+        setSaleEndDateError("Sale end date cannot be in the past");
+      } else {
+        setSaleEndDateError(null);
+      }
+    }, [salePrice, saleEndDate]);
+
+  const generateSlug = useCallback((value: string) => {
+    return value
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-");
+  }, []);
+
+  const handleNameChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setName(value);
+      if (!slugEdited) {
+        setSlug(generateSlug(value));
+      }
+    },
+    [slugEdited],
+  );
+
+  const handleSlugChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSlug(generateSlug(e.target.value));
+      setSlugEdited(true);
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (product?.saleEndDate) {
+      // API returns: "2024-03-15T00:00:00"
+      const date = new Date(product.saleEndDate);
+      const formatted = date.toISOString().split("T")[0]; // "2024-03-15"
+      setSaleEndDate(formatted);
+    }
+  }, [product]);
+
+  useEffect(() => {
+    if (product) {
+      setName(product.name || "");
+      setDescription(product.description || "");
+      setPrice(product.price || 0);
+      setSalePrice(product.salePrice?.toString() || "");
+      setStock(product.stock || 0);
+      setSlug(product.slug || "");
+      setIsFeatured(product.isFeatured || false);
+      setCategoryId(product.categoryId || 0);
+      setBrandId(product.brandId || 0);
+      //Load color
+      if(product?.colors){
+        setColors(product.colors.map(c => ({ name: c.name, hex: c.hex })));
+      }
+
+    } else {
+      // Reset form for new product
+      setName("");
+      setDescription("");
+      setPrice(0);
+      setSalePrice("");
+      setSaleEndDate("");
+      setStock(0);
+      setSlug("");
+      setIsFeatured(false);
+      setCategoryId(0);
+      setBrandId(0);
+      setImageFiles([]);
+      setImagePreviews([]);
+      setAltTexts([]);
+      setColors([]);
+      setDeleteImageIds([]);
+      setSetMainImageId(undefined);
+    }
+  }, [product]);
+
+
+
+  // Load existing images
+  useEffect(() => {
+    if (product?.images) {
+      setImagePreviews(product.images.map((img) => img.imageUrl));
+      setAltTexts(product.images.map((img) => img.altText || ""));
+    }
+  }, [product]);
+
+  // ProductForm line ~154
+const handleClearSaleEndDate = async (productId: number) => {
+  try {
+    if (clearDiscount) {
+      await clearDiscount(productId);  // ← Pass productId
+    }
+    setSaleEndDateError(null);
+    setSalePriceError(null);
+    setSalePrice("");
+    setSaleEndDate("");
+  } catch (error) {
+    console.error("Failed to clear discount:", error);
+  }
+};
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setImageFiles((prev) => [...prev, ...files]);
+
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreviews((prev) => [...prev, reader.result as string]);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    setAltTexts((prev) => [...prev, ...files.map(() => "")]);
+  };
+
+  const removeNewImage = (index: number) => {
+    setImageFiles((prev) => prev.filter((_, i) => i !== index));
+    setImagePreviews((prev) => prev.filter((_, i) => i !== index));
+    setAltTexts((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const updateMainImage = useCallback(
+    async (productId: number, imageId: number) => {
+      try {
+        await onToggleMainImage(productId, imageId);
+      } catch (error) {
+        console.error("Error updating main image:", error);
+      }
+    },
+    [onToggleMainImage],
+  );
+
+  const deleteProductImage = useCallback(
+    async (productId: number, imageId: number) => {
+      if (!confirm("Are you sure you want to delete this image?")) return;
+      try {
+        await onDeleteImage(productId, imageId);
+      } catch (error) {
+        console.error("Error deleting product image:", error);
+      }
+    },
+    [onDeleteImage],
+  );
+
+  useEffect(() => {
+    if (deleteImageIds.length > 0) {
+      setDeleteImageIds((prev) => prev.filter((id) => !deleteImageIds.includes(id)));
+    }
+  },[onDeleteImage])
+
+  const isFormValid = useCallback(() => {
+    if (!name || !price || !categoryId) return false;
+    if (salePriceError) return false;
+    if (saleEndDateError) return false;
+    return true;
+  }, [name, price, categoryId, salePriceError, saleEndDateError]);
+
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+
+      if (salePriceError) {
+        setFormError(salePriceError);
+        return;
+      }
+
+      setFormMessage(null);
+      setFormError(null);
+
+      try {
+        const formData = new FormData();
+        formData.append("name", name);
+        if (description) formData.append("description", description);
+        formData.append("price", price.toString());
+        if (salePrice) formData.append("salePrice", salePrice);
+        if (saleEndDate) {
+          formData.append("saleEndDate", `${saleEndDate}T00:00:00`);
+        }
+        formData.append("stock", stock.toString());
+        if (slug) formData.append("slug", slug);
+        formData.append("isFeatured", isFeatured.toString());
+        formData.append("categoryId", categoryId.toString());
+
+        if (brandId && brandId !== 0) {
+          formData.append("brandId", brandId.toString());
+        }
+
+        colors.forEach((color, index) => {
+          if(color.name && color.name.trim()){
+           formData.append(`colors[${index}].name`, color.name);
+           formData.append(`colors[${index}].hex`, color.hex );
+          }else{
+            formData.append(`colors[${index}].name`, "");
+            formData.append(`colors[${index}].hex`, "");
+          }
+
+        })
+
+        if (product) {
+          imageFiles.forEach((file) => formData.append("newImages", file));
+          altTexts.forEach((text) => formData.append("newAltTexts", text));
+          deleteImageIds.forEach((id) =>
+            formData.append("deleteImageIds", id.toString()),
+          );
+          if (setMainImageId)
+            formData.append("setMainImageId", setMainImageId.toString());
+
+          await onUpdateProduct(product.id, formData);
+          setFormMessage("Product updated successfully ✅");
+        } else {
+          imageFiles.forEach((file) => formData.append("images", file));
+          altTexts.forEach((text) => formData.append("altTexts", text));
+
+          await onCreateProduct(formData);
+          setFormMessage("Product created successfully ✅");
+        }
+
+        onSuccess();
+        onClose();
+      } catch (error: any) {
+        console.error(error);
+        setFormError(
+          error?.response?.data?.message ||
+            "Something went wrong. Please try again.",
+        );
+      }
+    },
+    [
+      name,
+      description,
+      price,
+      salePrice,
+      saleEndDate,
+      stock,
+      slug,
+      isFeatured,
+      categoryId,
+      brandId,
+      colors,
+      product,
+      imageFiles,
+      altTexts,
+      deleteImageIds,
+      setMainImageId,
+      salePriceError,
+      onUpdateProduct,
+      onCreateProduct,
+      onSuccess,
+      onClose,
+    ],
+  );
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b sticky top-0 bg-white text-gray-500">
+          <h2 className="text-lg font-semibold">
+            {product ? "Edit Product" : "New Product"}
+          </h2>
+          <button
+            onClick={onClose}
+            className="p-1 hover:bg-gray-100 rounded transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {formMessage && <p className="text-green-600">{formMessage}</p>}
+
+        {formError && <p className="text-red-600">{formError}</p>}
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="p-4 space-y-4">
+          {/* Basic Info */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Name *
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={handleNameChange}
+                className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+
+            <div className="col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Description
+              </label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={3}
+                className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Price *
+              </label>
+              
+
+              <input
+              type="number"
+              value={price}
+                className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setPrice(value === "" ? "" : Number(value));
+                  }}
+                />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Sale Price
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                value={salePrice}
+                onChange={(e) => setSalePrice(e.target.value)}
+                className={`w-full px-3 text-gray-600 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 ${
+                  salePriceError
+                    ? "border-red-300 focus:ring-red-500"
+                    : "border-gray-200 focus:ring-blue-500"
+                }`}
+              />
+              {salePriceError && (
+                <div className="flex items-center gap-1 mt-1 text-xs text-red-600">
+                  <AlertCircle className="w-3 h-3" />
+                  <span>{salePriceError}</span>
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Sale End Date
+              </label>
+              <div className="flex gap-2">
+                <input
+                type="date"
+                value={saleEndDate}
+                min={new Date().toISOString().split("T")[0]}
+                onChange={(e) => setSaleEndDate(e.target.value)}
+                className={`w-full px-3 py-2 border text-gray-600 rounded-lg text-sm focus:outline-none focus:ring-2 ${
+                    saleEndDateError
+                      ? "border-red-300 focus:ring-red-500"
+                      : "border-gray-200 focus:ring-blue-500"
+                  }`}
+                  required={!!salePrice}
+                />
+             
+                <button type="button" onClick={()=> handleClearSaleEndDate(product!.id)}  className="flex-1 px-4 py-2 border-gray-200 border hover:text-white hover:bg-black cursor-pointer  text-sm font-medium rounded-lg disabled:opacity-50 transition-colors flex items-center justify-center gap-2">Clear</button>
+              </div>
+                {saleEndDateError && (
+                  <div className="flex items-center gap-1 mt-1 text-xs text-red-600">
+                    <AlertCircle className="w-3 h-3" />
+                    <span>{saleEndDateError}</span>
+                  </div>
+                )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Stock *
+              </label>
+              <input
+                type="number"
+                value={stock}
+                onChange={(e) => setStock(parseInt(e.target.value))}
+                className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Slug
+              </label>
+              <input
+                type="text"
+                value={slug}
+                onChange={handleSlugChange}
+                className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Category *
+              </label>
+              <select
+                value={categoryId}
+                onChange={(e) => setCategoryId(parseInt(e.target.value))}
+                className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              >
+                <option value="">Select category</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Brand (Optional)
+              </label>
+              <select
+                value={brandId}
+                onChange={(e) => setBrandId(parseInt(e.target.value))}
+                className="w-full px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="0">No brand</option>
+                {brands.map((brand) => (
+                  <option key={brand.id} value={brand.id}>
+                    {brand.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Colors Section */}
+<div className="border border-gray-200 rounded-lg p-4">
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Product Colors (Optional)
+  </label>
+  
+  {colors.length > 0 && (
+    <div className="space-y-2 mb-3">
+      {colors.map((color, index) => (
+        <div key={index} className="flex gap-2 items-center">
+          <input
+            type="text"
+            value={color.name}
+            onChange={(e) => {
+              const updated = [...colors];
+              updated[index].name = e.target.value;
+              setColors(updated);
+            }}
+            placeholder="Color name (e.g., Blue)"
+            className="flex-1 px-3 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={color.hex || "#000000"}
+              onChange={(e) => {
+                const updated = [...colors];
+                updated[index].hex = e.target.value;
+                setColors(updated);
+              }}
+              className="w-10 h-10 border border-gray-200 rounded cursor-pointer"
+            />
+            <input
+              type="text"
+              value={color.hex || ""}
+              onChange={(e) => {
+                const updated = [...colors];
+                updated[index].hex = e.target.value;
+                setColors(updated);
+              }}
+              placeholder="#000000"
+              className="w-24 px-2 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => setColors(colors.filter((_, i) => i !== index))}
+            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
+      ))}
+    </div>
+  )}
+  
+  <button
+    type="button"
+    onClick={() => setColors([...colors, { name: "", hex: "#000000" }])}
+    className="text-[14px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+  >
+    + Add Color
+  </button>
+</div>
+
+          {/* Featured Checkbox */}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="isFeatured"
+              checked={isFeatured}
+              onChange={(e) => setIsFeatured(e.target.checked)}
+              className="rounded border-gray-300"
+            />
+            <label htmlFor="isFeatured" className="text-sm text-gray-700">
+              Featured Product
+            </label>
+          </div>
+
+          {/* Images */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Product Images
+            </label>
+
+            {imagePreviews.length > 0 && (
+              <div className="grid grid-cols-4 gap-3 mb-3">
+                {imagePreviews.map((preview, index) => (
+                  <div key={index} className="relative group">
+                    <img
+                      src={preview}
+                      alt=""
+                      className="w-full aspect-square object-cover rounded-lg border border-gray-200"
+                    />
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-1">
+                      {product?.images && index < product.images.length ? (
+                        // Existing image
+                        <>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              updateMainImage(
+                                product.id,
+                                product.images[index].id,
+                              )
+                            }
+                            className={`p-1 rounded-full transition-colors ${
+                              setMainImageId === product.images[index].id ||
+                              product.images[index].isMain
+                                ? "bg-yellow-500 text-white"
+                                : "bg-white text-gray-700 hover:bg-yellow-500 hover:text-white"
+                            }`}
+                            title="Set as main"
+                          >
+                            <Star className="w-4 h-4" />
+                          </button>
+                          {!product.images[index].isMain && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                deleteProductImage(
+                                  product.id,
+                                  product.images[index].id,
+                                )
+                              }
+                              className="p-1 bg-white text-red-600 rounded-full hover:bg-red-600 hover:text-white transition-colors"
+                              title="Delete"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
+                        </>
+                      ) : (
+                        // New image
+                        <button
+                          type="button"
+                          onClick={() => removeNewImage(index)}
+                          className="p-1 bg-white text-red-600 rounded-full hover:bg-red-600 hover:text-white transition-colors"
+                          title="Remove"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                    {product?.images &&
+                      index < product.images.length &&
+                      product.images[index].isMain && (
+                        <span className="absolute top-1 left-1 bg-yellow-500 text-white p-1 rounded-full">
+                          <Star className="w-3 h-3 fill-current" />
+                        </span>
+                      )}
+                    <input
+                      type="text"
+                      value={altTexts[index] || ""}
+                      onChange={(e) =>
+                        setAltTexts((prev) =>
+                          prev.map((t, i) =>
+                            i === index ? e.target.value : t,
+                          ),
+                        )
+                      }
+                      placeholder="Alt text"
+                      className="mt-1 w-full px-2 py-1 text-xs border border-gray-200 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <label className="block w-full border-2 border-dashed border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:border-gray-300 transition-colors">
+              <Upload className="w-6 h-6 text-gray-400 mx-auto mb-2" />
+              <span className="text-sm text-gray-600">
+                Click to upload images
+              </span>
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </label>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex gap-3 pt-4 border-t">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-4 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isSaving || !isFormValid()}
+              className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
+            >
+              {isSaving ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Saving...</span>
+                </>
+              ) : (
+                <span>{product ? "Update" : "Create"}</span>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,321 @@
+/* ─── Search Page ────────────────────────────────────────────── */
+
+.sp-page {
+  min-height: 100vh;
+  background: var(--surface, #ffffff);
+  font-family: 'DM Sans', sans-serif;
+}
+
+.dark .sp-page {
+  background: #0f0f0e;
+}
+
+/* ─── Sticky Header ──────────────────────────────────────────── */
+.sp-header {
+  position: sticky;
+  top: 3.75rem;
+  z-index: 20;
+  background: #ffffff;
+  border-bottom: 1px solid #e8e8e4;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark .sp-header {
+  background: #0f0f0e;
+  border-bottom-color: #2a2a27;
+}
+
+.sp-header--hidden {
+  transform: translateY(-100%);
+}
+
+/* Search bar row */
+.sp-search-row {
+  padding: 1.125rem 1rem 0;
+}
+
+.sp-search-form {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1.5px solid #111110;
+  padding-bottom: 0.75rem;
+}
+
+.dark .sp-search-form {
+  border-bottom-color: #f5f5f3;
+}
+
+.sp-search-icon {
+  color: #a3a39f;
+  flex-shrink: 0;
+}
+
+.dark .sp-search-icon {
+  color: #5a5a57;
+}
+
+.sp-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: #111110;
+  letter-spacing: -0.01em;
+}
+
+.dark .sp-search-input {
+  color: #f5f5f3;
+}
+
+.sp-search-input::placeholder {
+  color: #d0d0cc;
+  font-family: 'DM Serif Display', serif;
+}
+
+.dark .sp-search-input::placeholder {
+  color: #3a3a37;
+}
+
+.sp-search-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #111110;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.dark .sp-search-btn {
+  color: #f5f5f3;
+}
+
+.sp-search-btn:hover {
+  opacity: 0.5;
+}
+
+/* Controls row */
+.sp-controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1rem;
+}
+
+.sp-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: 1px solid #e8e8e4;
+  color: #111110;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.dark .sp-filter-btn {
+  border-color: #2a2a27;
+  color: #f5f5f3;
+}
+
+.sp-filter-btn:hover {
+  border-color: #111110;
+  background: #f7f7f5;
+}
+
+.dark .sp-filter-btn:hover {
+  border-color: #f5f5f3;
+  background: #1a1a18;
+}
+
+.sp-sort-select {
+  background: transparent;
+  border: 1px solid #e8e8e4;
+  color: #111110;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  padding: 0.45rem 0.875rem;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23a3a39f' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.625rem center;
+  padding-right: 2rem;
+}
+
+.dark .sp-sort-select {
+  border-color: #2a2a27;
+  color: #f5f5f3;
+  background: #1a1a18;
+}
+
+.sp-sort-select:hover {
+  border-color: #111110;
+}
+
+.dark .sp-sort-select:hover {
+  border-color: #f5f5f3;
+}
+
+/* ─── Main Content ───────────────────────────────────────────── */
+.sp-content {
+  margin: 0 auto;
+  padding: 2.5rem 1rem 5rem;
+}
+
+/* Result count line */
+.sp-result-meta {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #a3a39f;
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+
+.dark .sp-result-meta {
+  color: #5a5a57;
+}
+
+.sp-result-meta strong {
+  color: #111110;
+  font-weight: 500;
+}
+
+.dark .sp-result-meta strong {
+  color: #f5f5f3;
+}
+
+/* Grid */
+.sp-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem 1.25rem;
+}
+
+@media (max-width: 1024px) {
+  .sp-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .sp-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem 0.75rem; }
+}
+
+/* Load more sentinel */
+.sp-sentinel {
+  width: 100%;
+  padding: 3rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sp-loading-dots {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.sp-loading-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #c8102e;
+  animation: sp-dot 1.4s ease-in-out infinite;
+}
+
+.sp-loading-dot:nth-child(2) { animation-delay: 0.16s; }
+.sp-loading-dot:nth-child(3) { animation-delay: 0.32s; }
+
+@keyframes sp-dot {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.4); }
+}
+
+.sp-end-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #d0d0cc;
+}
+
+.dark .sp-end-label { color: #3a3a37; }
+
+/* ─── Empty State ────────────────────────────────────────────── */
+.sp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 1rem;
+  text-align: center;
+}
+
+.sp-empty-icon {
+  color: #e8e8e4;
+  margin-bottom: 2rem;
+}
+
+.dark .sp-empty-icon { color: #2a2a27; }
+
+.sp-empty-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #111110;
+  margin-bottom: 0.625rem;
+  letter-spacing: -0.01em;
+}
+
+.dark .sp-empty-title { color: #f5f5f3; }
+
+.sp-empty-sub {
+  font-size: 0.875rem;
+  color: #a3a39f;
+  font-weight: 300;
+  margin-bottom: 2.5rem;
+  max-width: 28rem;
+  line-height: 1.7;
+}
+
+.dark .sp-empty-sub { color: #5a5a57; }
+
+.sp-empty-cta {
+  display: inline-block;
+  background: #111110;
+  color: #ffffff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.875rem 2.5rem;
+  transition: opacity 0.2s;
+}
+
+.sp-empty-cta:hover { opacity: 0.75; }
+
+.dark .sp-empty-cta {
+  background: #f5f5f3;
+  color: #111110;
+}
+

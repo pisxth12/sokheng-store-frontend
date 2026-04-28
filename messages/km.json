@@ -1,0 +1,234 @@
+{
+  "DesktopNav": {
+    "products": "ផលិតផល",
+    "sale": "លក់ដាច់",
+    "about": "អំពីយើង"
+  },
+  "Account": {
+    "page": {
+      "title": "គណនីរបស់ខ្ញុំ",
+      "subtitle": "គ្រប់គ្រងប្រវត្តិរូប និងចំណូលចិត្តរបស់អ្នក"
+    },
+    "profile": {
+      "orders": "ការបញ្ជាទិញ",
+      "wishlist": "បញ្ជីរំលឹក",
+      "quickActions": "សកម្មភាពរហ័ស"
+    },
+    "quickActions": {
+      "myOrders": "ការបញ្ជាទិញរបស់ខ្ញុំ",
+      "wishlist": "បញ្ជីរំលឹក",
+      "addresses": "អាសយដ្ឋាន",
+      "findYourOrder": "រកទំនិញរបស់អ្នក"
+    },
+    "settings": {
+      "title": "ការកំណត់",
+      "darkMode": "លក្ខណៈងងឹត",
+      "emailNotifications": "ការជូនដំណឹងតាមអ៊ីមែល",
+      "language": "ភាសា",
+      "logout": "ចាកចេញ"
+    },
+    "help": {
+      "title": "ត្រូវការជំនួយ?",
+      "description": "ទាក់ទងក្រុមគាំទ្ររបស់យើង 24/7",
+      "button": "ទាក់ទងជំនួយ"
+    }
+  },
+   "Cart": {
+    "title": "ការបញ្ជាទិញរបស់អ្នក",
+    "cartWithCount": "ការបញ្ជាទិញ",
+    "nothingHere": "មិនទាន់មានទំនិញនៅឡើយទេ",
+    "addItemsToStart": "បន្ថែមទំនិញដើម្បីចាប់ផ្តើម",
+    "browseProducts": "មើលផលិតផល",
+    "subtotal": "បូកសរុប",
+    "checkout": "ទូទាត់",
+    "taxShipping": "ពន្ធ និងថ្លៃដឹកជញ្ជូន នឹងត្រូវគណនាពេលទូទាត់",
+    "removeItem": "លុបទំនិញ",
+    "emptyCart": "កន្ត្រកទំនិញរបស់អ្នកទទេ"
+  },
+   "EditProfile": {
+    "title": "កែសម្រួលប្រវត្តិរូប",
+    "fields": {
+      "fullName": "ឈ្មោះពេញ",
+      "fullNamePlaceholder": "បញ្ចូលឈ្មោះពេញរបស់អ្នក",
+      "phoneNumber": "លេខទូរស័ព្ទ",
+      "phonePlaceholder": "បញ្ចូលលេខទូរស័ព្ទរបស់អ្នក",
+      "address": "អាសយដ្ឋាន",
+      "addressPlaceholder": "បញ្ចូលអាសយដ្ឋានរបស់អ្នក"
+    },
+    "buttons": {
+      "cancel": "បោះបង់",
+      "save": "រក្សាទុក",
+      "saving": "កំពុងរក្សាទុក..."
+    }
+  },
+  "Search": {
+    "placeholder": "ស្វែងរកផលិតផល...",
+    "recentSearches": "ការស្វែងរកថ្មីៗ",
+    "popularSearches": "ការស្វែងរកពេញនិយម",
+    "clearAll": "លុបទាំងអស់",
+    "close": "បិទ",
+    "clear": "លុប"
+  },
+  "ProductDetail": {
+    "loading": "កំពុងផ្ទុកផលិតផល...",
+    "notFound": {
+      "title": "រកមិនឃើញផលិតផល",
+      "message": "ផលិតផលដែលអ្នកកំពុងស្វែងរកមិនមានទេ។",
+      "button": "មើលផលិតផលទាំងអស់"
+    },
+    "breadcrumb": {
+      "home": "ទំព័រដើម",
+      "products": "ផលិតផល"
+    },
+    "labels": {
+      "inStock": "មានស្តុក ({count} អាចរកបាន)",
+      "outOfStock": "អស់ស្តុក",
+      "description": "ការពិពណ៌នា",
+      "quantity": "ចំនួន",
+      "addToCart": "បន្ថែមទៅកន្ត្រក",
+      "sku": "លេខកូដស្តុក"
+    },
+    "discount": "-{percent}%"
+  },
+  "RelatedProduct": {
+    "title": "អ្នកអាចចូលចិត្តផងដែរ",
+    "loading": "កំពុងផ្ទុក...",
+    "loadingMore": "កំពុងផ្ទុកផលិតផលបន្ថែម...",
+    "of": "ក្នុងចំណោម",
+    "previous": "មុន",
+    "next": "បន្ទាប់"
+  },
+  "FeaturedPage": {
+    "title": "ផលិតផលពិសេស",
+    "loading": "កំពុងផ្ទុកផលិតផលពិសេស...",
+    "error": "មិនអាចផ្ទុកផលិតផលពិសេសបានទេ"
+  },
+   "SearchPage": {
+    "searchPlaceholder": "ស្វែងរកផលិតផល...",
+    "filters": "តម្រង",
+    "sortOptions": {
+      "recommend": "ណែនាំ",
+      "newest": "ថ្មីបំផុត",
+      "oldest": "ចាស់បំផុត",
+      "priceLowHigh": "តម្លៃ៖ ថោក​→​ថ្លៃ",
+      "priceHighLow": "តម្លៃ៖ ថ្លៃ​→​ថោក"
+    },
+    "noResults": {
+      "title": "រកមិនឃើញផលិតផល",
+      "message": "យើងមិនអាចរកឃើញផលិតផលដែលត្រូវនឹង \"{query}\" ទេ",
+      "button": "មើលផលិតផលទាំងអស់"
+    },
+    "noMoreProducts": "គ្មានផលិតផលទៀតទេ",
+    "loading": "កំពុងផ្ទុក...",
+    "searching": "កំពុងស្វែងរក \"{query}\"..."
+  }, "FilterModal": {
+    "title": "តម្រង",
+    "priceRange": {
+      "label": "ជួរតម្លៃ",
+      "min": "តិចបំផុត",
+      "max": "ច្រើនបំផុត"
+    },
+    "sortBy": {
+      "label": "តម្រៀបតាម",
+      "options": {
+        "recommend": "ណែនាំ",
+        "newest": "ថ្មីបំផុត",
+        "oldest": "ចាស់បំផុត",
+        "priceLowHigh": "តម្លៃ៖ ថោក​→​ថ្លៃ",
+        "priceHighLow": "តម្លៃ៖ ថ្លៃ​→​ថោក"
+      }
+    },
+    "buttons": {
+      "cancel": "បោះបង់",
+      "apply": "អនុវត្ត"
+    }
+  },
+  "Auth": {
+  "login": {
+    "brand": "វ៉ានេស្សា ហាងទារក",
+    "email": {
+      "label": "អ៊ីមែល",
+      "placeholder": "បញ្ចូលអ៊ីមែល"
+    },
+    "password": {
+      "label": "ពាក្យសម្ងាត់",
+      "placeholder": "បញ្ចូលពាក្យសម្ងាត់",
+      "forgot": "ភ្លេចពាក្យសម្ងាត់?"
+    },
+    "button": {
+      "signIn": "ចូល",
+      "signingIn": "កំពុងចូល..."
+    },
+    "divider": "ឬ",
+    "google": "ចូលជាមួយ Google",
+    "register": {
+      "text": "អតិថិជនថ្មី?",
+      "link": "បង្កើតគណនី"
+    },
+    "demo": "សាកល្បង: admin@example.com / admin123",
+    "errors": {
+      "invalid": "អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ",
+      "googleFailed": "ការចូលជាមួយ Google បរាជ័យ"
+    }
+  },
+  "forgotPassword": {
+    "title": "កំណត់ពាក្យសម្ងាត់ឡើងវិញ",
+    "subtitle": "បញ្ចូលអ៊ីមែលរបស់អ្នក",
+    "email": {
+      "label": "អាសយដ្ឋានអ៊ីមែល",
+      "placeholder": "your@email.com"
+    },
+    "button": "ផ្ញើរលេខកូដ",
+    "sending": "កំពុងផ្ញើរ...",
+    "back": "ត្រឡប់ក្រោយ",
+    "rememberPassword": "ចាំពាក្យសម្ងាត់របស់អ្នកទេ?",
+    "login": "ចូល"
+  },
+  "checkEmail": {
+    "title": "ពិនិត្យអ៊ីមែលរបស់អ្នក",
+    "message": "យើងបានផ្ញើរលេខកូដ ៦ ខ្ទង់ទៅកាន់៖",
+    "expires": "លេខកូដផុតកំណត់ក្នុងរយៈពេល ១៥ នាទី",
+    "button": "បញ្ចូលលេខកូដ"
+  },
+  "verifyCode": {
+    "title": "ផ្ទៀងផ្ទាត់លេខកូដ",
+    "subtitle": "បញ្ចូលលេខកូដ ៦ ខ្ទង់",
+    "description": "យើងបានផ្ញើលេខកូដទៅកាន់៖",
+    "label": "លេខកូដផ្ទៀងផ្ទាត់",
+    "button": "ផ្ទៀងផ្ទាត់",
+    "verifying": "កំពុងផ្ទៀងផ្ទាត់...",
+    "resend": "ផ្ញើរលេខកូដម្តងទៀត",
+    "sending": "កំពុងផ្ញើរ...",
+    "resendIn": "ផ្ញើរម្តងទៀតក្នុងរយៈពេល {countdown} វិនាទី",
+    "back": "ត្រឡប់ក្រោយ"
+  },
+  "newPassword": {
+    "title": "ពាក្យសម្ងាត់ថ្មី",
+    "subtitle": "ជ្រើសរើសពាក្យសម្ងាត់ដែលខ្លាំង",
+    "newPassword": {
+      "label": "ពាក្យសម្ងាត់ថ្មី",
+      "placeholder": "យ៉ាងតិច ៦ តួអក្សរ"
+    },
+    "confirmPassword": {
+      "label": "បញ្ជាក់ពាក្យសម្ងាត់",
+      "placeholder": "បញ្ចូលពាក្យសម្ងាត់ម្តងទៀត"
+    },
+    "button": "កំណត់ពាក្យសម្ងាត់ឡើងវិញ",
+    "resetting": "កំពុងកំណត់ឡើងវិញ...",
+    "validation": {
+      "minLength": "ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច ៦ តួអក្សរ",
+      "match": "ពាក្យសម្ងាត់មិនត្រូវគ្នាទេ"
+    },
+    "back": "ត្រឡប់ក្រោយ"
+  },
+  "errors": {
+    "invalidCode": "លេខកូដមិនត្រឹមត្រូវ",
+    "codeRequired": "សូមបញ្ចូលលេខកូដទាំង ៦ ខ្ទង់",
+    "sessionExpired": "វគ្គផុតកំណត់ហើយ។ សូមចាប់ផ្តើមម្តងទៀត។",
+    "resetFailed": "ការកំណត់ពាក្យសម្ងាត់ឡើងវិញបរាជ័យ",
+    "resendFailed": "ការផ្ញើរលេខកូដម្តងទៀតបរាជ័យ",
+    "sendFailed": "ការផ្ញើរលេខកូដបរាជ័យ"
+  }
+}
+ 
+}

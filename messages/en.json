@@ -1,0 +1,257 @@
+{
+  "DesktopNav": {
+    "products": "Products",
+    "sale": "Sale",
+    "about": "About"
+  },
+
+
+  "Account": {
+    "page": {
+      "title": "My Account",
+      "subtitle": "Manage your profile and preferences"
+    },
+    "profile": {
+      "orders": "Orders",
+      "wishlist": "Wishlist",
+      "quickActions": "Quick Actions"
+    },
+    "quickActions": {
+      "myOrders": "My Orders",
+      "wishlist": "Wishlist",
+      "addresses": "Addresses",
+      "findYourOrder": "Find Your Order"
+    },
+    
+    "settings": {
+      "title": "Settings",
+      "darkMode": "Dark Mode",
+      "emailNotifications": "Email Notifications",
+      "language": "Language",
+      "logout": "Logout"
+    },
+    "help": {
+      "title": "Need Help?",
+      "description": "Contact our support team 24/7",
+      "button": "Contact Support"
+    }
+  },
+
+
+  "Cart": {
+    "title": "Your Cart",
+    "cartWithCount": "Cart",
+    "nothingHere": "Nothing here yet",
+    "addItemsToStart": "Add items to get started",
+    "browseProducts": "Browse products",
+    "subtotal": "Subtotal",
+    "checkout": "Checkout",
+    "taxShipping": "Taxes & shipping calculated at checkout",
+    "removeItem": "Remove item",
+    "emptyCart": "Your cart is empty"
+  },
+  
+  
+  "EditProfile": {
+    "title": "Edit Profile",
+    "fields": {
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Enter your full name",
+      "phoneNumber": "Phone Number",
+      "phonePlaceholder": "Enter your phone number",
+      "address": "Address",
+      "addressPlaceholder": "Enter your address"
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "save": "Save Changes",
+      "saving": "Saving..."
+    }
+  },
+
+
+   "Search": {
+    "placeholder": "Search for products...",
+    "recentSearches": "Recent searches",
+    "popularSearches": "Popular searches",
+    "clearAll": "Clear All",
+    "close": "Close",
+    "clear": "Clear"
+  },
+
+
+
+   "ProductDetail": {
+    "loading": "Loading product...",
+    "notFound": {
+      "title": "Product Not Found",
+      "message": "The product you're looking for doesn't exist.",
+      "button": "Browse Products"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "products": "Products"
+    },
+    "labels": {
+      "inStock": "In Stock ({count} available)",
+      "outOfStock": "Out of Stock",
+      "description": "Description",
+      "quantity": "Quantity",
+      "addToCart": "Add to Cart",
+      "sku": "SKU"
+    },
+    "discount": "-{percent}%"
+  },
+
+
+   "RelatedProduct": {
+    "title": "You May Also Like",
+    "loading": "Loading...",
+    "loadingMore": "Loading more products...",
+    "of": "of",
+    "previous": "Previous",
+    "next": "Next"
+  },
+
+
+  "FeaturedPage": {
+    "title": "Featured Products",
+    "loading": "Loading featured products...",
+    "error": "Failed to load featured products"
+  },
+   "SearchPage": {
+    "searchPlaceholder": "Search products...",
+    "filters": "Filters",
+    "sortOptions": {
+      "recommend": "Recommend",
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "priceLowHigh": "Price: Low to High",
+      "priceHighLow": "Price: High to Low"
+    },
+    "noResults": {
+      "title": "No products found",
+      "message": "We couldn't find any products matching \"{query}\"",
+      "button": "Browse All Products"
+    },
+    "noMoreProducts": "No more products",
+    "loading": "Loading...",
+    "searching": "Searching for \"{query}\"..."
+  },
+
+
+   "FilterModal": {
+    "title": "Filters",
+    "priceRange": {
+      "label": "Price Range",
+      "min": "Min",
+      "max": "Max"
+    },
+    "sortBy": {
+      "label": "Sort By",
+      "options": {
+        "recommend": "Recommend",
+        "newest": "Newest",
+        "oldest": "Oldest",
+        "priceLowHigh": "Price: Low to High",
+        "priceHighLow": "Price: High to Low"
+      }
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "apply": "Apply"
+    }
+  },
+
+  "Auth": {
+  "login": {
+    "brand": "VANESSA BABY SHOP",
+    "email": {
+      "label": "Email",
+      "placeholder": "Enter email"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "Enter password",
+      "forgot": "Forgot?"
+    },
+    "button": {
+      "signIn": "SIGN IN",
+      "signingIn": "SIGNING IN"
+    },
+    "divider": "Or",
+    "google": "Continue with Google",
+    "register": {
+      "text": "New here?",
+      "link": "Create account"
+    },
+    "demo": "demo: admin@example.com / admin123",
+    "errors": {
+      "invalid": "Invalid email or password",
+      "googleFailed": "Google login failed"
+    }
+  },
+  "forgotPassword": {
+    "title": "RESET PASSWORD",
+    "subtitle": "Enter your email",
+    "email": {
+      "label": "Email Address",
+      "placeholder": "your@email.com"
+    },
+    "button": "SEND RESET CODE",
+    "sending": "SENDING...",
+    "back": "Back",
+    "rememberPassword": "Remember your password?",
+    "login": "LOGIN"
+  },
+  "checkEmail": {
+    "title": "CHECK YOUR EMAIL",
+    "message": "We've sent a 6-digit code to:",
+    "expires": "Code expires in 15 minutes",
+    "button": "ENTER CODE"
+  },
+  "verifyCode": {
+    "title": "VERIFY CODE",
+    "subtitle": "Enter the 6-digit code",
+    "description": "We sent a code to:",
+    "label": "Verification Code",
+    "button": "VERIFY CODE",
+    "verifying": "VERIFYING...",
+    "resend": "RESEND CODE",
+    "sending": "SENDING...",
+    "resendIn": "RESEND IN {countdown}S",
+    "back": "Back"
+  },
+  "newPassword": {
+    "title": "NEW PASSWORD",
+    "subtitle": "Choose a strong password",
+    "newPassword": {
+      "label": "New Password",
+      "placeholder": "Minimum 6 characters"
+    },
+    "confirmPassword": {
+      "label": "Confirm Password",
+      "placeholder": "Re-enter password"
+    },
+    "button": "RESET PASSWORD",
+    "resetting": "RESETTING...",
+    "validation": {
+      "minLength": "Password must be at least 6 characters",
+      "match": "Passwords don't match"
+    },
+    "back": "Back"
+  },
+  "errors": {
+    "sendFailed": "Failed to send reset code",
+    "invalidCode": "Invalid code",
+    "codeRequired": "Please enter all 6 digits",
+    "sessionExpired": "Session expired. Please start over.",
+    "resetFailed": "Failed to reset password",
+    "resendFailed": "Failed to resend code"
+  }
+}
+  
+
+   
+  
+}

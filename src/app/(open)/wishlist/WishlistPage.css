@@ -1,0 +1,325 @@
+/* ─── Wishlist Page ──────────────────────────────────────────── */
+
+.wl-page {
+  min-height: 100vh;
+  padding: 3rem 0 6rem;
+  background: #ffffff;
+  font-family: 'DM Sans', sans-serif;
+  animation: wl-fade-up 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.dark .wl-page { background: #0f0f0e; }
+
+@keyframes wl-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.wl-container {
+  margin: 0 auto;
+}
+
+/* ─── Header ─────────────────────────────────────────────────── */
+.wl-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid #e8e8e4;
+  margin-bottom: 3rem;
+}
+
+.dark .wl-header { border-bottom-color: #2a2a27; }
+
+.wl-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.wl-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 400;
+  color: #111110;
+  letter-spacing: -0.01em;
+}
+
+.dark .wl-title { color: #f5f5f3; }
+
+.wl-count {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a3a39f;
+}
+
+.dark .wl-count { color: #5a5a57; }
+
+.wl-browse-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #a3a39f;
+  text-decoration: none;
+  transition: color 0.2s, gap 0.25s;
+}
+
+.dark .wl-browse-link { color: #5a5a57; }
+
+.wl-browse-link:hover {
+  color: #111110;
+  gap: 0.75rem;
+}
+
+.dark .wl-browse-link:hover { color: #f5f5f3; }
+
+/* ─── Grid ───────────────────────────────────────────────────── */
+.wl-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem 0.25rem;
+}
+
+@media (min-width: 768px)  { .wl-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1280px) { .wl-grid { grid-template-columns: repeat(4, 1fr); } }
+
+/* ─── Card ───────────────────────────────────────────────────── */
+.wl-card {
+  display: flex;
+  flex-direction: column;
+  animation: wl-card-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes wl-card-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Image */
+.wl-img-wrap {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #f7f7f5;
+  display: block;
+}
+
+.dark .wl-img-wrap { background: #1a1a18; }
+
+.wl-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.wl-card:hover .wl-img { transform: scale(1.05); }
+
+/* Sale badge */
+.wl-badge-sale {
+  position: absolute;
+  top: 0.875rem;
+  right: 0.875rem;
+  background: #c8102e;
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  z-index: 2;
+}
+
+/* Remove overlay button — top left, appears on hover */
+.wl-remove-overlay {
+  position: absolute;
+  top: 0.875rem;
+  left: 0.875rem;
+  z-index: 3;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: none;
+  border-radius: 50%;
+  color: #6b6b67;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.2s, transform 0.2s, color 0.2s;
+}
+
+.dark .wl-remove-overlay { background: #0f0f0e; color: #9a9a96; }
+
+.wl-card:hover .wl-remove-overlay {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.wl-remove-overlay:hover { color: #c8102e; }
+
+/* ─── Card Body ──────────────────────────────────────────────── */
+.wl-body {
+  padding: 0.675rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.wl-category {
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #a3a39f;
+}
+
+.dark .wl-category { color: #5a5a57; }
+
+.wl-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #111110;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  text-decoration: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.2s;
+}
+
+.dark .wl-name { color: #f5f5f3; }
+.wl-name:hover { color: #a3a39f; }
+.dark .wl-name:hover { color: #9a9a96; }
+
+/* Price */
+.wl-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.wl-price {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1rem;
+  color: #111110;
+  letter-spacing: -0.01em;
+}
+
+.dark .wl-price { color: #f5f5f3; }
+
+.wl-price--sale { color: #c8102e; }
+
+.wl-price-original {
+  font-size: 0.78rem;
+  color: #a3a39f;
+  text-decoration: line-through;
+  font-weight: 300;
+}
+
+.dark .wl-price-original { color: #5a5a57; }
+
+/* Stock */
+.wl-stock {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 400;
+  margin-top: 0.125rem;
+}
+
+.wl-stock-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.wl-stock-dot--in  { background: #22c55e; }
+.wl-stock-dot--out { background: #c8102e; }
+
+.wl-stock--in  { color: #16a34a; }
+.wl-stock--out { color: #c8102e; }
+
+/* ─── Actions ────────────────────────────────────────────────── */
+.wl-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.875rem;
+}
+
+.wl-btn-cart {
+  flex: 1;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #111110;
+  color: #ffffff;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.dark .wl-btn-cart { background: #f5f5f3; color: #111110; }
+
+.wl-btn-cart:hover:not(:disabled) { opacity: 0.78; }
+.wl-btn-cart:active:not(:disabled) { transform: scale(0.98); }
+.wl-btn-cart:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.wl-btn-remove {
+  width: 2.75rem;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid #e8e8e4;
+  color: #a3a39f;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  flex-shrink: 0;
+}
+
+.dark .wl-btn-remove {
+  border-color: #2a2a27;
+  color: #5a5a57;
+}
+
+.wl-btn-remove:hover {
+  border-color: #c8102e;
+  color: #c8102e;
+  background: rgba(200, 16, 46, 0.04);
+}
+
+/* Out of stock — remove takes full width */
+.wl-btn-remove--full {
+  flex: 1;
+  width: auto;
+  gap: 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}

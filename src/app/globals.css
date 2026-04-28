@@ -1,0 +1,229 @@
+/* src/app/globals.css */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+/* ======================================
+   1. THEME & VARIABLES
+   ====================================== */
+:root {
+  --background: #f2f3f5;
+  --foreground: #333333;
+}
+
+.dark {
+  --background: #1a1a1a;
+  --foreground: #f2f3f5;
+}
+
+/* ======================================
+   4.5 DARK MODE UTILITIES
+   ====================================== */
+
+.dark .bg-page {
+  background-color: #1a1a1a;
+}
+@theme {
+  --color-darkbg: #333333;
+}
+
+/* Dark mode strategy */
+@variant dark (&:where(.dark, .dark *));
+
+/* ======================================
+   2. BASE STYLES
+   ====================================== */
+* {
+  font-family: 'DM Sans', sans-serif !important;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  @apply antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-y: scroll;
+
+  
+}
+
+/* ======================================
+   3. TYPOGRAPHY UTILITIES
+   ====================================== */
+.mono {
+  font-family: 'DM Mono', monospace !important;
+}
+
+/* ======================================
+   4. CUSTOM UTILITIES
+   ====================================== */
+@utility max-w-primary {
+  max-width: 1450px;
+  margin: 0 auto;
+}
+
+@layer utilities {
+   @media (max-width: 639px) {
+    .px-primary {
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .px-primary {
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+  }
+
+  .max-w-primary {
+    max-width: 1520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* ======================================
+   5. ANIMATIONS
+   ====================================== */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDownFull {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideLeft {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Animation Classes */
+.animate-slideDown {
+  animation: slideDown 0.2s ease-out;
+}
+
+.animate-slideDownFull {
+  animation: slideDownFull 0.3s ease-out;
+}
+
+.animate-slideLeft {
+  animation: slideLeft 0.3s ease-out;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* ======================================
+   6. SCROLL UTILITIES
+   ====================================== */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-webkitscrollbar {
+  display: none;
+}
+
+.snap-x {
+  scroll-snap-type: x mandatory;
+}
+
+.snap-start {
+  scroll-snap-align: start;
+}
+
+/* ======================================
+   7. COMPONENT STYLES (Legacy - Consider moving to components)
+   ====================================== */
+.item-row {
+  transition: background 0.15s;
+}
+
+.item-row:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.pay-btn {
+  transition: all 0.2s;
+}
+
+.pay-btn:hover {
+  background: #fff;
+  color: #000;
+}
+
+
+/* Selele option */
+.custom-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.5rem;
+  appearance: none;
+}
+.option-selected {
+  border: none;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  background-color: #f3f4f6;
+  color: #000000;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+
+.dark .option-selected {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  font-weight: 500;
+}
