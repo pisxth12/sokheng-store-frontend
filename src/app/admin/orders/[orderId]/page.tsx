@@ -33,8 +33,7 @@ export default function OrderDetailPage() {
   };
 
 
-
-
+    if (loading) return <LoadingSpinner/>
 
 
   if (!order) {
@@ -59,11 +58,7 @@ export default function OrderDetailPage() {
     );
   }
 
-  
 
-
-  if (loading) return <LoadingSpinner/>
-  
 
 
 
@@ -113,7 +108,7 @@ export default function OrderDetailPage() {
       {/* Order Info - Stack on mobile */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8">
         {/* Customer Card */}
-        <div className="border border-gray-200 p-4 rounded-lg bg-white">
+      <div className={`border ${order.status === "COMPLETED" ? "border-green-400" : order.status === "PENDING" ? "border-yellow-400"  : "border-red-400"} p-4 rounded-lg bg-white `}>
           <p className="text-xs text-gray-500 mb-2 uppercase tracking-wider">Customer</p>
           <p className="font-medium text-gray-900">{order.customerName}</p>
           <p className="text-sm text-gray-600 mt-2 wrap-break-word">{order.email}</p>
@@ -121,7 +116,7 @@ export default function OrderDetailPage() {
         </div>
 
         {/* Order Details Card */}
-        <div className="border border-gray-200 p-4 rounded-lg bg-white">
+        <div className={`border ${order.status === "COMPLETED" ? "border-green-400" : order.status === "PENDING" ? "border-yellow-400"  : "border-red-400"} p-4 rounded-lg bg-white `}>
           <p className="text-xs text-gray-500 mb-2 uppercase tracking-wider">Order Details</p>
           <div className="space-y-1">
             <p className="text-sm">
@@ -140,7 +135,7 @@ export default function OrderDetailPage() {
         </div>
 
         {/* Shipping Card */}
-        <div className="border border-gray-200 p-4 rounded-lg bg-white">
+         <div className={`border ${order.status === "COMPLETED" ? "border-green-400" : order.status === "PENDING" ? "border-yellow-400"  : "border-red-400"} p-4 rounded-lg bg-white `}>
           <p className="text-xs text-gray-500 mb-2 uppercase tracking-wider">Shipping</p>
           <p className="text-sm text-gray-900 break-words">{order.address || 'No address provided'}</p>
           {order.note && (

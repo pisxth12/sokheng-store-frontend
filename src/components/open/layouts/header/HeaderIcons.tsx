@@ -2,6 +2,7 @@
 import { ShoppingCart, User, Search, Heart } from "lucide-react";
 import Link from "next/link";
 import './Header.css';
+import { useTranslations } from "next-intl";
 
 interface Props {
   onSearchClick: () => void;
@@ -18,6 +19,9 @@ export default function HeaderIcons({
   initialWishlistCount,
   isLoading = false,
 }: Props) {
+
+    const t = useTranslations('DesktopNav');
+
   if (isLoading) {
     return (
       <div className="hd-icons">
@@ -60,7 +64,7 @@ export default function HeaderIcons({
           <User size={18} strokeWidth={1.5} />
         </Link>
       ) : (
-        <Link href="/login" className="hd-signin">Sign in</Link>
+        <Link href="/login" className="hd-signin">{t('signIn')}</Link>
       )}
 
     </div>

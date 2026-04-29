@@ -2,8 +2,10 @@
   "DesktopNav": {
     "products": "商品",
     "sale": "特卖",
-    "about": "关于"
+    "about": "关于",
+     "signIn": "登录"
   },
+  
   "Account": {
     "page": {
       "title": "我的账户",

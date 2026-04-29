@@ -2,8 +2,12 @@
   "DesktopNav": {
     "products": "Products",
     "sale": "Sale",
-    "about": "About"
+    "about": "About",
+    "signIn":"Sign In"
   },
+
+
+
 
 
   "Account": {

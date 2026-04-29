@@ -62,10 +62,10 @@ const colorMap: Record<string, { bar: string; dot: string; border: string; value
 
 // Status colors for the donut chart
 const STATUS_COLORS = {
-  completed: '#10b981',  // green
-   processing: '#3b82f6', // blue
-  pending: '#f59e0b',    // yellow/orange
-  cancelled: '#ef4444'   // red
+  completed: '#10b981',  
+   processing: '#3b82f6', 
+  pending: '#f59e0b',    
+  cancelled: '#ef4444'   
 };
 
 export default function StatsCardsOrder({ stats }: StatsCardsOrderProps) {
@@ -113,8 +113,8 @@ export default function StatsCardsOrder({ stats }: StatsCardsOrderProps) {
                           data={statusData}
                           cx="50%"
                           cy="50%"
-                          innerRadius={18}
-                          outerRadius={28}
+                          innerRadius={15}
+                          outerRadius={25}
                           paddingAngle={2}
                           dataKey="value"
                           stroke="none"

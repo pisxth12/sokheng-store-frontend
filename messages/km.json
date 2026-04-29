@@ -2,8 +2,10 @@
   "DesktopNav": {
     "products": "ផលិតផល",
     "sale": "លក់ដាច់",
-    "about": "អំពីយើង"
+    "about": "អំពីយើង",
+     "signIn": "ចុះឈ្មោះ"
   },
+  
   "Account": {
     "page": {
       "title": "គណនីរបស់ខ្ញុំ",
